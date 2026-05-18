@@ -1,0 +1,3 @@
+$kind: collection
+name: 'Mock Server Integration'
+description: 'REST endpoints exposed by the fiserv-dev-studio-mock-server-integration Spring Boot service. Select the Local environment to resolve {{base_url}}.'
