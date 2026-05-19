@@ -90,8 +90,8 @@ public class PostmanService {
 
         SpecTaskResponse syncTask = apiClient.triggerCollectionSync(
                 existing.getPostmanCollectionUid(), existing.getPostmanSpecId());
-        SpecTaskResponse completed = apiClient.pollSpecTaskUntilComplete(
-                existing.getPostmanSpecId(), syncTask.taskId());
+        SpecTaskResponse completed = apiClient.pollCollectionTaskUntilComplete(
+                existing.getPostmanCollectionUid(), syncTask.taskId());
         assertTaskSucceeded(completed);
 
         return resourceService.markResourceStatus(existing, ResourceStatus.READY, null);

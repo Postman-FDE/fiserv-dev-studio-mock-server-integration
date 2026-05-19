@@ -1,10 +1,10 @@
 $kind: http-request
+name: Process event
 order: 2000
 method: POST
-url: '{{base_url}}/events'
+url: "{{base_url}}/events"
 headers:
-  - key: Content-Type
-    value: application/json
+  Content-Type: application/json
 body:
   type: json
   content: |-
@@ -12,9 +12,13 @@ body:
       "tenantName": "CommerceHub",
       "branchName": "develop",
       "added": [
-        "reference/1.25.2000/openapi.yaml"
+        // "reference/1.25.2000/openapi.yaml"
       ],
-      "modified": [],
-      "removed": []
+      "modified": [
+        "reference/1.25.2000/openapi.yaml"
+        ],
+      "removed": [
+        // "reference/1.25.2000/openapi.yaml"
+        ]
     }
-examples: './.resources/Process event.resources/examples'
+examples: ./.resources/Process event.resources/examples
