@@ -1,0 +1,38 @@
+$kind: http-example
+request:
+  url: '{{base_url}}/events'
+  method: POST
+  headers:
+    - key: Content-Type
+      value: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "tenantName": "CommerceHub",
+        "branchName": "develop",
+        "added": [
+          "reference/1.25.2000/openapi.yaml"
+        ],
+        "modified": [],
+        "removed": []
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    - key: Content-Type
+      value: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "results": [
+          {
+            "filePath": "reference/1.25.2000/openapi.yaml",
+            "operation": "ADDED",
+            "status": "OK",
+            "message": "https://abc123.mock.pstmn.io"
+          }
+        ]
+      }
