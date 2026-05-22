@@ -18,4 +18,14 @@ public class RestClientConfig {
                 .requestInterceptor(rateLimitInterceptor)
                 .build();
     }
+
+    /**
+     * Plain RestClient used to forward UI sandbox requests to provisioned Postman mock servers.
+     * No base URL (each call provides absolute), no Postman API key (mock.pstmn.io doesn't need it),
+     * and no rate-limit interceptor (the Postman per-key budget covers api.getpostman.com, not the mocks).
+     */
+    @Bean
+    public RestClient mockServerRestClient() {
+        return RestClient.builder().build();
+    }
 }
