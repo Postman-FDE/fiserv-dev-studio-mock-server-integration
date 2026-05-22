@@ -21,12 +21,12 @@ public class PostmanResource {
     private String branchName;
     private String filePath;
 
-    private String version;
     private String fileName;
 
     private String postmanSpecId;
     private String postmanCollectionId;
     private String postmanCollectionUid;
+    private String postmanCollectionBaseUrl;
     private String postmanMockServerId;
     private String postmanMockServerUrl;
 
@@ -50,9 +50,6 @@ public class PostmanResource {
     public String getFilePath() { return filePath; }
     public void setFilePath(String filePath) { this.filePath = filePath; }
 
-    public String getVersion() { return version; }
-    public void setVersion(String version) { this.version = version; }
-
     public String getFileName() { return fileName; }
     public void setFileName(String fileName) { this.fileName = fileName; }
 
@@ -64,6 +61,9 @@ public class PostmanResource {
 
     public String getPostmanCollectionUid() { return postmanCollectionUid; }
     public void setPostmanCollectionUid(String postmanCollectionUid) { this.postmanCollectionUid = postmanCollectionUid; }
+
+    public String getPostmanCollectionBaseUrl() { return postmanCollectionBaseUrl; }
+    public void setPostmanCollectionBaseUrl(String postmanCollectionBaseUrl) { this.postmanCollectionBaseUrl = postmanCollectionBaseUrl; }
 
     public String getPostmanMockServerId() { return postmanMockServerId; }
     public void setPostmanMockServerId(String postmanMockServerId) { this.postmanMockServerId = postmanMockServerId; }

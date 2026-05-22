@@ -61,7 +61,6 @@ public class PostmanResourceService {
         resource.setTenantName(tenantName);
         resource.setBranchName(branchName);
         resource.setFilePath(info.filePath());
-        resource.setVersion(info.version());
         resource.setFileName(info.fileName());
         resource.setStatus(ResourceStatus.PROVISIONING);
         resource.setCreatedAt(now);

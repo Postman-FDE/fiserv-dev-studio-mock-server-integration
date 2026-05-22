@@ -51,7 +51,7 @@ public class PostmanService {
 
         PostmanTenant tenant = ensureTenant(tenantName);
         String workspaceId = tenant.getPostmanWorkspaceId();
-        String resourceName = info.pathFromVersion();
+        String resourceName = info.pathFromReference() + " - " + branchName;
 
         // Step 1: spec (skip if a prior run already created it).
         if (resource.getPostmanSpecId() == null) {
@@ -68,8 +68,13 @@ public class PostmanService {
             String collectionUid = extractCollectionUid(completed);
             CollectionResponse collection = apiClient.getCollection(collectionUid);
             String collectionId = collection.collection().info().postmanId();
+            String baseUrl = extractBaseUrl(collection);
+            if (baseUrl == null) {
+                log.warn("Collection {} has no 'baseUrl' variable", collectionUid);
+            }
             resource.setPostmanCollectionUid(collectionUid);
             resource.setPostmanCollectionId(collectionId);
+            resource.setPostmanCollectionBaseUrl(baseUrl);
             resource = resourceService.save(resource);
         }
 
@@ -93,6 +98,14 @@ public class PostmanService {
         SpecTaskResponse completed = apiClient.pollCollectionTaskUntilComplete(
                 existing.getPostmanCollectionUid(), syncTask.taskId());
         assertTaskSucceeded(completed);
+
+        // Refresh baseUrl from the post-sync collection (the spec's servers block may have changed).
+        CollectionResponse collection = apiClient.getCollection(existing.getPostmanCollectionUid());
+        String baseUrl = extractBaseUrl(collection);
+        if (baseUrl == null) {
+            log.warn("Collection {} has no 'baseUrl' variable after sync", existing.getPostmanCollectionUid());
+        }
+        existing.setPostmanCollectionBaseUrl(baseUrl);
 
         return resourceService.markResourceStatus(existing, ResourceStatus.READY, null);
     }
@@ -133,6 +146,22 @@ public class PostmanService {
         if (normalized.contains("fail") || normalized.contains("error")) {
             throw new IllegalStateException("Postman task ended in failure status '" + status + "': " + task);
         }
+    }
+
+    private String extractBaseUrl(CollectionResponse collection) {
+        if (collection == null || collection.collection() == null) {
+            return null;
+        }
+        List<CollectionResponse.Collection.Variable> variables = collection.collection().variable();
+        if (variables == null) {
+            return null;
+        }
+        for (CollectionResponse.Collection.Variable variable : variables) {
+            if ("baseUrl".equals(variable.key())) {
+                return variable.value();
+            }
+        }
+        return null;
     }
 
     private String extractCollectionUid(SpecTaskResponse task) {

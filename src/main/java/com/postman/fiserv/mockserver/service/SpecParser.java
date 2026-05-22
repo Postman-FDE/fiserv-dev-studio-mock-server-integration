@@ -16,20 +16,31 @@ public class SpecParser {
         Map<String, Object> root = parseYamlRoot(rawYaml);
         String openapiType = detectOpenapiType(root);
 
-        if (!filePath.startsWith(PATH_PREFIX)) {
-            throw new IllegalArgumentException(
-                    "File path must start with 'reference/<version>/…': " + filePath);
+        // Real webhook events arrive as "reference/…"; POC fixtures organized under
+        // specs/<tenant>/reference/… carry the tenant directory as a prefix. Either is
+        // fine — locate 'reference/' as a whole segment and take everything after as the
+        // canonical resource path. The original filePath is preserved on the result so
+        // the fetcher still reads from the right place on disk.
+        int referenceIdx;
+        if (filePath.startsWith(PATH_PREFIX)) {
+            referenceIdx = 0;
+        } else {
+            int slashRefIdx = filePath.indexOf("/" + PATH_PREFIX);
+            if (slashRefIdx < 0) {
+                throw new IllegalArgumentException(
+                        "File path must contain a 'reference/' segment: " + filePath);
+            }
+            referenceIdx = slashRefIdx + 1;
         }
-        String pathFromVersion = filePath.substring(PATH_PREFIX.length());
-        String[] remainingSegments = pathFromVersion.split("/");
-        if (remainingSegments.length < 2 || remainingSegments[0].isBlank()) {
+        String pathFromReference = filePath.substring(referenceIdx + PATH_PREFIX.length());
+        if (pathFromReference.isBlank()) {
             throw new IllegalArgumentException(
-                    "File path must include version and file segments: " + filePath);
+                    "File path must include a file after 'reference/': " + filePath);
         }
-        String version = remainingSegments[0];
-        String fileName = remainingSegments[remainingSegments.length - 1];
+        String[] segments = pathFromReference.split("/");
+        String fileName = segments[segments.length - 1];
 
-        return new SpecFileInfo(filePath, version, fileName, pathFromVersion, openapiType, rawYaml);
+        return new SpecFileInfo(filePath, fileName, pathFromReference, openapiType, rawYaml);
     }
 
     private Map<String, Object> parseYamlRoot(String rawYaml) {
