@@ -1,0 +1,36 @@
+$kind: http-example
+request:
+  url: "{{base_url}}/events"
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "tenantName": "Finxact",
+        "branchName": "develop",
+        "added": [],
+        "modified": [],
+        "removed": [
+          "finxact/reference/1.27.0/openapi.yaml"
+        ]
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "results": [
+          {
+            "filePath": "finxact/reference/1.27.0/openapi.yaml",
+            "operation": "REMOVED",
+            "status": "OK",
+            "message": "deleted"
+          }
+        ]
+      }

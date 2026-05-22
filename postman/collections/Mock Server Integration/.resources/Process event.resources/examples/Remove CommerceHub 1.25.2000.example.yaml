@@ -1,0 +1,36 @@
+$kind: http-example
+request:
+  url: "{{base_url}}/events"
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "tenantName": "CommerceHub",
+        "branchName": "develop",
+        "added": [],
+        "modified": [],
+        "removed": [
+          "commercehub/reference/1.25.2000/openapi.yaml"
+        ]
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "results": [
+          {
+            "filePath": "commercehub/reference/1.25.2000/openapi.yaml",
+            "operation": "REMOVED",
+            "status": "OK",
+            "message": "deleted"
+          }
+        ]
+      }

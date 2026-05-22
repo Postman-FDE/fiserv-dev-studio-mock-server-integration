@@ -1,0 +1,36 @@
+$kind: http-example
+request:
+  url: "{{base_url}}/events"
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "tenantName": "BankingHub",
+        "branchName": "develop",
+        "added": [],
+        "modified": [],
+        "removed": [
+          "bankinghub/reference/DNA/Accounts/AcctService-11.0.0_DNA-Add_DDA_SDA_CDA.yaml"
+        ]
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "results": [
+          {
+            "filePath": "bankinghub/reference/DNA/Accounts/AcctService-11.0.0_DNA-Add_DDA_SDA_CDA.yaml",
+            "operation": "REMOVED",
+            "status": "OK",
+            "message": "deleted"
+          }
+        ]
+      }

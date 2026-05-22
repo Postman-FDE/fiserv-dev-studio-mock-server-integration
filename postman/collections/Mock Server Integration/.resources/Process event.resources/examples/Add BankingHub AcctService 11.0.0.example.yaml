@@ -1,0 +1,36 @@
+$kind: http-example
+request:
+  url: "{{base_url}}/events"
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "tenantName": "BankingHub",
+        "branchName": "develop",
+        "added": [
+          "bankinghub/reference/DNA/Accounts/AcctService-11.0.0_DNA-Add_DDA_SDA_CDA.yaml"
+        ],
+        "modified": [],
+        "removed": []
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "results": [
+          {
+            "filePath": "bankinghub/reference/DNA/Accounts/AcctService-11.0.0_DNA-Add_DDA_SDA_CDA.yaml",
+            "operation": "ADDED",
+            "status": "OK",
+            "message": "https://7b2e91c4-f3a1-4d8e-9c2a-1b5d6e7f8a9b.mock.pstmn.io"
+          }
+        ]
+      }

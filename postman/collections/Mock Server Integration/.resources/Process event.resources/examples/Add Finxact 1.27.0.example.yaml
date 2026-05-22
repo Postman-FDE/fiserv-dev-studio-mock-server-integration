@@ -1,0 +1,36 @@
+$kind: http-example
+request:
+  url: "{{base_url}}/events"
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "tenantName": "Finxact",
+        "branchName": "develop",
+        "added": [
+          "finxact/reference/1.27.0/openapi.yaml"
+        ],
+        "modified": [],
+        "removed": []
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "results": [
+          {
+            "filePath": "finxact/reference/1.27.0/openapi.yaml",
+            "operation": "ADDED",
+            "status": "OK",
+            "message": "https://c8d7e6f5-a4b3-4c2d-8e1f-9a8b7c6d5e4f.mock.pstmn.io"
+          }
+        ]
+      }

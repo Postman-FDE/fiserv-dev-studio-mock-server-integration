@@ -1,0 +1,36 @@
+$kind: http-example
+request:
+  url: "{{base_url}}/events"
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "tenantName": "FirstVisionAPAC",
+        "branchName": "develop",
+        "added": [],
+        "modified": [],
+        "removed": [
+          "firstvisionapac/reference/1.9.0/accounts_api.yaml"
+        ]
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "results": [
+          {
+            "filePath": "firstvisionapac/reference/1.9.0/accounts_api.yaml",
+            "operation": "REMOVED",
+            "status": "OK",
+            "message": "deleted"
+          }
+        ]
+      }
