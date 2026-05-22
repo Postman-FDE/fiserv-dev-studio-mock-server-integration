@@ -1,0 +1,1389 @@
+openapi: 3.0.1
+info:
+  title: Vision10 API Documentation
+  description: V10 open API document.
+  version: 1.9.0
+servers:
+- url: https://stg34.visionplus.io/sandbox/
+tags:
+- name: Loyalty Management
+paths:
+  /v1/loyalty/{accountId}/details:
+    get:
+      description: The API is used to fetch points accounts details for a given loyalty
+        account.
+      operationId: InquirePointsAccount
+      parameters:
+      - description: Token is used in token-based authentication to allow an application
+          to access an API.
+        in: header
+        name: Authorization
+        required: true
+        schema:
+          type: string
+          example: Bearer eyJhbGciOiJSUzI1NiJ9.eyJzY29wZSI6ImFsbCIsImNsaWVudF9pZCI6InZpc2lvbi1hcGktdXNlciIsImZpcnN0VmlzaW9uSWQiOiIwMDAwMEFVTkFCIiwiZXhwIjoxNzUwMzkyMDAwfQ.O6ZW0FnlWN09GqPeTEgWTQ9Gq6LPyt7BWTx65z7a0DKJQWBZ-pz29NX9xcuk-1ZdoLbKd_jPpwLNYGfS4KsuOLz1tQj1-teV2JO10DHxxthlG1-IGUIMyI5MivzNFlvLEG6TipqdQd3WdNl2juqlHKpDY86N0Z_Fg3n9igw4pFDzdGpHle5_4vGnl9PkYBA_WoWtgic05_63s5j6kmWbPkrV22NsHtOjJIh0sN1Q7sArecVnJCI7mwGVC5xasLGTO-Nn3hx6r8Y2mBv1Fv39LO_rUYcaK1RXS_xkoJV_3NdopGgfq4hp9F0naCKWxUxW1oaCaGCqk3p6xhkyDsJgaQ
+      - description: Client specified identifier to correlate the request with the
+          response of the API within their application. Any value passed in the request
+          message will be return back as-is in the API response message.
+        in: header
+        name: x-client-correlation-id
+        required: false
+        schema:
+          maxLength: 40
+          type: string
+          example: ABC123
+      - description: Client specified trace-id to track the request within their application.
+          Any value passed in the request message will be return back as-is in the
+          API response message.
+        in: header
+        name: x-client-trace-id
+        required: false
+        schema:
+          maxLength: 256
+          type: string
+          example: ABC123
+      - description: Client specified identifier of the channel that initiated the
+          API request. Any value passed in the request message will be return back
+          as-is in the API response message.
+        in: header
+        name: x-client-source-channel
+        required: false
+        schema:
+          maxLength: 40
+          type: string
+          example: ABC123
+      - description: Client specified identifier of their user** that initiated the
+          API request.  Any value passed in the request message will be return back
+          as-is in the API response message.<BR><BR><i>**The value passed in this
+          field will not be used for any Identity and access management</i>
+        in: header
+        name: x-client-user-id
+        required: false
+        schema:
+          maxLength: 40
+          type: string
+          example: ABC123
+      - description: Unique identification number associated with the organization.
+          Valid values from 1-998.
+        in: query
+        name: businessUnit
+        required: true
+        schema:
+          maximum: 999
+          maxLength: 3
+          type: integer
+          example: '600'
+      - description: Unique identification number that identifies the points account.
+        in: path
+        name: accountId
+        required: true
+        schema:
+          maxLength: 19
+          type: string
+          example: '1111111111111111111'
+      - description: Unique identification number of the points scheme associated
+          with the organization.
+        in: query
+        name: schemeId
+        required: true
+        schema:
+          maxLength: 5
+          type: string
+          example: '10101'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InquirePointsAccountV1ResponseModel'
+          description: " \nSuccess"
+        '400':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request cannot be validated"
+        '401':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request was unauthorized"
+        '403':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request resource is forbidden for user"
+        '404':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request resource does not exist"
+        '422':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request could not be processed"
+        '500':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nAn unexpected internal server error occurred"
+        '503':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe service was unavailable"
+        '504':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request timed out while waiting for a response"
+      security:
+      - Authorization: [
+          ]
+      summary: Inquire Points Account
+      tags:
+      - Loyalty Management
+      x-group-name: Loyalty Management
+      x-proxy-name: Inquire Points Account
+  /v1/loyalty/{accountId}/listActiveTransaction:
+    get:
+      description: This service is used to fetch Active transactions. Service displays
+        the point transactions that have been calculated and posted but either a statement
+        has not been produced for the account and/or the transactions have not been
+        settled with the store.
+      operationId: ListActiveTransaction
+      parameters:
+      - description: Token is used in token-based authentication to allow an application
+          to access an API.
+        in: header
+        name: Authorization
+        required: true
+        schema:
+          type: string
+          example: Bearer eyJhbGciOiJSUzI1NiJ9.eyJzY29wZSI6ImFsbCIsImNsaWVudF9pZCI6InZpc2lvbi1hcGktdXNlciIsImZpcnN0VmlzaW9uSWQiOiIwMDAwMEFVTkFCIiwiZXhwIjoxNzUwMzkyMDAwfQ.O6ZW0FnlWN09GqPeTEgWTQ9Gq6LPyt7BWTx65z7a0DKJQWBZ-pz29NX9xcuk-1ZdoLbKd_jPpwLNYGfS4KsuOLz1tQj1-teV2JO10DHxxthlG1-IGUIMyI5MivzNFlvLEG6TipqdQd3WdNl2juqlHKpDY86N0Z_Fg3n9igw4pFDzdGpHle5_4vGnl9PkYBA_WoWtgic05_63s5j6kmWbPkrV22NsHtOjJIh0sN1Q7sArecVnJCI7mwGVC5xasLGTO-Nn3hx6r8Y2mBv1Fv39LO_rUYcaK1RXS_xkoJV_3NdopGgfq4hp9F0naCKWxUxW1oaCaGCqk3p6xhkyDsJgaQ
+      - description: Client specified identifier to correlate the request with the
+          response of the API within their application. Any value passed in the request
+          message will be return back as-is in the API response message.
+        in: header
+        name: x-client-correlation-id
+        required: false
+        schema:
+          maxLength: 40
+          type: string
+          example: ABC123
+      - description: Client specified trace-id to track the request within their application.
+          Any value passed in the request message will be return back as-is in the
+          API response message.
+        in: header
+        name: x-client-trace-id
+        required: false
+        schema:
+          maxLength: 256
+          type: string
+          example: ABC123
+      - description: Client specified identifier of the channel that initiated the
+          API request. Any value passed in the request message will be return back
+          as-is in the API response message.
+        in: header
+        name: x-client-source-channel
+        required: false
+        schema:
+          maxLength: 40
+          type: string
+          example: ABC123
+      - description: Client specified identifier of their user** that initiated the
+          API request.  Any value passed in the request message will be return back
+          as-is in the API response message.<BR><BR><i>**The value passed in this
+          field will not be used for any Identity and access management</i>
+        in: header
+        name: x-client-user-id
+        required: false
+        schema:
+          maxLength: 40
+          type: string
+          example: ABC123
+      - description: Unique identification number associated with the organization.
+          Valid values from 1-998.
+        in: query
+        name: businessUnit
+        required: true
+        schema:
+          maximum: 999
+          maxLength: 3
+          type: integer
+          example: '600'
+      - description: Unique identification number that identifies the points account.
+        in: path
+        name: accountId
+        required: true
+        schema:
+          maxLength: 19
+          type: string
+          example: '0000000000000000001'
+      - description: Unique identification number of the points scheme associated
+          with the organization.
+        in: query
+        name: schemeId
+        required: true
+        schema:
+          maxLength: 5
+          type: string
+          example: '10101'
+      - description: ISO Standard.
+        in: query
+        name: fromEffectiveDate
+        required: false
+        schema:
+          maxLength: 10
+          type: string
+          example: 17/01/2021
+      - description: Field that specifies the ending date in range of effective dates
+          assigned to transactions. The format is MM/DD/YYYY or DD/MM/YYYY depending
+          on the DATE FORMAT on System Control.
+        in: query
+        name: ToEffectiveDate
+        required: false
+        schema:
+          maxLength: 10
+          type: string
+          example: 17/01/2022
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListActiveTransactionV1ResponseModel'
+          description: " \nSuccess"
+        '400':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request cannot be validated"
+        '401':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request was unauthorized"
+        '403':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request resource is forbidden for user"
+        '404':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request resource does not exist"
+        '422':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request could not be processed"
+        '500':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nAn unexpected internal server error occurred"
+        '503':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe service was unavailable"
+        '504':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request timed out while waiting for a response"
+      security:
+      - Authorization: [
+          ]
+      summary: List Active Transaction.
+      tags:
+      - Loyalty Management
+      x-group-name: Loyalty Management
+      x-proxy-name: List Active Transaction
+  /v1/loyalty/{accountId}/listHistoryTransaction:
+    get:
+      description: This service is used to fetch History transactions. Service displays
+        all point transactions that have posted, appeared on a statement, and settled
+        with the store.
+      operationId: ListHistoryTransaction
+      parameters:
+      - description: Token is used in token-based authentication to allow an application
+          to access an API.
+        in: header
+        name: Authorization
+        required: true
+        schema:
+          type: string
+          example: Bearer eyJhbGciOiJSUzI1NiJ9.eyJzY29wZSI6ImFsbCIsImNsaWVudF9pZCI6InZpc2lvbi1hcGktdXNlciIsImZpcnN0VmlzaW9uSWQiOiIwMDAwMEFVTkFCIiwiZXhwIjoxNzUwMzkyMDAwfQ.O6ZW0FnlWN09GqPeTEgWTQ9Gq6LPyt7BWTx65z7a0DKJQWBZ-pz29NX9xcuk-1ZdoLbKd_jPpwLNYGfS4KsuOLz1tQj1-teV2JO10DHxxthlG1-IGUIMyI5MivzNFlvLEG6TipqdQd3WdNl2juqlHKpDY86N0Z_Fg3n9igw4pFDzdGpHle5_4vGnl9PkYBA_WoWtgic05_63s5j6kmWbPkrV22NsHtOjJIh0sN1Q7sArecVnJCI7mwGVC5xasLGTO-Nn3hx6r8Y2mBv1Fv39LO_rUYcaK1RXS_xkoJV_3NdopGgfq4hp9F0naCKWxUxW1oaCaGCqk3p6xhkyDsJgaQ
+      - description: Client specified identifier to correlate the request with the
+          response of the API within their application. Any value passed in the request
+          message will be return back as-is in the API response message.
+        in: header
+        name: x-client-correlation-id
+        required: false
+        schema:
+          maxLength: 40
+          type: string
+          example: ABC123
+      - description: Client specified trace-id to track the request within their application.
+          Any value passed in the request message will be return back as-is in the
+          API response message.
+        in: header
+        name: x-client-trace-id
+        required: false
+        schema:
+          maxLength: 256
+          type: string
+          example: ABC123
+      - description: Client specified identifier of the channel that initiated the
+          API request. Any value passed in the request message will be return back
+          as-is in the API response message.
+        in: header
+        name: x-client-source-channel
+        required: false
+        schema:
+          maxLength: 40
+          type: string
+          example: ABC123
+      - description: Client specified identifier of their user** that initiated the
+          API request.  Any value passed in the request message will be return back
+          as-is in the API response message.<BR><BR><i>**The value passed in this
+          field will not be used for any Identity and access management</i>
+        in: header
+        name: x-client-user-id
+        required: false
+        schema:
+          maxLength: 40
+          type: string
+          example: ABC123
+      - description: Unique identification number associated with the organization.
+          Valid values from 1-998.
+        in: query
+        name: businessUnit
+        required: true
+        schema:
+          maximum: 999
+          maxLength: 3
+          type: integer
+          example: '600'
+      - description: Unique identification number that identifies the points account.
+        in: path
+        name: accountId
+        required: true
+        schema:
+          maxLength: 19
+          type: string
+          example: '0000000000000000001'
+      - description: Unique identification number of the points scheme associated
+          with the organization.
+        in: query
+        name: schemeId
+        required: true
+        schema:
+          maxLength: 5
+          type: string
+          example: '10101'
+      - description: ISO Standard.
+        in: query
+        name: fromEffectiveDate
+        required: false
+        schema:
+          maxLength: 10
+          type: string
+          example: 17/01/2021
+      - description: Field that specifies the ending date in range of effective dates
+          assigned to transactions. The format is MM/DD/YYYY or DD/MM/YYYY depending
+          on the DATE FORMAT on System Control.
+        in: query
+        name: ToEffectiveDate
+        required: false
+        schema:
+          maxLength: 10
+          type: string
+          example: 17/01/2022
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListHistoryTransactionV1ResponseModel'
+          description: " \nSuccess"
+        '400':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request cannot be validated"
+        '401':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request was unauthorized"
+        '403':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request resource is forbidden for user"
+        '404':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request resource does not exist"
+        '422':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request could not be processed"
+        '500':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nAn unexpected internal server error occurred"
+        '503':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe service was unavailable"
+        '504':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request timed out while waiting for a response"
+      security:
+      - Authorization: [
+          ]
+      summary: List History Transaction.
+      tags:
+      - Loyalty Management
+      x-group-name: Loyalty Management
+      x-proxy-name: List History Transaction
+  /v1/loyalty/{accountId}/listWarehousedTransaction:
+    get:
+      description: This service is used to fetch Warehouse transactions. This Sevice
+        displays all LMS monetary transactions for which the points are yet to be
+        calculated and posted. This includes transactions that have not reached their
+        maturity date or transactions for business units that are not processing today.
+      operationId: ListWarehousedTransaction
+      parameters:
+      - description: Token is used in token-based authentication to allow an application
+          to access an API.
+        in: header
+        name: Authorization
+        required: true
+        schema:
+          type: string
+          example: Bearer eyJhbGciOiJSUzI1NiJ9.eyJzY29wZSI6ImFsbCIsImNsaWVudF9pZCI6InZpc2lvbi1hcGktdXNlciIsImZpcnN0VmlzaW9uSWQiOiIwMDAwMEFVTkFCIiwiZXhwIjoxNzUwMzkyMDAwfQ.O6ZW0FnlWN09GqPeTEgWTQ9Gq6LPyt7BWTx65z7a0DKJQWBZ-pz29NX9xcuk-1ZdoLbKd_jPpwLNYGfS4KsuOLz1tQj1-teV2JO10DHxxthlG1-IGUIMyI5MivzNFlvLEG6TipqdQd3WdNl2juqlHKpDY86N0Z_Fg3n9igw4pFDzdGpHle5_4vGnl9PkYBA_WoWtgic05_63s5j6kmWbPkrV22NsHtOjJIh0sN1Q7sArecVnJCI7mwGVC5xasLGTO-Nn3hx6r8Y2mBv1Fv39LO_rUYcaK1RXS_xkoJV_3NdopGgfq4hp9F0naCKWxUxW1oaCaGCqk3p6xhkyDsJgaQ
+      - description: Client specified identifier to correlate the request with the
+          response of the API within their application. Any value passed in the request
+          message will be return back as-is in the API response message.
+        in: header
+        name: x-client-correlation-id
+        required: false
+        schema:
+          maxLength: 40
+          type: string
+          example: ABC123
+      - description: Client specified trace-id to track the request within their application.
+          Any value passed in the request message will be return back as-is in the
+          API response message.
+        in: header
+        name: x-client-trace-id
+        required: false
+        schema:
+          maxLength: 256
+          type: string
+          example: ABC123
+      - description: Client specified identifier of the channel that initiated the
+          API request. Any value passed in the request message will be return back
+          as-is in the API response message.
+        in: header
+        name: x-client-source-channel
+        required: false
+        schema:
+          maxLength: 40
+          type: string
+          example: ABC123
+      - description: Client specified identifier of their user** that initiated the
+          API request.  Any value passed in the request message will be return back
+          as-is in the API response message.<BR><BR><i>**The value passed in this
+          field will not be used for any Identity and access management</i>
+        in: header
+        name: x-client-user-id
+        required: false
+        schema:
+          maxLength: 40
+          type: string
+          example: ABC123
+      - description: Unique identification number associated with the organization.
+          Valid values from 1-998.
+        in: query
+        name: businessUnit
+        required: true
+        schema:
+          maximum: 999
+          maxLength: 3
+          type: integer
+          example: '600'
+      - description: Unique identification number that identifies the points account.
+        in: path
+        name: accountId
+        required: true
+        schema:
+          maxLength: 19
+          type: string
+          example: '0000000000000000001'
+      - description: Unique identification number of the points scheme associated
+          with the organization.
+        in: query
+        name: schemeId
+        required: true
+        schema:
+          maxLength: 5
+          type: string
+          example: '10101'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListWarehousedTransactionV1ResponseModel'
+          description: " \nSuccess"
+        '400':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request cannot be validated"
+        '401':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request was unauthorized"
+        '403':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request resource is forbidden for user"
+        '404':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request resource does not exist"
+        '422':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request could not be processed"
+        '500':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nAn unexpected internal server error occurred"
+        '503':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe service was unavailable"
+        '504':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request timed out while waiting for a response"
+      security:
+      - Authorization: [
+          ]
+      summary: List Warehoused Transaction.
+      tags:
+      - Loyalty Management
+      x-group-name: Loyalty Management
+      x-proxy-name: List Warehoused Transaction
+  /v1/loyalty/{accountId}/statistics:
+    get:
+      description: The API is used to fetch points statistics for a given loyalty
+        account
+      operationId: InquirePointsStatistics
+      parameters:
+      - description: Token is used in token-based authentication to allow an application
+          to access an API.
+        in: header
+        name: Authorization
+        required: true
+        schema:
+          type: string
+          example: Bearer eyJhbGciOiJSUzI1NiJ9.eyJzY29wZSI6ImFsbCIsImNsaWVudF9pZCI6InZpc2lvbi1hcGktdXNlciIsImZpcnN0VmlzaW9uSWQiOiIwMDAwMEFVTkFCIiwiZXhwIjoxNzUwMzkyMDAwfQ.O6ZW0FnlWN09GqPeTEgWTQ9Gq6LPyt7BWTx65z7a0DKJQWBZ-pz29NX9xcuk-1ZdoLbKd_jPpwLNYGfS4KsuOLz1tQj1-teV2JO10DHxxthlG1-IGUIMyI5MivzNFlvLEG6TipqdQd3WdNl2juqlHKpDY86N0Z_Fg3n9igw4pFDzdGpHle5_4vGnl9PkYBA_WoWtgic05_63s5j6kmWbPkrV22NsHtOjJIh0sN1Q7sArecVnJCI7mwGVC5xasLGTO-Nn3hx6r8Y2mBv1Fv39LO_rUYcaK1RXS_xkoJV_3NdopGgfq4hp9F0naCKWxUxW1oaCaGCqk3p6xhkyDsJgaQ
+      - description: Client specified identifier to correlate the request with the
+          response of the API within their application. Any value passed in the request
+          message will be return back as-is in the API response message.
+        in: header
+        name: x-client-correlation-id
+        required: false
+        schema:
+          maxLength: 40
+          type: string
+          example: ABC123
+      - description: Client specified trace-id to track the request within their application.
+          Any value passed in the request message will be return back as-is in the
+          API response message.
+        in: header
+        name: x-client-trace-id
+        required: false
+        schema:
+          maxLength: 256
+          type: string
+          example: ABC123
+      - description: Client specified identifier of the channel that initiated the
+          API request. Any value passed in the request message will be return back
+          as-is in the API response message.
+        in: header
+        name: x-client-source-channel
+        required: false
+        schema:
+          maxLength: 40
+          type: string
+          example: ABC123
+      - description: Client specified identifier of their user** that initiated the
+          API request.  Any value passed in the request message will be return back
+          as-is in the API response message.<BR><BR><i>**The value passed in this
+          field will not be used for any Identity and access management</i>
+        in: header
+        name: x-client-user-id
+        required: false
+        schema:
+          maxLength: 40
+          type: string
+          example: ABC123
+      - description: Unique identification number associated with the organization.
+          Valid values from 1-998.
+        in: query
+        name: businessUnit
+        required: true
+        schema:
+          maximum: 999
+          maxLength: 3
+          type: integer
+          example: '600'
+      - description: Unique identification number that identifies the points account.
+        in: path
+        name: accountId
+        required: true
+        schema:
+          maxLength: 19
+          type: string
+          example: '1111111111111111111'
+      - description: Unique identification number of the points scheme associated
+          with the organization.
+        in: query
+        name: schemeId
+        required: true
+        schema:
+          maxLength: 5
+          type: string
+          example: '10101'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InquirePointsStatisticV1ResponseModel'
+          description: " \nSuccess"
+        '400':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request cannot be validated"
+        '401':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request was unauthorized"
+        '403':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request resource is forbidden for user"
+        '404':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request resource does not exist"
+        '422':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request could not be processed"
+        '500':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nAn unexpected internal server error occurred"
+        '503':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe service was unavailable"
+        '504':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request timed out while waiting for a response"
+      security:
+      - Authorization: [
+          ]
+      summary: Inquire Loyalty Account
+      tags:
+      - Loyalty Management
+      x-group-name: Loyalty Management
+      x-proxy-name: Inquire Points Statistics
+components:
+  schemas:
+    InquirePointsAccountV1ResponseModel:
+      type: object
+      properties:
+        accountId:
+          maxLength: 19
+          type: string
+          description: Unique identification number that identifies the points account.
+          example: '1111111111111111111'
+        businessUnit:
+          maximum: 999
+          maxLength: 3
+          type: integer
+          description: Unique identification number associated with the organization.
+            Valid values from 1-998.
+          example: '600'
+        cashValue:
+          maxLength: 24
+          type: string
+          description: This identifies the cash value for the available points on
+            the account.
+          example: $50.00
+        enrollmentChannel:
+          maxLength: 4
+          type: string
+          description: User-defined code that identifies the method by which the account
+            was enrolled or opened.
+          example: NETB
+        lastStatusChangeDate:
+          maxLength: 10
+          type: string
+          description: Date when the last status change occurred for the points account
+            record, The format is MM/DD/YYYY or DD/MM/YYYY depending on the DATE FORMAT
+            on System Control. System will retrieve the latest statement details,
+            if no value is given in this field.
+          example: 12/01/2021
+        schemeId:
+          maxLength: 5
+          type: string
+          description: Unique identification number of the points scheme associated
+            with the organization.
+          example: '10101'
+        schemeName:
+          maxLength: 40
+          type: string
+          description: Name or description assigned to the points scheme record.
+          example: REWARDS
+        status:
+          maximum: 9
+          maxLength: 1
+          type: integer
+          description: Field that displays the status of the points account record
+            and a description of the status. <br/>The values are:<br/>&nbsp; '0' -
+            Incomplete <br/>&nbsp; '1' - Active <br/>&nbsp; '2' - Inactive (batch
+            status method) <br/>&nbsp; '3' -  On hold (batch status method) <br/>&nbsp;
+            '4' - Frozen (batch status method) <br/>&nbsp; '6' - Pending close (batch
+            status method) <br/>&nbsp; '7' - Closed <br/>&nbsp; '8' - Pending purge
+            (batch status method) <br/>&nbsp; '9' - Purged.
+          example: '1'
+        totalAmount:
+          maxLength: 24
+          type: string
+          description: This identifies the total amount available for the points on
+            account.
+          example: $100.00
+        totalAvailablePoints:
+          maxLength: 17
+          type: string
+          description: This identifies the available points to redeem on a points
+            account.
+          example: '1000'
+        typeOfCustomer:
+          maxLength: 1
+          type: string
+          description: This identifies the type of customer for the points account
+            record. <br/>The values are:<br/>&nbsp; 'I' - Individual <br/>&nbsp; 'B'
+            - Business <br/>&nbsp; 'C' - Consolidated
+          example: I
+    InquirePointsStatisticV1ResponseModel:
+      type: object
+      properties:
+        cycleToDatePoints:
+          type: object
+          properties:
+            adjustIn:
+              maxLength: 17
+              type: string
+              description: Field that displays the total number of adjust in points
+                cycle-to-date.
+              example: '12'
+            adjustOut:
+              maxLength: 17
+              type: string
+              description: Field that displays the total number of adjust out points
+                cycle-to-date.
+              example: '12'
+            bonus:
+              maxLength: 17
+              type: string
+              description: Field that displays the total number of bonus points cycle-to-date.
+              example: '12'
+            bought:
+              maxLength: 17
+              type: string
+              description: Field that displays the total number of bought points cycle-to-date.
+              example: '100'
+            closed:
+              maxLength: 17
+              type: string
+              description: Field that displays the total number of closed points cycle-to-date.
+              example: '12'
+            earned:
+              maxLength: 17
+              type: string
+              description: Field that displays the total number of basic earned points
+                cycle-to-date.
+              example: '12'
+            expired:
+              maxLength: 17
+              type: string
+              description: Field that displays the total number of expired points
+                cycle-to-date.
+              example: '12'
+            expiredInGracePeriod:
+              maxLength: 17
+              type: string
+              description: Field that displays the total number of expired points
+                retained in a grace period cycle-to-date.
+              example: '12'
+            redeemed:
+              maxLength: 17
+              type: string
+              description: Field that displays the total number of redeemed points
+                cycle-to-date. This total includes points redeemed by automatic disbursement.
+              example: '12'
+            total:
+              maxLength: 17
+              type: string
+              description: Field that displays the grand total number of bought, earned,
+                bonus, adjust in, redeemed, closed, grace, expired, and adjust out
+                points for cycle-to-date points.
+              example: '12'
+        cycleToDateSpendAmount:
+          maxLength: 24
+          type: string
+          description: Total cycle-to-date basic spend amount for the points account
+            record.
+          example: $1000.12
+        lifeToDatePoints:
+          type: object
+          properties:
+            adjustIn:
+              maxLength: 17
+              type: string
+              description: Field that displays the total number of adjust in points
+                life-to-date.
+              example: '120'
+            adjustOut:
+              maxLength: 17
+              type: string
+              description: Field that displays the total number of adjust out points
+                life-to-date.
+              example: '120'
+            bonus:
+              maxLength: 17
+              type: string
+              description: Field that displays the total number of bonus points life-to-date.
+              example: '120'
+            bought:
+              maxLength: 17
+              type: string
+              description: Field that displays the total number of bought points life-to-date.
+              example: '1000'
+            closed:
+              maxLength: 17
+              type: string
+              description: Field that displays the total number of closed points life-to-date.
+              example: '120'
+            earned:
+              maxLength: 17
+              type: string
+              description: Field that displays the total number of basic earned points
+                life-to-date.
+              example: '120'
+            expired:
+              maxLength: 17
+              type: string
+              description: Field that displays the total number of expired points
+                life-to-date.
+              example: '120'
+            expiredInGracePeriod:
+              maxLength: 17
+              type: string
+              description: Field that displays the total number of expired points
+                retained in a grace period life-to-date.
+              example: '120'
+            redeemed:
+              maxLength: 17
+              type: string
+              description: Field that displays the total number of redeemed points
+                life-to-date. This total includes points redeemed by automatic disbursement.
+              example: '120'
+            total:
+              maxLength: 17
+              type: string
+              description: Field that displays the grand total number of bought, earned,
+                bonus, adjust in, redeemed, closed, grace, expired, and adjust out
+                points for life-to-date points.
+              example: '120'
+        yearToDateSpendAmount:
+          maxLength: 24
+          type: string
+          description: Total year-to-date basic spend amount for the points account
+            record.
+          example: $12345.00
+    ListActiveTransactionV1ResponseModel:
+      type: object
+      properties:
+        accountId:
+          maxLength: 19
+          type: string
+          description: Unique identification number that identifies the points account.
+          example: '0000000000000000001'
+        businessUnit:
+          maximum: 999
+          maxLength: 3
+          type: integer
+          description: Unique identification number associated with the organization.
+            Valid values from 001-998.
+          example: '600'
+        schemeId:
+          maxLength: 5
+          type: string
+          description: Unique identification number of the points scheme associated
+            with the organization.
+          example: '10101'
+        schemeName:
+          maxLength: 40
+          type: string
+          description: Field that displays the scheme name of the points scheme record
+            assigned to the transaction.
+          example: ' '
+        transactionList:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionList_ListActiveTransactionV1ResponseModel'
+    ListHistoryTransactionV1ResponseModel:
+      type: object
+      properties:
+        accountId:
+          maxLength: 19
+          type: string
+          description: Unique identification number that identifies the points account.
+          example: '0000000000000000001'
+        businessUnit:
+          maximum: 999
+          maxLength: 3
+          type: integer
+          description: Unique identification number associated with the organization.
+            Valid values from 001-998.
+          example: '600'
+        schemeId:
+          maxLength: 5
+          type: string
+          description: Unique identification number of the points scheme associated
+            with the organization.
+          example: '10101'
+        schemeName:
+          maxLength: 40
+          type: string
+          description: Field that displays the scheme name of the points scheme record
+            assigned to the transaction.
+          example: ' '
+        transactionList:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionList_ListHistoryTransactionV1ResponseModel'
+    ListWarehousedTransactionV1ResponseModel:
+      type: object
+      properties:
+        accountId:
+          maxLength: 19
+          type: string
+          description: Unique identification number that identifies the points account.
+          example: '0000000000000000001'
+        businessUnit:
+          maximum: 999
+          maxLength: 3
+          type: integer
+          description: Unique identification number associated with the organization.
+            Valid values from 001-998.
+          example: '600'
+        schemeId:
+          maxLength: 5
+          type: string
+          description: Unique identification number of the points scheme associated
+            with the organization.
+          example: '10101'
+        schemeName:
+          maxLength: 40
+          type: string
+          description: Field that displays the scheme name of the points scheme record
+            assigned to the transaction.
+          example: ' '
+        transactionList:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionList_ListWarehousedTransactionV1ResponseModel'
+    ResponseErrorMessageInfo:
+      type: object
+      properties:
+        detail:
+          type: string
+          example: ''
+        errorCode:
+          type: string
+          example: ''
+        instance:
+          type: string
+          example: ''
+        invalid-params:
+          type: array
+          items:
+            type: string
+        source:
+          type: string
+          example: ''
+        status:
+          type: integer
+          example: '0'
+        title:
+          type: string
+          example: ''
+    TransactionList_ListActiveTransactionV1ResponseModel:
+      type: object
+      properties:
+        effectiveDate:
+          maxLength: 10
+          type: string
+          description: Effective date of the transaction. The format is MM/DD/YYYY
+            or DD/MM/YYYY depending on the DATE FORMAT on System Control.
+          example: 17/01/2021
+        loyaltyPoints:
+          maxLength: 17
+          type: string
+          description: Number of loyalty points calculated for this transaction
+          example: '1000'
+        postingDate:
+          maxLength: 10
+          type: string
+          description: Field that specifies the posting date date of transactions.
+            The format is MM/DD/YYYY or DD/MM/YYYY depending on the DATE FORMAT on
+            System Control.
+          example: 17/01/2021
+        rate:
+          maxLength: 12
+          type: string
+          description: Rate applied to points transactions.
+          example: '000000000'
+        recordNumber:
+          maximum: 99999999
+          maxLength: 8
+          type: integer
+          description: Identification number of a particular record.
+          example: '1'
+        storeName:
+          maxLength: 43
+          type: string
+          description: Store DBA (doing-business-as) name of the store record assigned
+            to the transaction.
+          example: PRIMECREDIT LIMITED
+        transactionAmount:
+          maxLength: 24
+          type: string
+          description: Spend amount of the transaction.
+          example: $0.00
+        transactionCode:
+          maxLength: 3
+          type: string
+          description: LMS transaction code assigned to a transaction. <br/>The values
+            are:<br/> &nbsp; '001' = Incoming monetary debit<br/> &nbsp; '002' = Incoming
+            monetary credit<br/> &nbsp; '050' = Earned points credit<br/> &nbsp; '051'
+            = Redeemed points debit<br/> &nbsp; '052' = Bonus points credit<br/> &nbsp;
+            '053' = Expired points debit<br/> &nbsp; '054' = Adjusted points credit<br/>
+            &nbsp; '055' = Closed increase debit<br/> &nbsp; '056' = Bought points
+            credit<br/> &nbsp; '057' = Grace expiration points debit<br/> &nbsp; '070'
+            = Earned points debit<br/> &nbsp; '071' = Redeemed points credit<br/>
+            &nbsp; '072' = Bonus points debit<br/> &nbsp; '073' = Expired points credit<br/>
+            &nbsp; '074' = Adjusted points debit<br/> &nbsp; '075' = Closed decrease
+            credit<br/> &nbsp; '076' = Bought points debit<br/> &nbsp; '077' = Grace
+            expiration points credit<br/> &nbsp; '100–998' = User-defined monetary
+            transactions
+          example: '050'
+        transactionDescription:
+          maxLength: 15
+          type: string
+          description: Description assigned to the transaction when it was entered.
+          example: EARNED POINTS C
+    TransactionList_ListHistoryTransactionV1ResponseModel:
+      type: object
+      properties:
+        effectiveDate:
+          maxLength: 10
+          type: string
+          description: Effective date of the transaction. The format is MM/DD/YYYY
+            or DD/MM/YYYY depending on the DATE FORMAT on System Control.
+          example: 17/01/2021
+        loyaltyPoints:
+          maxLength: 17
+          type: string
+          description: Number of loyalty points calculated for this transaction
+          example: '1000'
+        postingDate:
+          maxLength: 10
+          type: string
+          description: Field that specifies the posting date date of transactions.
+            The format is MM/DD/YYYY or DD/MM/YYYY depending on the DATE FORMAT on
+            System Control.
+          example: 17/01/2021
+        rate:
+          maxLength: 12
+          type: string
+          description: Rate applied to points transactions.
+          example: '000000000'
+        recordNumber:
+          maximum: 99999999
+          maxLength: 8
+          type: integer
+          description: Identification number of a particular record.
+          example: '1'
+        storeName:
+          maxLength: 43
+          type: string
+          description: Store DBA (doing-business-as) name of the store record assigned
+            to the transaction.
+          example: PRIMECREDIT LIMITED
+        transactionAmount:
+          maxLength: 24
+          type: string
+          description: Spend amount of the transaction.
+          example: $0.00
+        transactionCode:
+          maxLength: 3
+          type: string
+          description: LMS transaction code assigned to a transaction. <br/>The values
+            are:<br/> &nbsp; '001' = Incoming monetary debit<br/> &nbsp; '002' = Incoming
+            monetary credit<br/> &nbsp; '050' = Earned points credit<br/> &nbsp; '051'
+            = Redeemed points debit<br/> &nbsp; '052' = Bonus points credit<br/> &nbsp;
+            '053' = Expired points debit<br/> &nbsp; '054' = Adjusted points credit<br/>
+            &nbsp; '055' = Closed increase debit<br/> &nbsp; '056' = Bought points
+            credit<br/> &nbsp; '057' = Grace expiration points debit<br/> &nbsp; '070'
+            = Earned points debit<br/> &nbsp; '071' = Redeemed points credit<br/>
+            &nbsp; '072' = Bonus points debit<br/> &nbsp; '073' = Expired points credit<br/>
+            &nbsp; '074' = Adjusted points debit<br/> &nbsp; '075' = Closed decrease
+            credit<br/> &nbsp; '076' = Bought points debit<br/> &nbsp; '077' = Grace
+            expiration points credit<br/> &nbsp; '100–998' = User-defined monetary
+            transactions
+          example: '050'
+        transactionDescription:
+          maxLength: 15
+          type: string
+          description: Description assigned to the transaction when it was entered.
+          example: EARNED POINTS C
+    TransactionList_ListWarehousedTransactionV1ResponseModel:
+      type: object
+      properties:
+        effectiveDate:
+          maxLength: 10
+          type: string
+          description: Effective date of the transaction. The format is MM/DD/YYYY
+            or DD/MM/YYYY depending on the DATE FORMAT on System Control.
+          example: 17/01/2021
+        loyaltyPoints:
+          maxLength: 17
+          type: string
+          description: Number of loyalty points calculated for this transaction.
+          example: '1000'
+        postingDate:
+          maxLength: 10
+          type: string
+          description: Field that specifies the posting date date of transactions.
+            The format is MM/DD/YYYY or DD/MM/YYYY depending on the DATE FORMAT on
+            System Control.
+          example: 17/01/2021
+        rate:
+          maxLength: 12
+          type: string
+          description: Rate applied to points transactions.
+          example: '000000000'
+        recordNumber:
+          maximum: 99999999
+          maxLength: 8
+          type: integer
+          description: Identification number of a particular record.
+          example: '1'
+        storeName:
+          maxLength: 43
+          type: string
+          description: Store DBA (doing-business-as) name of the store record assigned
+            to the transaction.
+          example: PRIMECREDIT LIMITED
+        transactionAmount:
+          maxLength: 24
+          type: string
+          description: Spend amount of the transaction.
+          example: $0.00
+        transactionCode:
+          maxLength: 3
+          type: string
+          description: LMS transaction code assigned to a transaction. <br/>The values
+            are:<br/> &nbsp; '001' = Incoming monetary debit<br/> &nbsp; '002' = Incoming
+            monetary credit<br/> &nbsp; '050' = Earned points credit<br/> &nbsp; '051'
+            = Redeemed points debit<br/> &nbsp; '052' = Bonus points credit<br/> &nbsp;
+            '053' = Expired points debit<br/> &nbsp; '054' = Adjusted points credit<br/>
+            &nbsp; '055' = Closed increase debit<br/> &nbsp; '056' = Bought points
+            credit<br/> &nbsp; '057' = Grace expiration points debit<br/> &nbsp; '070'
+            = Earned points debit<br/> &nbsp; '071' = Redeemed points credit<br/>
+            &nbsp; '072' = Bonus points debit<br/> &nbsp; '073' = Expired points credit<br/>
+            &nbsp; '074' = Adjusted points debit<br/> &nbsp; '075' = Closed decrease
+            credit<br/> &nbsp; '076' = Bought points debit<br/> &nbsp; '077' = Grace
+            expiration points credit<br/> &nbsp; '100–998' = User-defined monetary
+            transactions
+          example: '050'
+        transactionDescription:
+          maxLength: 15
+          type: string
+          description: Description assigned to the transaction when it was entered.
+          example: EARNED POINTS C
+  securitySchemes:
+    Authorization:
+      scheme: bearer
+      type: http

@@ -1,0 +1,2279 @@
+openapi: 3.0.0
+info:
+  title: CCA
+  description: "The Card Control and Alerts API offers functions to control payment cards from mobile devices or other channels including, registering a card, setting card policies, and retrieving a registered card list.(all time zones are in UTC)"
+  version: 1.0.0-Sep-2025
+servers:
+- url: https://swaggerhub.onefiserv.net/virts/DEV_STUDIO_LATEST/CCA/1.0.0-Sep-2025
+  description: SwaggerHub API Auto Mocking
+security:
+- BearerAuth: []
+tags:
+- name: CCA
+  description: Card Control and Alerts for Debit and Credit cards.
+paths:
+  /v1/cards/preload:
+    post:
+      tags:
+      - CCA
+      description: This API retrieves a one or a list of cards and its details for the requested accounts . Applicable for Debit and Credit .
+      operationId: getCardsListV1
+      requestBody:
+        description: cardListRequest
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CardsListRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CardsListResponse"
+        "400":
+          description: Invalid Request
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/4xxErrorV2"
+        "401":
+          description: Unauthorized access
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/4xxErrorV2"
+        "403":
+          description: Forbidden
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/4xxErrorV2"
+        "404":
+          description: Not Found
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/4xxErrorV2"
+        "405":
+          description: Method Not Allowed
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/4xxErrorV2"
+        "406":
+          description: Unacceptable
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/4xxErrorV2"
+        "415":
+          description: Unsupported Media Type
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/4xxErrorV2"
+        "422":
+          description: Unprocessable Entity
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/4xxErrorV2"
+        "429":
+          description: Too Many Requests
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/4xxErrorV2"
+        "500":
+          description: Internal Server Error
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errorResponse:
+                    code: 500-01
+                    message: internal server error
+                    developerInfo:
+                      developerMessage: internal server error
+                      moreInfo: There was a problem handling your request. Please try again. If the problem persists please contact Support
+                      messageid: 25557-84290371-1
+      x-child-product-name: Card Controls & Alerts
+      x-group-name: Details
+      x-proxy-name: Get cards list v1
+components:
+  schemas:
+    CardsListRequest:
+      required:
+      - accountList
+      - binList
+      - fiToken
+      type: object
+      properties:
+        fiToken:
+          type: string
+          description: FI Token is unique ID associated to each client by Card hub. FI Setup from mConsole.
+          example: "12345678"
+        subscriberReferenceId:
+          type: string
+          description: Unique ID provided to user when user completes the registration on CardHub app.
+          example: subRefId-1234-abcd
+        accountList:
+          type: array
+          description: List of accounts can contain either Debit and Credit type. Maximum 20 accounts can be provided in the list.
+          items:
+            $ref: "#/components/schemas/AccountListDetails"
+        binList:
+          type: array
+          description: List of BINs to be provided. Maximum 50 bins can be provided in one request.
+          items:
+            $ref: "#/components/schemas/BinListDetails"
+    AccountListDetails:
+      title: AccountListDetails
+      type: object
+      properties:
+        accountNumber:
+          maxLength: 20
+          type: string
+          description: Identifies account of the cardholder.
+          example: "123456789"
+        accountType:
+          type: string
+          description: "Identifies the account type of the account number. CHK=Checking, SAV=Saving, CC=Credit Card"
+          example: CHK
+          enum:
+          - CHK
+          - SAV
+          - CC
+    BinListDetails:
+      title: BinListDetails
+      type: object
+      properties:
+        bin:
+          maxLength: 12
+          minLength: 6
+          type: string
+          description: Prefix of the Card.
+          example: "123456"
+        clientId:
+          maxLength: 8
+          minLength: 4
+          type: string
+          description: Client ID of the card. It supports only numeric digits.
+          example: "12345678"
+    CardsListResponse:
+      type: object
+      properties:
+        fiToken:
+          type: string
+          description: FI Token is unique ID associated to each client by Card hub. It would echo the value of the request.
+          example: "12345678"
+        subscriberReferenceId:
+          type: string
+          description: Unique ID provided to user when user completes the registration on CardHub app.It would echo the value of the request.
+          example: subRefId-1234-abcd
+        cardsList:
+          type: array
+          items:
+            $ref: "#/components/schemas/cardsListDetails"
+    cardsListDetails:
+      type: object
+      properties:
+        cardNumber:
+          type: string
+          description: Card number between 16 to 19 digits.
+          example: "4000200030004000"
+        cardExpiry:
+          type: string
+          description: Date on which the card expires.
+          format: MM/YY
+          example: 10/23
+        cardholderName:
+          maxLength: 26
+          type: string
+          description: Name of the cardholder.
+          example: JOHN DOE
+        bin:
+          maxLength: 12
+          minLength: 6
+          type: string
+          description: Prefix of the card number.
+          example: "123456"
+        cardStatus:
+          type: string
+          description: "Status of card. Valid values for Debit - ACTIVE, CAPTURE, DEACTIVATE, ISSUED and RESTRICTED. Valid values for Credit - BLOCKED_FROM_AUTHORIZATION, NOT_ACTIVE, LOST_OR_STOLEN, FRAUD_DETECTED, NORMAL."
+          example: ACTIVE
+          enum:
+          - ACTIVE
+          - CAPTURE
+          - DEACTIVATE
+          - ISSUED
+          - RESTRICTED
+          - BLOCKED_FROM_AUTHORIZATION
+          - NOT_ACTIVE
+          - LOST_OR_STOLEN
+          - FRAUD_DETECTED
+          - NORMAL
+        cardActivationStatus:
+          type: string
+          description: Activation status of a card.
+          example: NOT_ACTIVATED
+          enum:
+          - NOT_ACTIVATED
+          - ACTIVATED
+          - ACTVN_BEFORE_AVAILABLE_DATE
+          - CARD_RECORD_NOT_FOUND
+          - CARD_LOST_OR_STOLEN
+          - CARD_CLOSED
+          - NO_ACTIVATION_REQUIRED
+          - ACTIVATION_REQUIRED
+          - EXP_DATE_NOT_MATCH
+          - ALREADY_ACTIVATED
+          - ATTEMPT_AFTER_DEADLINE
+          - MAX_ATTEMPTS_EXCEEDED
+          - CALLER_ID_INVALID
+          - ACTIVATION_CODE_INVALID
+          - PIN_CHECK_NOT_PERFORMED
+          - INVALID_ACTIVATION_METHOD
+          - IVR_AUTH_FAILED
+    Warning:
+      type: object
+      properties:
+        message:
+          type: string
+          description: An explanation specific to this occurrence of the problem.
+        spanId:
+          type: string
+          description: Id generated on each service.
+        traceId:
+          type: string
+          description: Id generated from a request on the first service and passed to other downstream services.
+        warningDetails:
+          type: array
+          description: List of multiple errors that may cause/trigger the general error.
+          items:
+            $ref: "#/components/schemas/WarningDetail"
+    WarningUpdateDetail:
+      type: object
+      properties:
+        code:
+          type: string
+          description: "Unique code for error [artifact Id] - [code of the error(logic, action, etc)]."
+        detail:
+          type: string
+          description: Details of the error.
+          example: External card type code is invalid.
+        spanId:
+          type: string
+          description: Id generated per request on each service.
+        timestamp:
+          type: string
+          description: Date time of the error from a services.
+    WarningDetail:
+      type: object
+      properties:
+        code:
+          type: string
+          description: "Unique code for error [artifact Id] - [code of the error(logic, action, etc)]."
+        detail:
+          type: string
+          description: Details of the error.
+          example: "Please refine your search criteria, Search results are >=250"
+        spanId:
+          type: string
+          description: Id generated per request on each service.
+        timestamp:
+          type: string
+          description: Date time of the error from a services.
+    WarningV2:
+      type: object
+      properties:
+        message:
+          type: string
+          description: An explanation specific to this occurrence of the problem.
+        spanId:
+          type: string
+          description: Id generated on each service.
+        traceId:
+          type: string
+          description: Id generated from a request on the first service and passed to other downstream services.
+        warningDetails:
+          type: array
+          description: List of multiple errors that may cause/trigger the general error.
+          items:
+            $ref: "#/components/schemas/WarningDetailV2"
+    WarningReplacement:
+      type: object
+      properties:
+        message:
+          type: string
+          description: An explanation specific to this occurrence of the problem.
+          example: 9000:PLASTIC ID MISSING OR INVALID!
+        warningDetails:
+          type: array
+          description: List of multiple errors that may cause/trigger the general error.
+          items:
+            $ref: "#/components/schemas/WarningReplacementDetail"
+    WarningReplacementDetail:
+      type: object
+      properties:
+        code:
+          type: string
+          description: "Unique code for error [artifact Id] - [code of the error(logic, action, etc)]."
+          example: "705"
+        detail:
+          type: string
+          description: Details of the error.
+          example: 9000:PLASTIC ID MISSING OR INVALID!
+        timestamp:
+          type: string
+          description: Date time of the error from a services.
+          example: 2023-01-11T02:36:54.620+0000
+    WarningDetailV2:
+      type: object
+      properties:
+        code:
+          type: string
+          description: "Unique code for error [artifact Id] - [code of the error(logic, action, etc)]."
+        detail:
+          type: string
+          description: Details of the error.
+          example: "Please refine your search criteria, Search results are >=250"
+        spanId:
+          type: string
+          description: Id generated per request on each service.
+        timestamp:
+          type: string
+          description: Date time of the error from a services.
+    "400Error":
+      type: object
+      properties:
+        type:
+          type: string
+          description: An URI reference that identifies the problem type
+          example: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title:
+          type: string
+          description: Short summary of the problem.
+          example: Bad Request
+        detail:
+          type: string
+          description: Specific explanation to the occurrence of the problem.
+          example: CONTENT-TYPE header required. Supported content-type is application/json
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurrence of the problem.
+          example: /api/basepath
+        status:
+          type: number
+          description: The HTTP status code generated by the origin server for this occurrence of the problem.
+          example: 400
+    "401Error":
+      type: object
+      properties:
+        type:
+          type: string
+          description: An URI reference that identifies the problem type
+          example: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title:
+          type: string
+          description: Short summary of the problem.
+          example: Unauthorized
+        detail:
+          type: string
+          description: Specific explanation to the occurrence of the problem.
+          example: Invalid Access Token
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurrence of the problem.
+          example: /api/basepath
+        status:
+          type: number
+          description: The HTTP status code generated by the origin server for this occurrence of the problem.
+          example: 401
+    "403Error":
+      type: object
+      properties:
+        type:
+          type: string
+          description: An URI reference that identifies the problem type
+          example: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title:
+          type: string
+          description: Short summary of the problem.
+          example: Forbidden
+        detail:
+          type: string
+          description: Specific explanation to the occurrence of the problem.
+          example: Authorization failure
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurrence of the problem.
+          example: /api/basepath
+        status:
+          type: number
+          description: The HTTP status code generated by the origin server for this occurrence of the problem.
+          example: 403
+    "404Error":
+      type: object
+      properties:
+        type:
+          type: string
+          description: An URI reference that identifies the problem type
+          example: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title:
+          type: string
+          description: Short summary of the problem.
+          example: Resource Not found
+        detail:
+          type: string
+          description: Specific explanation to the occurrence of the problem.
+          example: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurrence of the problem.
+          example: /api/basepath
+        status:
+          type: number
+          description: The HTTP status code generated by the origin server for this occurrence of the problem.
+          example: 404
+    "415Error":
+      type: object
+      properties:
+        type:
+          type: string
+          description: An URI reference that identifies the problem type
+          example: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title:
+          type: string
+          description: Short summary of the problem.
+          example: Unsupported Media Type
+        detail:
+          type: string
+          description: Specific explanation to the occurrence of the problem.
+          example: unsupported Media Type
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurrence of the problem.
+          example: /api/basepath
+        status:
+          type: number
+          description: The HTTP status code generated by the origin server for this occurrence of the problem.
+          example: 415
+    "4xxError":
+      type: object
+      properties:
+        type:
+          type: string
+          description: An URI reference that identifies the problem type
+          example: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title:
+          type: string
+          description: Short summary of the problem.
+          example: Invalid Request
+        detail:
+          type: string
+          description: Specific explanation to the occurrence of the problem.
+          example: We had a problem getting your credit and debit card information.
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurrence of the problem.
+          example: /v1/cards/details
+        status:
+          type: number
+          description: The HTTP status code generated by the origin server for this occurrence of the problem.
+          example: 400
+    "4xxErrorV2":
+      type: object
+      properties:
+        type:
+          type: string
+          description: An URI reference that identifies the problem type
+          example: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title:
+          type: string
+          description: Short summary of the problem.
+          example: Invalid Request
+        detail:
+          type: string
+          description: Specific explanation to the occurrence of the problem.
+          example: We had a problem getting your credit and debit card information.
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurrence of the problem.
+          example: /v1/cards/details
+        status:
+          type: number
+          description: The HTTP status code generated by the origin server for this occurrence of the problem.
+          example: 400
+  parameters:
+    userIdParam:
+      name: userId
+      in: header
+      description: Optional. User on behalf of whom the request is being made. userId must be alphanumeric.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+      example: johndoe
+    authorizationParam:
+      name: Authorization
+      in: header
+      description: "Retrieve an access token through the Access Token API. Access token is required in every request. To view documentation on access token <a href=\"../docs/?path=docs/gettingstarted/access-tokens.md\" title=\"Click to open\">click here.</a> Tokens expire after 15 minutes. Provide the value as follows in the header. Authorization: Bearer <Access Token Value>"
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+      example: Bearer USlfM8dilzKZPcuGGP3BfVLd7Snk
+    clientIdParam:
+      name: x-fapi-financial-id
+      in: header
+      description: Required. Provide 8 digit client id
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+      example: 12345678
+  examples:
+    CardStockAndExpiration400:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unauthorized
+        detail: Invalid Access Token
+        instance: /v1/cards/cardStockAndExpiration
+        status: 400
+    CardStockAndExpiration401:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unauthorized
+        detail: Invalid Access Token
+        instance: /v1/cards/cardStockAndExpiration
+        status: 401
+    CardStockAndExpiration403:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Forbidden
+        detail: Unauthorized to perform request.
+        instance: /v1/cards/cardStockAndExpiration
+        status: 403
+    CardStockAndExpiration404:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Resource Not Found
+        detail: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance: /v1/cards/cardStockAndExpiration
+        status: 404
+    CardStockAndExpiration405:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Method Not Allowed
+        detail: The HTTP method requested is not acceptable for this endpoint.
+        instance: /v1/cards/cardStockAndExpiration
+        status: 405
+    CardStockAndExpiration406:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Not Acceptable
+        detail: The content type being requested is not provided by this service.
+        instance: /v1/cards/cardStockAndExpiration
+        status: 406
+    CardStockAndExpiration415:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unsupported Media type
+        detail: The payload format is unsupported.
+        instance: /v1/cards/cardStockAndExpiration
+        status: 415
+    CardStockAndExpiration422:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unprocessable Content
+        detail: The service was not able to process this request.
+        instance: /v1/cards/cardStockAndExpiration
+        status: 422
+    CardStockAndExpiration429:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Too Many Requests
+        detail: We had a problem getting your credit and debit card information.
+        instance: /v1/cards/cardStockAndExpiration
+        status: 429
+    InstantIssuance400:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Bad Request
+        detail: Invalid input cardholderName.
+        instance: /v1/cards/instantIssuance
+        status: 400
+    InstantIssuance401:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unauthorized
+        detail: Invalid Access Token
+        instance: /v1/cards/instantIssuance
+        status: 401
+    InstantIssuance403:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Forbidden
+        detail: Unauthorized to perform request.
+        instance: /v1/cards/instantIssuance
+        status: 403
+    InstantIssuance404:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Resource Not Found
+        detail: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance: /v1/cards/instantIssuance
+        status: 404
+    InstantIssuance405:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Method Not Allowed
+        detail: The HTTP method requested is not acceptable for this endpoint.
+        instance: /v1/cards/instantIssuance
+        status: 405
+    InstantIssuance406:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Not Acceptable
+        detail: The content type being requested is not provided by this service.
+        instance: /v1/cards/instantIssuance
+        status: 406
+    InstantIssuance415:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unsupported Media type
+        detail: The payload format is unsupported.
+        instance: /v1/cards/instantIssuance
+        status: 415
+    InstantIssuance422:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unprocessable Content
+        detail: The service was not able to process this request.
+        instance: /v1/cards/instantIssuance
+        status: 422
+    InstantIssuance429:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Too Many Requests
+        detail: We had a problem getting your credit and debit card information.
+        instance: /v1/cards/instantIssuance
+        status: 429
+    ReplacementOrder400:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Bad Request
+        detail: Invalid input cardholderName.
+        instance: /v3/cards/replacement
+        status: 400
+    ReplacementOrder401:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unauthorized
+        detail: Invalid Access Token
+        instance: /v3/cards/replacement
+        status: 401
+    ReplacementOrder403:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Forbidden
+        detail: Unauthorized to perform request.
+        instance: /v3/cards/replacement
+        status: 403
+    ReplacementOrder404:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Resource Not Found
+        detail: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance: /v3/cards/replacement
+        status: 404
+    ReplacementOrder405:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Method Not Allowed
+        detail: The HTTP method requested is not acceptable for this endpoint.
+        instance: /v3/cards/replacement
+        status: 405
+    ReplacementOrder406:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Not Acceptable
+        detail: The content type being requested is not provided by this service.
+        instance: /v3/cards/replacement
+        status: 406
+    ReplacementOrder415:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unsupported Media type
+        detail: The payload format is unsupported.
+        instance: /v3/cards/replacement
+        status: 415
+    ReplacementOrder422:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unprocessable Content
+        detail: The service was not able to process this request.
+        instance: /v3/cards/replacement
+        status: 422
+    ReplacementOrder429:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Too Many Requests
+        detail: We had a problem getting your credit and debit card information.
+        instance: /v3/cards/replacement
+        status: 429
+    ReplacementV2Order400:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Bad Request
+        detail: Invalid input cardholderName.
+        instance: /v2/cards/replacement
+        status: 400
+    ReplacementV2Order401:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unauthorized
+        detail: Invalid Access Token
+        instance: /v2/cards/replacement
+        status: 401
+    ReplacementV2Order403:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Forbidden
+        detail: Unauthorized to perform request.
+        instance: /v2/cards/replacement
+        status: 403
+    ReplacementV2Order404:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Resource Not Found
+        detail: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance: /v2/cards/replacement
+        status: 404
+    ReplacementV2Order405:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Method Not Allowed
+        detail: The HTTP method requested is not acceptable for this endpoint.
+        instance: /v2/cards/replacement
+        status: 405
+    ReplacementV2Order406:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Not Acceptable
+        detail: The content type being requested is not provided by this service.
+        instance: /v2/cards/replacement
+        status: 406
+    ReplacementV2Order415:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unsupported Media type
+        detail: The payload format is unsupported.
+        instance: /v2/cards/replacement
+        status: 415
+    ReplacementV2Order422:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unprocessable Content
+        detail: The service was not able to process this request.
+        instance: /v2/cards/replacement
+        status: 422
+    ReplacementV2Order429:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Too Many Requests
+        detail: We had a problem getting your credit and debit card information.
+        instance: /v2/cards/replacement
+        status: 429
+    CardholdersDemographicsSearch400:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Invalid Request
+        detail: Either cardNumber or nonTransToken should be included
+        instance: /v3/cardholders/demographics/search
+        status: 400
+    CardholdersDemographicsSearch401:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unauthorized
+        detail: Invalid Access Token
+        instance: /v3/cardholders/demographics/search
+        status: 401
+    CardholdersDemographicsSearch403:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Forbidden
+        detail: Unauthorized to perform request.
+        instance: /v3/cardholders/demographics/search
+        status: 403
+    CardholdersDemographicsSearch404:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Resource Not Found
+        detail: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance: /v3/cardholders/demographics/search
+        status: 404
+    CardholdersDemographicsSearch405:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Method Not Allowed
+        detail: The HTTP method requested is not acceptable for this endpoint.
+        instance: /v3/cardholders/demographics/search
+        status: 405
+    CardholdersDemographicsSearch406:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Not Acceptable
+        detail: The content type being requested is not provided by this service.
+        instance: /v3/cardholders/demographics/search
+        status: 406
+    CardholdersDemographicsSearch415:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unsupported Media type
+        detail: The payload format is unsupported.
+        instance: /v3/cardholders/demographics/search
+        status: 415
+    CardholdersDemographicsSearch422:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unprocessable Content
+        detail: The service was not able to process this request.
+        instance: /v3/cardholders/demographics/search
+        status: 422
+    CardholdersDemographicsSearch429:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Too Many Requests
+        detail: We had a problem getting your credit and debit card information.
+        instance: /v3/cardholders/demographics/search
+        status: 429
+    CardholdersAdditionalInfoSearch400:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Invalid Request
+        detail: Either cardNumber or nonTransToken should be included
+        instance: /v1/cardholders/additionalInfo/search
+        status: 400
+    CardholdersAdditionalInfoSearch401:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unauthorized
+        detail: Invalid Access Token
+        instance: /v1/cardholders/additionalInfo/search
+        status: 401
+    CardholdersAdditionalInfoSearch403:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Forbidden
+        detail: Unauthorized to perform request.
+        instance: /v1/cardholders/additionalInfo/search
+        status: 403
+    CardholdersAdditionalInfoSearch404:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Resource Not Found
+        detail: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance: /v1/cardholders/additionalInfo/search
+        status: 404
+    CardholdersAdditionalInfoSearch405:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Method Not Allowed
+        detail: The HTTP method requested is not acceptable for this endpoint.
+        instance: /v1/cardholders/additionalInfo/search
+        status: 405
+    CardholdersAdditionalInfoSearch406:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Not Acceptable
+        detail: The content type being requested is not provided by this service.
+        instance: /v1/cardholders/additionalInfo/search
+        status: 406
+    CardholdersAdditionalInfoSearch415:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unsupported Media type
+        detail: The payload format is unsupported.
+        instance: /v1/cardholders/additionalInfo/search
+        status: 415
+    CardholdersAdditionalInfoSearch422:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unprocessable Content
+        detail: The service was not able to process this request.
+        instance: /v1/cardholders/additionalInfo/search
+        status: 422
+    CardholdersAdditionalInfoSearch429:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Too Many Requests
+        detail: We had a problem getting your credit and debit card information.
+        instance: /v1/cardholders/additionalInfo/search
+        status: 429
+    AtmPreferencesSearch400:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Invalid Request
+        detail: Either cardNumber or nonTransToken should be included
+        instance: /v1/cards/atmPreferences/search
+        status: 400
+    AtmPreferencesSearch401:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unauthorized
+        detail: Invalid Access Token
+        instance: /v1/cards/atmPreferences/search
+        status: 401
+    AtmPreferencesSearch403:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Forbidden
+        detail: Unauthorized to perform request.
+        instance: /v1/cards/atmPreferences/search
+        status: 403
+    AtmPreferencesSearch404:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Resource Not Found
+        detail: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance: /v1/cards/atmPreferences/search
+        status: 404
+    AtmPreferencesSearch405:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Method Not Allowed
+        detail: The HTTP method requested is not acceptable for this endpoint.
+        instance: /v1/cards/atmPreferences/search
+        status: 405
+    AtmPreferencesSearch406:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Not Acceptable
+        detail: The content type being requested is not provided by this service.
+        instance: /v1/cards/atmPreferences/search
+        status: 406
+    AtmPreferencesSearch415:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unsupported Media type
+        detail: The payload format is unsupported.
+        instance: /v1/cards/atmPreferences/search
+        status: 415
+    AtmPreferencesSearch422:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unprocessable Content
+        detail: The service was not able to process this request.
+        instance: /v1/cards/atmPreferences/search
+        status: 422
+    AtmPreferencesSearch429:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Too Many Requests
+        detail: We had a problem getting your credit and debit card information.
+        instance: /v1/cards/atmPreferences/search
+        status: 429
+    CardholdersDemographicsV4Search400:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Invalid Request
+        detail: Either cardNumber or nonTransToken should be included
+        instance: /v4/cardholders/demographics/search
+        status: 400
+    CardholdersDemographicsV4Search401:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unauthorized
+        detail: Invalid Access Token
+        instance: /v4/cardholders/demographics/search
+        status: 401
+    CardholdersDemographicsV4Search403:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Forbidden
+        detail: Unauthorized to perform request.
+        instance: /v4/cardholders/demographics/search
+        status: 403
+    CardholdersDemographicsV4Search404:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Resource Not Found
+        detail: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance: /v4/cardholders/demographics/search
+        status: 404
+    CardholdersDemographicsV4Search405:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Method Not Allowed
+        detail: The HTTP method requested is not acceptable for this endpoint.
+        instance: /v4/cardholders/demographics/search
+        status: 405
+    CardholdersDemographicsV4Search406:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Not Acceptable
+        detail: The content type being requested is not provided by this service.
+        instance: /v4/cardholders/demographics/search
+        status: 406
+    CardholdersDemographicsV4Search415:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unsupported Media type
+        detail: The payload format is unsupported.
+        instance: /v4/cardholders/demographics/search
+        status: 415
+    CardholdersDemographicsV4Search422:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unprocessable Content
+        detail: The service was not able to process this request.
+        instance: /v4/cardholders/demographics/search
+        status: 422
+    CardholdersDemographicsV4Search429:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Too Many Requests
+        detail: We had a problem getting your credit and debit card information.
+        instance: /v4/cardholders/demographics/search
+        status: 429
+    CardholdersContact400:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Invalid Request
+        detail: Either cardNumber or nonTransToken should be included
+        instance: /v3/cardholders/contact
+        status: 400
+    CardholdersContact401:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unauthorized
+        detail: Invalid Access Token
+        instance: /v3/cardholders/contact
+        status: 401
+    CardholdersContact403:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Forbidden
+        detail: Unauthorized to perform request.
+        instance: /v3/cardholders/contact
+        status: 403
+    CardholdersContact404:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Resource Not Found
+        detail: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance: /v3/cardholders/contact
+        status: 404
+    CardholdersContact405:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Method Not Allowed
+        detail: The HTTP method requested is not acceptable for this endpoint.
+        instance: /v3/cardholders/contact
+        status: 405
+    CardholdersContact406:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Not Acceptable
+        detail: The content type being requested is not provided by this service.
+        instance: /v3/cardholders/contact
+        status: 406
+    CardholdersContact415:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unsupported Media type
+        detail: The payload format is unsupported.
+        instance: /v3/cardholders/contact
+        status: 415
+    CardholdersContact422:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unprocessable Content
+        detail: The service was not able to process this request.
+        instance: /v3/cardholders/contact
+        status: 422
+    CardholdersContact429:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Too Many Requests
+        detail: We had a problem getting your credit and debit card information.
+        instance: /v3/cardholders/contact
+        status: 429
+    CardholdersAddress400:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Invalid Request
+        detail: Either cardNumber or nonTransToken should be included
+        instance: /v2/cardholders/address
+        status: 400
+    CardholdersAddress401:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unauthorized
+        detail: Invalid Access Token
+        instance: /v2/cardholders/address
+        status: 401
+    CardholdersAddress403:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Forbidden
+        detail: Unauthorized to perform request.
+        instance: /v2/cardholders/address
+        status: 403
+    CardholdersAddress404:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Resource Not Found
+        detail: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance: /v2/cardholders/address
+        status: 404
+    CardholdersAddress405:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Method Not Allowed
+        detail: The HTTP method requested is not acceptable for this endpoint.
+        instance: /v2/cardholders/address
+        status: 405
+    CardholdersAddress406:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Not Acceptable
+        detail: The content type being requested is not provided by this service.
+        instance: /v2/cardholders/address
+        status: 406
+    CardholdersAddress415:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unsupported Media type
+        detail: The payload format is unsupported.
+        instance: /v2/cardholders/address
+        status: 415
+    CardholdersAddress422:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unprocessable Content
+        detail: The service was not able to process this request.
+        instance: /v2/cardholders/address
+        status: 422
+    CardholdersAddress429:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Too Many Requests
+        detail: We had a problem getting your credit and debit card information.
+        instance: /v2/cardholders/address
+        status: 429
+    V3CardholdersAddress400:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Invalid Request
+        detail: Either cardNumber or nonTransToken should be included
+        instance: /v3/cardholders/address
+        status: 400
+    V3CardholdersAddress401:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unauthorized
+        detail: Invalid Access Token
+        instance: /v3/cardholders/address
+        status: 401
+    V3CardholdersAddress403:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Forbidden
+        detail: Unauthorized to perform request.
+        instance: /v3/cardholders/address
+        status: 403
+    V3CardholdersAddress404:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Resource Not Found
+        detail: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance: /v3/cardholders/address
+        status: 404
+    V3CardholdersAddress405:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Method Not Allowed
+        detail: The HTTP method requested is not acceptable for this endpoint.
+        instance: /v3/cardholders/address
+        status: 405
+    V3CardholdersAddress406:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Not Acceptable
+        detail: The content type being requested is not provided by this service.
+        instance: /v3/cardholders/address
+        status: 406
+    V3CardholdersAddress415:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unsupported Media type
+        detail: The payload format is unsupported.
+        instance: /v3/cardholders/address
+        status: 415
+    V3CardholdersAddress422:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unprocessable Content
+        detail: The service was not able to process this request.
+        instance: /v3/cardholders/address
+        status: 422
+    V3CardholdersAddress429:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Too Many Requests
+        detail: We had a problem getting your credit and debit card information.
+        instance: /v3/cardholders/address
+        status: 429
+    CardholdersAdditionalInfo400:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Invalid Request
+        detail: Either cardNumber or nonTransToken should be included
+        instance: /v2/cardholders/additionalInfo
+        status: 400
+    CardholdersAdditionalInfo401:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unauthorized
+        detail: Invalid Access Token
+        instance: /v2/cardholders/additionalInfo
+        status: 401
+    CardholdersAdditionalInfo403:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Forbidden
+        detail: Unauthorized to perform request.
+        instance: /v2/cardholders/additionalInfo
+        status: 403
+    CardholdersAdditionalInfo404:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Resource Not Found
+        detail: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance: /v2/cardholders/additionalInfo
+        status: 404
+    CardholdersAdditionalInfo405:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Method Not Allowed
+        detail: The HTTP method requested is not acceptable for this endpoint.
+        instance: /v2/cardholders/additionalInfo
+        status: 405
+    CardholdersAdditionalInfo406:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Not Acceptable
+        detail: The content type being requested is not provided by this service.
+        instance: /v2/cardholders/additionalInfo
+        status: 406
+    CardholdersAdditionalInfo415:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unsupported Media type
+        detail: The payload format is unsupported.
+        instance: /v2/cardholders/additionalInfo
+        status: 415
+    CardholdersAdditionalInfo422:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unprocessable Content
+        detail: The service was not able to process this request.
+        instance: /v2/cardholders/additionalInfo
+        status: 422
+    CardholdersAdditionalInfo429:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Too Many Requests
+        detail: We had a problem getting your credit and debit card information.
+        instance: /v2/cardholders/additionalInfo
+        status: 429
+    V3CardholdersAdditionalInfo400:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Invalid Request
+        detail: Either cardNumber or nonTransToken should be included
+        instance: /v3/cardholders/additionalInfo
+        status: 400
+    V3CardholdersAdditionalInfo401:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unauthorized
+        detail: Invalid Access Token
+        instance: /v3/cardholders/additionalInfo
+        status: 401
+    V3CardholdersAdditionalInfo403:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Forbidden
+        detail: Unauthorized to perform request.
+        instance: /v3/cardholders/additionalInfo
+        status: 403
+    V3CardholdersAdditionalInfo404:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Resource Not Found
+        detail: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance: /v3/cardholders/additionalInfo
+        status: 404
+    V3CardholdersAdditionalInfo405:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Method Not Allowed
+        detail: The HTTP method requested is not acceptable for this endpoint.
+        instance: /v3/cardholders/additionalInfo
+        status: 405
+    V3CardholdersAdditionalInfo406:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Not Acceptable
+        detail: The content type being requested is not provided by this service.
+        instance: /v3/cardholders/additionalInfo
+        status: 406
+    V3CardholdersAdditionalInfo415:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unsupported Media type
+        detail: The payload format is unsupported.
+        instance: /v3/cardholders/additionalInfo
+        status: 415
+    V3CardholdersAdditionalInfo422:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unprocessable Content
+        detail: The service was not able to process this request.
+        instance: /v3/cardholders/additionalInfo
+        status: 422
+    V3CardholdersAdditionalInfo429:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Too Many Requests
+        detail: We had a problem getting your credit and debit card information.
+        instance: /v3/cardholders/additionalInfo
+        status: 429
+    AtmPreferences400:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Invalid Request
+        detail: Either cardNumber or nonTransToken should be included
+        instance: /v2/cards/atmPreferences
+        status: 400
+    AtmPreferences401:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unauthorized
+        detail: Invalid Access Token
+        instance: /v2/cards/atmPreferences
+        status: 401
+    AtmPreferences403:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Forbidden
+        detail: Unauthorized to perform request.
+        instance: /v2/cards/atmPreferences
+        status: 403
+    AtmPreferences404:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Resource Not Found
+        detail: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance: /v2/cards/atmPreferences
+        status: 404
+    AtmPreferences405:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Method Not Allowed
+        detail: The HTTP method requested is not acceptable for this endpoint.
+        instance: /v2/cards/atmPreferences
+        status: 405
+    AtmPreferences406:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Not Acceptable
+        detail: The content type being requested is not provided by this service.
+        instance: /v2/cards/atmPreferences
+        status: 406
+    AtmPreferences415:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unsupported Media type
+        detail: The payload format is unsupported.
+        instance: /v2/cards/atmPreferences
+        status: 415
+    AtmPreferences422:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unprocessable Content
+        detail: The service was not able to process this request.
+        instance: /v2/cards/atmPreferences
+        status: 422
+    AtmPreferences429:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Too Many Requests
+        detail: We had a problem getting your credit and debit card information.
+        instance: /v2/cards/atmPreferences
+        status: 429
+    AccountsSearch400:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Invalid Request
+        detail: Either cardNumber or nonTransToken should be included
+        instance: /v2/cards/accounts/search
+        status: 400
+    AccountsSearch401:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unauthorized
+        detail: Invalid Access Token
+        instance: /v2/cards/accounts/search
+        status: 401
+    AccountsSearch403:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Forbidden
+        detail: Unauthorized to perform request.
+        instance: /v2/cards/accounts/search
+        status: 403
+    AccountsSearch404:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Resource Not Found
+        detail: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance: /v2/cards/accounts/search
+        status: 404
+    AccountsSearch405:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Method Not Allowed
+        detail: The HTTP method requested is not acceptable for this endpoint.
+        instance: /v2/cards/accounts/search
+        status: 405
+    AccountsSearch406:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Not Acceptable
+        detail: The content type being requested is not provided by this service.
+        instance: /v2/cards/accounts/search
+        status: 406
+    AccountsSearch415:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unsupported Media type
+        detail: The payload format is unsupported.
+        instance: /v2/cards/accounts/search
+        status: 415
+    AccountsSearch422:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unprocessable Content
+        detail: The service was not able to process this request.
+        instance: /v2/cards/accounts/search
+        status: 422
+    AccountsSearch429:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Too Many Requests
+        detail: We had a problem getting your credit and debit card information.
+        instance: /v2/cards/accounts/search
+        status: 429
+    AccountsAssociationsAdd400:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Invalid Request
+        detail: Either cardNumber or nonTransToken should be included
+        instance: /v2/cards/accounts/associations
+        status: 400
+    AccountsAssociationsAdd401:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unauthorized
+        detail: Invalid Access Token
+        instance: /v2/cards/accounts/associations
+        status: 401
+    AccountsAssociationsAdd403:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Forbidden
+        detail: Unauthorized to perform request.
+        instance: /v2/cards/accounts/associations
+        status: 403
+    AccountsAssociationsAdd404:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Resource Not Found
+        detail: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance: /v2/cards/accounts/associations
+        status: 404
+    AccountsAssociationsAdd405:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Method Not Allowed
+        detail: The HTTP method requested is not acceptable for this endpoint.
+        instance: /v2/cards/accounts/associations
+        status: 405
+    AccountsAssociationsAdd406:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Not Acceptable
+        detail: The content type being requested is not provided by this service.
+        instance: /v2/cards/accounts/associations
+        status: 406
+    AccountsAssociationsAdd415:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unsupported Media type
+        detail: The payload format is unsupported.
+        instance: /v2/cards/accounts/associations
+        status: 415
+    AccountsAssociationsAdd422:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unprocessable Content
+        detail: The service was not able to process this request.
+        instance: /v2/cards/accounts/associations
+        status: 422
+    AccountsAssociationsAdd429:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Too Many Requests
+        detail: We had a problem getting your credit and debit card information.
+        instance: /v2/cards/accounts/associations
+        status: 429
+    AccountsAssociationsUpdate400:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Invalid Request
+        detail: Either cardNumber or nonTransToken should be included
+        instance: /v2/cards/accounts/associations
+        status: 400
+    AccountsAssociationsUpdate401:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unauthorized
+        detail: Invalid Access Token
+        instance: /v2/cards/accounts/associations
+        status: 401
+    AccountsAssociationsUpdate403:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Forbidden
+        detail: Unauthorized to perform request.
+        instance: /v2/cards/accounts/associations
+        status: 403
+    AccountsAssociationsUpdate404:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Resource Not Found
+        detail: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance: /v2/cards/accounts/associations
+        status: 404
+    AccountsAssociationsUpdate405:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Method Not Allowed
+        detail: The HTTP method requested is not acceptable for this endpoint.
+        instance: /v2/cards/accounts/associations
+        status: 405
+    AccountsAssociationsUpdate406:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Not Acceptable
+        detail: The content type being requested is not provided by this service.
+        instance: /v2/cards/accounts/associations
+        status: 406
+    AccountsAssociationsUpdate415:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unsupported Media type
+        detail: The payload format is unsupported.
+        instance: /v2/cards/accounts/associations
+        status: 415
+    AccountsAssociationsUpdate422:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unprocessable Content
+        detail: The service was not able to process this request.
+        instance: /v2/cards/accounts/associations
+        status: 422
+    AccountsAssociationsUpdate429:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Too Many Requests
+        detail: We had a problem getting your credit and debit card information.
+        instance: /v2/cards/accounts/associations
+        status: 429
+    AccountsUnassociate400:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Invalid Request
+        detail: Either cardNumber or nonTransToken should be included
+        instance: /v2/cards/accounts/associations/unassociate
+        status: 400
+    AccountsUnassociate401:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unauthorized
+        detail: Invalid Access Token
+        instance: /v2/cards/accounts/associations/unassociate
+        status: 401
+    AccountsUnassociate403:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Forbidden
+        detail: Unauthorized to perform request.
+        instance: /v2/cards/accounts/associations/unassociate
+        status: 403
+    AccountsUnassociate404:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Resource Not Found
+        detail: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance: /v2/cards/accounts/associations/unassociate
+        status: 404
+    AccountsUnassociate405:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Method Not Allowed
+        detail: The HTTP method requested is not acceptable for this endpoint.
+        instance: /v2/cards/accounts/associations/unassociate
+        status: 405
+    AccountsUnassociate406:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Not Acceptable
+        detail: The content type being requested is not provided by this service.
+        instance: /v2/cards/accounts/associations/unassociate
+        status: 406
+    AccountsUnassociate415:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unsupported Media type
+        detail: The payload format is unsupported.
+        instance: /v2/cards/accounts/associations/unassociate
+        status: 415
+    AccountsUnassociate422:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unprocessable Content
+        detail: The service was not able to process this request.
+        instance: /v2/cards/accounts/associations/unassociate
+        status: 422
+    AccountsUnassociate429:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Too Many Requests
+        detail: We had a problem getting your credit and debit card information.
+        instance: /v2/cards/accounts/associations/unassociate
+        status: 429
+    AuthDetailsV2Search400:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Invalid Request
+        detail: Either cardNumber or nonTransToken should be included
+        instance: /v2/cards/authDetails
+        status: 400
+    AuthDetailsV2Search401:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unauthorized
+        detail: Invalid Access Token
+        instance: /v2/cards/authDetails
+        status: 401
+    AuthDetailsV2Search403:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Forbidden
+        detail: Unauthorized to perform request.
+        instance: /v2/cards/authDetails
+        status: 403
+    AuthDetailsV2Search404:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Resource Not Found
+        detail: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance: /v2/cards/authDetails
+        status: 404
+    AuthDetailsV2Search405:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Method Not Allowed
+        detail: The HTTP method requested is not acceptable for this endpoint.
+        instance: /v2/cards/authDetails
+        status: 405
+    AuthDetailsV2Search406:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Not Acceptable
+        detail: The content type being requested is not provided by this service.
+        instance: /v2/cards/authDetails
+        status: 406
+    AuthDetailsV2Search415:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unsupported Media type
+        detail: The payload format is unsupported.
+        instance: /v2/cards/authDetails
+        status: 415
+    AuthDetailsV2Search422:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unprocessable Content
+        detail: The service was not able to process this request.
+        instance: /v2/cards/authDetails
+        status: 422
+    AuthDetailsV2Search429:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Too Many Requests
+        detail: We had a problem getting your credit and debit card information.
+        instance: /v2/cards/authDetails
+        status: 429
+    NonTransToken400:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Invalid Request
+        detail: Invalid Card Number
+        instance: /v1/cards/ntt
+        status: 400
+    NonTransToken401:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unauthorized
+        detail: Invalid Access Token
+        instance: /v1/cards/ntt
+        status: 401
+    NonTransToken403:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Forbidden
+        detail: Unauthorized to perform request.
+        instance: /v1/cards/ntt
+        status: 403
+    NonTransToken404:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Resource Not Found
+        detail: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance: /v1/cards/ntt
+        status: 404
+    NonTransToken405:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Method Not Allowed
+        detail: The HTTP method requested is not acceptable for this endpoint.
+        instance: /v1/cards/ntt
+        status: 405
+    NonTransToken406:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Not Acceptable
+        detail: The content type being requested is not provided by this service.
+        instance: /v1/cards/ntt
+        status: 406
+    NonTransToken415:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unsupported Media type
+        detail: The payload format is unsupported.
+        instance: /v1/cards/ntt
+        status: 415
+    NonTransToken422:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unprocessable Content
+        detail: The service was not able to process this request.
+        instance: /v1/cards/ntt
+        status: 422
+    NonTransToken429:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Too Many Requests
+        detail: We had a problem getting your credit and debit card information.
+        instance: /v1/cards/ntt
+        status: 429
+    V2LimitOpenToBuy400:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Invalid Request
+        detail: Either cardNumber or nonTransToken should be included
+        instance: /v2/cards/limits/openToBuy
+        status: 400
+    V2LimitOpenToBuy401:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unauthorized
+        detail: Invalid Access Token
+        instance: /v2/cards/limits/openToBuy
+        status: 401
+    V2LimitOpenToBuy403:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Forbidden
+        detail: Unauthorized to perform request.
+        instance: /v2/cards/limits/openToBuy
+        status: 403
+    V2LimitOpenToBuy404:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Resource Not Found
+        detail: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance: /v2/cards/limits/openToBuy
+        status: 404
+    V2LimitOpenToBuy405:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Method Not Allowed
+        detail: The HTTP method requested is not acceptable for this endpoint.
+        instance: /v2/cards/limits/openToBuy
+        status: 405
+    V2LimitOpenToBuy406:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Not Acceptable
+        detail: The content type being requested is not provided by this service.
+        instance: /v2/cards/limits/openToBuy
+        status: 406
+    V2LimitOpenToBuy415:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unsupported Media type
+        detail: The payload format is unsupported.
+        instance: /v2/cards/limits/openToBuy
+        status: 415
+    V2LimitOpenToBuy422:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unprocessable Content
+        detail: The service was not able to process this request.
+        instance: /v2/cards/limits/openToBuy
+        status: 422
+    V2LimitOpenToBuy429:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Too Many Requests
+        detail: We had a problem getting your debit card information.
+        instance: /v2/cards/limits/openToBuy
+        status: 429
+    V2LimitDefault400:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Invalid Request
+        detail: Either cardNumber or nonTransToken should be included
+        instance: /v2/cards/limits/default
+        status: 400
+    V2LimitDefault401:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unauthorized
+        detail: Invalid Access Token
+        instance: /v2/cards/limits/default
+        status: 401
+    V2LimitDefault403:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Forbidden
+        detail: Unauthorized to perform request.
+        instance: /v2/cards/limits/default
+        status: 403
+    V2LimitDefault404:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Resource Not Found
+        detail: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance: /v2/cards/limits/default
+        status: 404
+    V2LimitDefault405:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Method Not Allowed
+        detail: The HTTP method requested is not acceptable for this endpoint.
+        instance: /v2/cards/limits/default
+        status: 405
+    V2LimitDefault406:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Not Acceptable
+        detail: The content type being requested is not provided by this service.
+        instance: /v2/cards/limits/default
+        status: 406
+    V2LimitDefault415:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unsupported Media type
+        detail: The payload format is unsupported.
+        instance: /v2/cards/limits/default
+        status: 415
+    V2LimitDefault422:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unprocessable Content
+        detail: The service was not able to process this request.
+        instance: /v2/cards/limits/default
+        status: 422
+    V2LimitDefault429:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Too Many Requests
+        detail: We had a problem getting your debit card information.
+        instance: /v2/cards/limits/default
+        status: 429
+    V2LimitSearch400:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Invalid Request
+        detail: Either cardNumber or nonTransToken should be included
+        instance: /v2/cards/limits/search
+        status: 400
+    V2LimitSearch401:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unauthorized
+        detail: Invalid Access Token
+        instance: /v2/cards/limits/search
+        status: 401
+    V2LimitSearch403:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Forbidden
+        detail: Unauthorized to perform request.
+        instance: /v2/cards/limits/search
+        status: 403
+    V2LimitSearch404:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Resource Not Found
+        detail: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance: /v2/cards/limits/search
+        status: 404
+    V2LimitSearch405:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Method Not Allowed
+        detail: The HTTP method requested is not acceptable for this endpoint.
+        instance: /v2/cards/limits/search
+        status: 405
+    V2LimitSearch406:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Not Acceptable
+        detail: The content type being requested is not provided by this service.
+        instance: /v2/cards/limits/search
+        status: 406
+    V2LimitSearch415:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unsupported Media type
+        detail: The payload format is unsupported.
+        instance: /v2/cards/limits/search
+        status: 415
+    V2LimitSearch422:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unprocessable Content
+        detail: The service was not able to process this request.
+        instance: /v2/cards/limits/search
+        status: 422
+    V2LimitSearch429:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Too Many Requests
+        detail: We had a problem getting your debit card information.
+        instance: /v2/cards/limits/search
+        status: 429
+    V2LimitVelocity400:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Invalid Request
+        detail: Either cardNumber or nonTransToken should be included
+        instance: /v2/cards/limits/velocity
+        status: 400
+    V2LimitVelocity401:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unauthorized
+        detail: Invalid Access Token
+        instance: /v2/cards/limits/velocity
+        status: 401
+    V2LimitVelocity403:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Forbidden
+        detail: Unauthorized to perform request.
+        instance: /v2/cards/limits/velocity
+        status: 403
+    V2LimitVelocity404:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Resource Not Found
+        detail: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance: /v2/cards/limits/velocity
+        status: 404
+    V2LimitVelocity405:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Method Not Allowed
+        detail: The HTTP method requested is not acceptable for this endpoint.
+        instance: /v2/cards/limits/velocity
+        status: 405
+    V2LimitVelocity406:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Not Acceptable
+        detail: The content type being requested is not provided by this service.
+        instance: /v2/cards/limits/velocity
+        status: 406
+    V2LimitVelocity415:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unsupported Media type
+        detail: The payload format is unsupported.
+        instance: /v2/cards/limits/velocity
+        status: 415
+    V2LimitVelocity422:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unprocessable Content
+        detail: The service was not able to process this request.
+        instance: /v2/cards/limits/velocity
+        status: 422
+    V2LimitVelocity429:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Too Many Requests
+        detail: We had a problem getting your debit card information.
+        instance: /v2/cards/limits/velocity
+        status: 429
+    V2LimitDaily400:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Invalid Request
+        detail: Either cardNumber or nonTransToken should be included
+        instance: /v2/cards/limits/daily
+        status: 400
+    V2LimitDaily401:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unauthorized
+        detail: Invalid Access Token
+        instance: /v2/cards/limits/daily
+        status: 401
+    V2LimitDaily403:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Forbidden
+        detail: Unauthorized to perform request.
+        instance: /v2/cards/limits/daily
+        status: 403
+    V2LimitDaily404:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Resource Not Found
+        detail: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance: /v2/cards/limits/daily
+        status: 404
+    V2LimitDaily405:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Method Not Allowed
+        detail: The HTTP method requested is not acceptable for this endpoint.
+        instance: /v2/cards/limits/daily
+        status: 405
+    V2LimitDaily406:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Not Acceptable
+        detail: The content type being requested is not provided by this service.
+        instance: /v2/cards/limits/daily
+        status: 406
+    V2LimitDaily415:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unsupported Media type
+        detail: The payload format is unsupported.
+        instance: /v2/cards/limits/daily
+        status: 415
+    V2LimitDaily422:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unprocessable Content
+        detail: The service was not able to process this request.
+        instance: /v2/cards/limits/daily
+        status: 422
+    V2LimitDaily429:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Too Many Requests
+        detail: We had a problem getting your debit card information.
+        instance: /v2/cards/limits/daily
+        status: 429
+    V2cardTemplate400:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Invalid Request
+        detail: Either cardNumber or nonTransToken should be included
+        instance: /v2/cards/template
+        status: 400
+    V2cardTemplate401:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unauthorized
+        detail: Invalid Access Token
+        instance: /v2/cards/template
+        status: 401
+    V2cardTemplate403:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Forbidden
+        detail: Unauthorized to perform request.
+        instance: /v2/cards/template
+        status: 403
+    V2cardTemplate404:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Resource Not Found
+        detail: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance: /v2/cards/template
+        status: 404
+    V2cardTemplate405:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Method Not Allowed
+        detail: The HTTP method requested is not acceptable for this endpoint.
+        instance: /v2/cards/template
+        status: 405
+    V2cardTemplate406:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Not Acceptable
+        detail: The content type being requested is not provided by this service.
+        instance: /v2/cards/template
+        status: 406
+    V2cardTemplate415:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unsupported Media type
+        detail: The payload format is unsupported.
+        instance: /v2/cards/template
+        status: 415
+    V2cardTemplate422:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unprocessable Content
+        detail: The service was not able to process this request.
+        instance: /v2/cards/template
+        status: 422
+    V2TransactionSearch400:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Invalid Request
+        detail: Either cardNumber or nonTransToken should be included
+        instance: /v2/cards/transactions/search
+        status: 400
+    V2TransactionSearch401:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unauthorized
+        detail: Invalid Access Token
+        instance: /v2/cards/transactions/search
+        status: 401
+    V2TransactionSearch403:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Forbidden
+        detail: Unauthorized to perform request.
+        instance: /v2/cards/transactions/search
+        status: 403
+    V2TransactionSearch404:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Resource Not Found
+        detail: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance: /v2/cards/transactions/search
+        status: 404
+    V2TransactionSearch405:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Method Not Allowed
+        detail: The HTTP method requested is not acceptable for this endpoint.
+        instance: /v2/cards/transactions/search
+        status: 405
+    V2TransactionSearch406:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Not Acceptable
+        detail: The content type being requested is not provided by this service.
+        instance: /v2/cards/transactions/search
+        status: 406
+    V2TransactionSearch415:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unsupported Media type
+        detail: The payload format is unsupported.
+        instance: /v2/cards/transactions/search
+        status: 415
+    V2TransactionSearch422:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Unprocessable Content
+        detail: The service was not able to process this request.
+        instance: /v2/cards/transactions/search
+        status: 422
+    V2TransactionSearch429:
+      value:
+        type: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title: Too Many Requests
+        detail: We had a problem getting your debit card information.
+        instance: /v2/cards/transactions/search
+        status: 429
+  headers:
+    interactionId:
+      description: unique transaction ID created for each request for tracking purposes
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: 95ad42fb-afd1-2121-b794-3ed29342ks42
+  securitySchemes:
+    BearerAuth:
+      type: http
+      description: Enter 'Bearer ' followed by the access token.
+      scheme: bearer

@@ -1,0 +1,357 @@
+---
+openapi: 3.0.0
+info:
+  title: Token
+  description: Token APIs to generate tokens (JWT, NTT).
+  version: 1.0.0-Feb-2025
+servers:
+- url: https://swaggerhub.onefiserv.net/virts/DEV_STUDIO_LATEST/Auth_Token_API/1.0.0-Feb-2025
+  description: SwaggerHub API Auto Mocking
+- url: https://card.api.fiservapps.com/cs/token
+  description: Production url
+- url: https://card-sandbox.api.fiservapps.com/cs/token
+  description: Sandbox url
+security:
+- BearerAuth: []
+paths:
+  /v2/cards/token:
+    post:
+      tags:
+      - Token
+      description: "This operation returns a JWT which is valid for 15 minutes.\n        <br><br>\n        For more information go to <a href=\"/product/CardDeveloper/docs/resources.md/#token\" title=\"Click to open\">Resources.</a>"
+      operationId: getJWTToken
+      parameters:
+      - name: Authorization
+        in: header
+        description: "Retrieve an access token through the Access Token API. Access token is required in every request. To view documentation on access token <a className='text-app-action-blue' href='/product/CardDeveloper/docs/?path=docs/gettingstarted/access-tokens.md' title='Click to open'>click here.</a> Tokens expire after 15 minutes. Provide the value as follows in the header. Authorization: Bearer <Access Token Value>"
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: Bearer USlfM8dilzKZPcuGGP3BfVLd7Snk
+      - name: userId
+        in: header
+        description: Optional. User on behalf of whom the request is being made. userId must be alphanumeric.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: johndoe
+      - name: x-fapi-financial-id
+        in: header
+        description: Required. Provide 8 digit client id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: "12345678"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+      responses:
+        "200":
+          description: Successful
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        "400":
+          description: Invalid Request
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400Error'
+        "401":
+          description: Unauthorized Access
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401Error'
+        "403":
+          description: Forbidden
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/403Error'
+        "404":
+          description: Not Found
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404Error'
+        "405":
+          description: Method Not Allowed
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+        "406":
+          description: Unacceptable
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+        "415":
+          description: Unsupported Media Type
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/415Error'
+        "422":
+          description: Unprocessable Entity
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+        "429":
+          description: Too Many Requests
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+        "500":
+          description: Internal Server Error
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errorResponse:
+                    code: 500-01
+                    message: Internal Server Error
+                    developerInfo:
+                      developerMessage: Internal Server Error
+                      moreInfo: There was a problem handling your request. Please try again. If the problem persists please contact Fiserv ETSD at 888-243-2543. Your unique messageID is included below.
+                      messageid: 25557-84290371-1
+      x-child-product-name: Token
+      x-group-name:  JWT Token
+      x-proxy-name: Get JWT token
+components:
+  schemas:
+    "400Error":
+      type: object
+      properties:
+        type:
+          type: string
+          description: An URI reference that identifies the problem type
+          example: Input Validation Exception
+        title:
+          type: string
+          description: Short summary of the problem.
+          example: Bad Request
+        detail:
+          type: string
+          description: Specific explanation to the occurence of the problem.
+          example: CONTENT-TYPE header required. Supported content-type is application/json
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurence of the problem.
+          example: /api/basepath
+        status:
+          type: number
+          description: The HTTP status code generated by the origin server for this occurance of the problem.
+          example: 400
+    "401Error":
+      type: object
+      properties:
+        type:
+          type: string
+          description: An URI reference that identifies the problem type
+          example: https://card.developer.fiserv.com/cards/error#unauthorized
+        title:
+          type: string
+          description: Short summary of the problem.
+          example: Unauthorized
+        detail:
+          type: string
+          description: Specific explanation to the occurence of the problem.
+          example: Invalid Access Token.
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurence of the problem.
+          example: /api/basepath
+        status:
+          type: number
+          description: The HTTP status code generated by the origin server for this occurance of the problem.
+          example: 401
+    "403Error":
+      type: object
+      properties:
+        type:
+          type: string
+          description: An URI reference that identifies the problem type
+          example: https://card.developer.fiserv.com/cards/error#forbidden
+        title:
+          type: string
+          description: Short summary of the problem.
+          example: Forbidden
+        detail:
+          type: string
+          description: Specific explanation to the occurence of the problem.
+          example: Authorization failure.
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurence of the problem.
+          example: /api/basepath
+        status:
+          type: number
+          description: The HTTP status code generated by the origin server for this occurance of the problem.
+          example: 403
+    "404Error":
+      type: object
+      properties:
+        type:
+          type: string
+          description: An URI reference that identifies the problem type
+          example: Resource does not exists
+        title:
+          type: string
+          description: Short summary of the problem.
+          example: Resource Not Found
+        detail:
+          type: string
+          description: Specific explanation to the occurence of the problem.
+          example: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurence of the problem.
+          example: /api/basepath
+        status:
+          type: number
+          description: The HTTP status code generated by the origin server for this occurance of the problem.
+          example: 404
+    "409Error":
+      type: object
+      properties:
+        type:
+          type: string
+          description: An URI reference that identifies the problem type
+          example: Http Resource conflict error
+        title:
+          type: string
+          description: Short summary of the problem.
+          example: Resource conflict
+        detail:
+          type: string
+          description: Specific explanation to the occurence of the problem.
+          example: Card is already present with the same status.
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurence of the problem.
+          example: /api/basepath
+        status:
+          type: number
+          description: The HTTP status code generated by the origin server for this occurance of the problem.
+          example: 409
+    "415Error":
+      type: object
+      properties:
+        type:
+          type: string
+          description: An URI reference that identifies the problem type
+          example: https://card.developer.fiserv.com/cards/error#unsupported-mediatype
+        title:
+          type: string
+          description: Short summary of the problem.
+          example: Unsupported Media Type
+        detail:
+          type: string
+          description: Specific explanation to the occurence of the problem.
+          example: Unsupported Media Type.
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurence of the problem.
+          example: /api/basepath
+        status:
+          type: number
+          description: The HTTP status code generated by the origin server for this occurance of the problem.
+          example: 415
+    TokenRequest:
+      type: object
+      properties:
+        cardNumber:
+          type: string
+          description: |
+            Unique number assigned to each cardholder record. Either cardNumber or nonTransToken must be included in the request. If both are included, only cardNumber will be used. Maximum length 19 digits.
+          format: numeric
+          example: "4000200030004000"
+        nonTransToken:
+          type: string
+          description: |
+            Non-transactional token associated with a card. Non-transactional token associated with a card.
+            Either cardNumber or nonTransToken must be included in the request. If both are included, only cardNumber is used. Length can be between 16 and 19.
+          format: alphanumeric
+          example: piUVBJKZGfks4000
+    TokenResponse:
+      type: object
+      properties:
+        jwt:
+          type: string
+          description: Javascript Web Token (JWT) provided for one card can only be used to verify the details for that particular card. Valid for 15 minutes only.
+          example: eyJ0eXAiOiJKV1QiLCJlbmMiOiJBMTI4R0NNIiwiYWxnIjoiUlNBLU9BRVAtMjU2In0.WrliT8nLQOTRnXldrYj0brobAyi6M7-U8_iHovmTH1VAZksc4mOGQCfaSx-sbDNjdkpeznR8lU1sHOX26qom94jBO6uePEw1cBbTHLpOSEPDYiWS6SzTgxguF7zT2g5Ui1HHi2GKgPtH5L0XC_QqP5TIs3A15fqpAnvMaSwW9O_GDRzxnsUDCgEZCkwQOuEpWYDbM7r7yKrfAlkWKOHOlZuUtvJvg3k8p-1qwKpuGexhWXQdgKsWphBWbMzbindOIefIo4VTrOVMxWOdP_bLNId0E0CBLxSpRHX1u3EeAjUykUdifT2CP4bb6kbJf4pp0dRc_uPZGJLj7faPyq6UeQ.zTLJMNI8bjGh-KBy.FW0W0ihL2sj7pYin2iY1gavS4W-yPswjKmrb6-ROwHgEOscfeGGLmUihzoV6vy9KvTJ9ytnIPqh-K94UsShUJ0-KgsY4_eWyUwx4IYpYaJkPeUVd4ni_1eZMBy6-hPr3n39DES_kXfnv3MJOiZZj0I-GJXw99WBV7xhl7KZcFKyMXYnszyboV8Xi2iZqHglvEoYRjKLvOlEq2j4pJoMRVfBB8oIOZm6uyCaOnyuWuE_Lg1HeuNMnHddTm8gexDAfwj3WYHkJazsN1PZVhPZVImyKwCNM.TOYk3lw2SKYamQL7XiLXlg
+  parameters:
+    userIdParam:
+      name: userId
+      in: header
+      description: Optional. User on behalf of whom the request is being made. userId must be alphanumeric.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+      example: johndoe
+    authorizationParam:
+      name: Authorization
+      in: header
+      description: "Retrieve an access token through the Access Token API. Access token is required in every request. To view documentation on access token <a className='text-app-action-blue' href='/product/CardDeveloper/docs/?path=docs/gettingstarted/access-tokens.md' title='Click to open'>click here.</a> Tokens expire after 15 minutes. Provide the value as follows in the header. Authorization: Bearer <Access Token Value>"
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+      example: Bearer USlfM8dilzKZPcuGGP3BfVLd7Snk
+    clientIdParam:
+      name: x-fapi-financial-id
+      in: header
+      description: Required. Provide 8 digit client id
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+      example: "12345678"
+  headers:
+    interactionId:
+      description: unique transaction ID created for each request for tracking purposes
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: 95ad42fb-afd1-2121-b794-3ed29342ks42
+  securitySchemes:
+    BearerAuth:
+      type: http
+      description: Enter 'Bearer ' followed by the access token.
+      scheme: bearer

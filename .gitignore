@@ -39,3 +39,5 @@ build/
 
 ### Local Spring profile (secrets) ###
 application-local.properties
+
+.DS_Store

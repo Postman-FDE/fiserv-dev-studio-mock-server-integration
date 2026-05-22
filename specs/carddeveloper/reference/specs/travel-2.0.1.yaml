@@ -1,0 +1,860 @@
+---
+openapi: 3.0.0
+info:
+  title: Travel Exemptions API
+  description: The Travel Exemptions RESTful API provides integration partners the ability to view, add/create, update, and expire travel exemptions for a specific card. All the date/time fields in this API are supported in UTC timezone. The time fields are relevant only up to minutes.
+  version: 2.1.1
+servers:
+- url: https://swaggerhub.onefiserv.net/virts/DEV_STUDIO_LATEST/Travel
+security:
+- BearerToken: []
+tags:
+- name: Travel Exemptions
+paths:
+  /v1/exemptions/search:
+    post:
+      tags:
+      - Travel Exemptions
+      description: |-
+        Obtain information on all existing travel exemptions for the requested card number.
+                <br><br>
+                For more information go to <a href="/product/CardDeveloper/docs/resources.md/#travel" title="Click to open">Resources.</a>
+      parameters:
+      - name: x-fapi-financial-id
+        in: header
+        description: Required. Enter the client id.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 8
+          minLength: 1
+          pattern: ^[0-9]*$
+          type: string
+      - name: x-fapi-interaction-id
+        in: header
+        description: Enter the transaction/correlation id
+        required: false
+        style: simple
+        explode: false
+        schema:
+          maxLength: 40
+          minLength: 15
+          pattern: ^[^-][a-zA-Z0-9-][^-]$
+          type: string
+      - name: Authorization
+        in: header
+        description: "Retrieve an access token through the Access Token API. Access token is required in every request. To view documentation on access token <a className='text-app-action-blue' href='/product/CardDeveloper/docs/?path=docs/gettingstarted/access-tokens.md' title='Click to open'>click here.</a> Tokens expire after 15 minutes. Provide the value as follows in the header. Authorization: Bearer <Access Token Value>"
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TravelExemptionRequest'
+        required: true
+      responses:
+        "200":
+          description: Success
+          headers:
+            x-fapi-interaction-id:
+              description: Represents a transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TravelExemptionResponse'
+        "400":
+          description: Bad Request
+          headers:
+            x-fapi-interaction-id:
+              description: Represents a transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: WS100
+                    description: Information entered is invalid-please revise and try again.
+        "401":
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 401
+                    description: Invalid access token
+        "404":
+          description: Resource Not Found
+          content: {}
+        "415":
+          description: Unsupported Media Type
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 415
+                    description: unsupported Media Type
+        "429":
+          description: Too Many Requests
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 429
+                    description: Rate limit quota violation. Quota limit  exceeded.
+        "500":
+          description: Server Error
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errorResponse:
+                    code: 500-01
+                    message: internal server error
+                    developerInfo:
+                      developerMessage: internal server error
+                      moreInfo: There was a problem handling your request.  Please try again.  If the problem persists please contact Fiserv ETSD at 888-243-2543 (you unique messageID included below)
+                      messageid: 25557-84290371-1
+      x-child-product-name: Travel
+      x-group-name: Exemptions
+      x-proxy-name: Get travel exemptions v1
+      x-codegen-request-body-name: request
+  /v1/exemptions:
+    put:
+      tags:
+      - Travel Exemptions
+      description: Update travel exemptions for the requested primary account number (PAN).
+      parameters:
+      - name: x-fapi-financial-id
+        in: header
+        description: Required. Enter the client id.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 8
+          minLength: 1
+          pattern: ^[0-9]*$
+          type: string
+      - name: x-fapi-interaction-id
+        in: header
+        description: Enter the transaction/correlation id
+        required: false
+        style: simple
+        explode: false
+        schema:
+          maxLength: 40
+          minLength: 15
+          pattern: ^[^-][a-zA-Z0-9-][^-]$
+          type: string
+      - name: Authorization
+        in: header
+        description: "Retrieve an access token through the Access Token API. Access token is required in every request. To view documentation on access token <a className='text-app-action-blue' href='/product/CardDeveloper/docs/?path=docs/gettingstarted/access-tokens.md' title='Click to open'>click here.</a> Tokens expire after 15 minutes. Provide the value as follows in the header. Authorization: Bearer <Access Token Value>"
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTravelExemptionRequest'
+        required: true
+      responses:
+        "200":
+          description: Success
+          headers:
+            x-fapi-interaction-id:
+              description: Represents a transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateTravelExemptionResponse'
+        "400":
+          description: Bad Request
+          headers:
+            x-fapi-interaction-id:
+              description: Represents a transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: WS100
+                    description: Information entered is invalid-please revise and try again.
+        "401":
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 401
+                    description: Invalid access token
+        "404":
+          description: Resource Not Found
+          content: {}
+        "415":
+          description: Unsupported Media Type
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 415
+                    description: unsupported Media Type
+        "429":
+          description: Too Many Requests
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 429
+                    description: Rate limit quota violation. Quota limit  exceeded.
+        "500":
+          description: Server Error
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errorResponse:
+                    code: 500-01
+                    message: internal server error
+                    developerInfo:
+                      developerMessage: internal server error
+                      moreInfo: There was a problem handling your request.  Please try again.  If the problem persists please contact Fiserv ETSD at 888-243-2543 (you unique messageID included below)
+                      messageid: 25557-84290371-1
+      x-child-product-name: Travel
+      x-group-name: Exemptions
+      x-proxy-name: Update travel exemptions v1
+      x-codegen-request-body-name: request
+    post:
+      tags:
+      - Travel Exemptions
+      description: |-
+        Add travel exemptions for the requested primary account number (PAN).
+                <br><br>
+                For more information go to <a href="/product/CardDeveloper/docs/resources.md/#travel" title="Click to open">Resources.</a>
+      parameters:
+      - name: x-fapi-financial-id
+        in: header
+        description: Required. Enter the client id.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 8
+          minLength: 1
+          pattern: ^[0-9]*$
+          type: string
+      - name: x-fapi-interaction-id
+        in: header
+        description: Enter the transaction/correlation id
+        required: false
+        style: simple
+        explode: false
+        schema:
+          maxLength: 40
+          minLength: 15
+          pattern: ^[^-][a-zA-Z0-9-][^-]$
+          type: string
+      - name: Authorization
+        in: header
+        description: "Retrieve an access token through the Access Token API. Access token is required in every request. To view documentation on access token <a className='text-app-action-blue' href='/product/CardDeveloper/docs/?path=docs/gettingstarted/access-tokens.md' title='Click to open'>click here.</a> Tokens expire after 15 minutes. Provide the value as follows in the header. Authorization: Bearer <Access Token Value>"
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddTravelExemptionRequest'
+        required: true
+      responses:
+        "201":
+          description: Created
+          headers:
+            x-fapi-interaction-id:
+              description: Represents a transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddTravelExemptionResponse'
+        "400":
+          description: Bad Request
+          headers:
+            x-fapi-interaction-id:
+              description: Represents a transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: WS100
+                    description: Information entered is invalid-please revise and try again.
+        "401":
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 401
+                    description: Invalid access token
+        "404":
+          description: Resource Not Found
+          content: {}
+        "415":
+          description: Unsupported Media Type
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 415
+                    description: unsupported Media Type
+        "429":
+          description: Too Many Requests
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 429
+                    description: Rate limit quota violation. Quota limit  exceeded.
+        "500":
+          description: Server Error
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errorResponse:
+                    code: 500-01
+                    message: internal server error
+                    developerInfo:
+                      developerMessage: internal server error
+                      moreInfo: There was a problem handling your request.  Please try again.  If the problem persists please contact Fiserv ETSD at 888-243-2543 (you unique messageID included below)
+                      messageid: 25557-84290371-1
+      x-child-product-name: Travel
+      x-group-name: Exemptions
+      x-proxy-name: Add travel exemptions v1
+      x-codegen-request-body-name: request
+  /v1/exemptions/expire:
+    put:
+      tags:
+      - Travel Exemptions
+      description: |-
+        Expire the travel exemptions for the requested card number.
+                <br><br>
+                For more information go to <a href="/product/CardDeveloper/docs/resources.md/#travel" title="Click to open">Resources.</a>
+      parameters:
+      - name: x-fapi-financial-id
+        in: header
+        description: Required. Enter the client id.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 8
+          minLength: 1
+          pattern: ^[0-9]*$
+          type: string
+      - name: x-fapi-interaction-id
+        in: header
+        description: Enter the transaction/correlation id
+        required: false
+        style: simple
+        explode: false
+        schema:
+          maxLength: 40
+          minLength: 15
+          pattern: ^[^-][a-zA-Z0-9-][^-]$
+          type: string
+      - name: Authorization
+        in: header
+        description: "Retrieve an access token through the Access Token API. Access token is required in every request. To view documentation on access token <a className='text-app-action-blue' href='/product/CardDeveloper/docs/?path=docs/gettingstarted/access-tokens.md' title='Click to open'>click here.</a> Tokens expire after 15 minutes. Provide the value as follows in the header. Authorization: Bearer <Access Token Value>"
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExpireTravelExemptionRequest'
+        required: true
+      responses:
+        "200":
+          description: Success
+          headers:
+            x-fapi-interaction-id:
+              description: Represents a transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpireTravelExemptionResponse'
+        "400":
+          description: Bad Request
+          headers:
+            x-fapi-interaction-id:
+              description: Represents a transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: WS100
+                    description: Information entered is invalid-please revise and try again.
+        "401":
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 401
+                    description: Invalid access token
+        "404":
+          description: Resource Not Found
+          content: {}
+        "415":
+          description: Unsupported Media Type
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 415
+                    description: unsupported Media Type
+        "429":
+          description: Too Many Requests
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 429
+                    description: Rate limit quota violation. Quota limit  exceeded.
+        "500":
+          description: Server Error
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errorResponse:
+                    code: 500-01
+                    message: internal server error
+                    developerInfo:
+                      developerMessage: internal server error
+                      moreInfo: There was a problem handling your request.  Please try again.  If the problem persists please contact Fiserv ETSD at 888-243-2543 (you unique messageID included below)
+                      messageid: 25557-84290371-1
+      x-child-product-name: Travel
+      x-group-name: Exemptions
+      x-proxy-name: Expire travel exemptions v1
+      x-codegen-request-body-name: request
+components:
+  schemas:
+    TravelExemptionRequest:
+      required:
+      - cardholder
+      - client
+      type: object
+      properties:
+        client:
+          $ref: '#/components/schemas/Client'
+        cardholder:
+          $ref: '#/components/schemas/Cardholder'
+    TravelExemptionResponse:
+      type: object
+      properties:
+        travelExemptions:
+          $ref: '#/components/schemas/TravelExemption'
+        exclusions:
+          $ref: '#/components/schemas/Exclusion'
+    AddTravelExemptionRequest:
+      required:
+      - cardholder
+      - client
+      - endDateTime
+      - exemptionCodes
+      - startDateTime
+      type: object
+      properties:
+        client:
+          $ref: '#/components/schemas/Client'
+        cardholder:
+          $ref: '#/components/schemas/Cardholder'
+        startDateTime:
+          type: string
+          description: 'Start date and time of the exemption. Date cannot be prior to current calendar date the web service request is being sent. '
+          format: yyyy-mm-ddThh:mm:ss[.mmm]±[hh]:[mm] or yyyy-mm-ddThh:mm:ss[.mmm]Z
+          example: 2020-07-30T22:15:00.000+0000
+        endDateTime:
+          type: string
+          description: End date and time of the exemption. Date cannot be prior to current calendar date the web service request is being sent
+          format: yyyy-mm-ddThh:mm:ss[.mmm]±[hh]:[mm] or yyyy-mm-ddThh:mm:ss[.mmm]Z
+          example: 2020-08-11T10:50:00.000+0000
+        exemptionCodes:
+          $ref: '#/components/schemas/ExemptionCodes'
+    AddTravelExemptionResponse:
+      type: object
+      properties:
+        travelExemptions:
+          $ref: '#/components/schemas/TravelExemption'
+        exclusions:
+          $ref: '#/components/schemas/Exclusion'
+    ExpireTravelExemptionRequest:
+      required:
+      - cardholder
+      - client
+      - exemptionNumber
+      type: object
+      properties:
+        client:
+          $ref: '#/components/schemas/Client'
+        cardholder:
+          $ref: '#/components/schemas/Cardholder'
+        exemptionNumber:
+          type: number
+          description: This number is required to properly identify the travel plan within the cardholder record that is to be updated or expired. Each cardholder record can house two travel plans; each plan can hold up to 15 states and/or countries
+    ExpireTravelExemptionResponse:
+      type: object
+      properties:
+        travelExemptions:
+          $ref: '#/components/schemas/TravelExemption'
+        exclusions:
+          $ref: '#/components/schemas/Exclusion'
+    UpdateTravelExemptionRequest:
+      required:
+      - cardholder
+      - client
+      - endDateTime
+      - exemptionNumber
+      - startDateTime
+      type: object
+      properties:
+        client:
+          $ref: '#/components/schemas/Client'
+        cardholder:
+          $ref: '#/components/schemas/Cardholder'
+        exemptionNumber:
+          type: number
+          description: This number is required to properly identify the travel plan within the cardholder record that is to be updated or expired. Each cardholder record can house two travel plans; each plan can hold up to 15 states and/or countries.
+        startDateTime:
+          type: string
+          description: Start date and time of the exemption. Date cannot be prior to current calendar date the web service request is being sent
+          format: yyyy-mm-ddThh:mm:ss[.mmm]±[hh]:[mm] or yyyy-mm-ddThh:mm:ss[.mmm]Z
+          example: 2020-07-30T22:15:00.000+0000
+        endDateTime:
+          maxLength: 20
+          type: string
+          description: End date and time of the exemption. Must be greater than the startDateTime
+          format: yyyy-mm-ddThh:mm:ss[.mmm]±[hh]:[mm] or yyyy-mm-ddThh:mm:ss[.mmm]Z
+          example: 2020-08-11T10:50:00.000+0000
+        exemptionCodes:
+          $ref: '#/components/schemas/ExemptionCodes'
+    UpdateTravelExemptionResponse:
+      type: object
+      properties:
+        travelExemptions:
+          $ref: '#/components/schemas/TravelExemption'
+        exclusions:
+          $ref: '#/components/schemas/Exclusion'
+    Client:
+      required:
+      - applicationName
+      - auditId
+      - id
+      - vendorName
+      type: object
+      properties:
+        id:
+          maxLength: 8
+          type: string
+          description: Card services assigned financial institution identifier (FIID) associated with the client
+          example: "84014831"
+        applicationName:
+          maxLength: 50
+          type: string
+          description: Name of the application calling this web service
+          example: OpenSystems
+        vendorName:
+          maxLength: 30
+          type: string
+          description: Client vendor identifier
+          example: Mobiliti
+        auditId:
+          maxLength: 13
+          type: string
+          description: Identifier provided by the client to track user activities
+          example: "84014831"
+    Cardholder:
+      required:
+      - pan
+      type: object
+      properties:
+        pan:
+          maxLength: 25
+          type: string
+          description: Full card number
+          example: "2222979764340017"
+        memberNumber:
+          maxLength: 1
+          type: string
+          description: Member number
+          example: "0"
+        firstName:
+          type: string
+          description: Primary Cardholder first name
+          example: SUMITRA
+        lastName:
+          type: string
+          description: Primary Cardholder last name
+          example: VEER
+        middleInitial:
+          maxLength: 1
+          type: string
+          description: Primary Cardholder middle initial
+          example: S
+        zip:
+          maxLength: 15
+          type: string
+          description: Card's billing zipcode
+          example: "20120"
+    ErrorResponse:
+      type: object
+      properties:
+        errors:
+          $ref: '#/components/schemas/Error'
+    Error:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          type: string
+          example: WS105
+        description:
+          type: string
+          example: Card record not found
+    TravelExemption:
+      type: array
+      items:
+        $ref: '#/components/schemas/TravelExemptionItem'
+    Exclusion:
+      type: array
+      items:
+        $ref: '#/components/schemas/ExclusionItem'
+    TravelExemptionItem:
+      required:
+      - endDateTime
+      - exemptionNumber
+      - lastUpdatedDateTime
+      - startDateTime
+      type: object
+      properties:
+        exemptionNumber:
+          type: number
+          description: This number is required to properly identify the travel plan within the cardholder record that is to be updated or expired. Each cardholder record can house two travel plans; each plan can hold up to 15 states and/or countries
+        startDateTime:
+          type: string
+          description: Start date and time of the exemption. Seconds of the time will always be 00
+          format: yyyy-mm-ddThh:mm:ss[.mmm]Z
+          example: 2019-07-20T07:00:00.000+0000
+        endDateTime:
+          type: string
+          description: End date and time of the exemption. Seconds of the time will always be 00
+          format: yyyy-mm-ddThh:mm:ss[.mmm]Z
+          example: 2020-07-31T03:59:00.000+0000
+        lastUpdatedDateTime:
+          type: string
+          description: Date and time the exemption data was last modified. Seconds of the time will always be 00
+          format: yyyy-mm-ddThh:mm:ss[.mmm]Z
+          example: 2019-06-07T07:00:00.000+0000
+        exemptionCodes:
+          $ref: '#/components/schemas/ExemptionCodes'
+    ExemptionCodes:
+      required:
+      - stateCountryCodes
+      type: object
+      properties:
+        stateCountryCodes:
+          $ref: '#/components/schemas/CountryCodes'
+      description: List of State/Country codes that are part of the exemption. Repeats up to 15 times. This object has only one field stateCountryCode
+    CountryCodes:
+      type: array
+      description: State and Country Codes that are part of the exemption. May contain up to 15 times. It is array
+      items:
+        type: string
+        example: AFG
+    ExclusionItem:
+      required:
+      - code
+      - type
+      type: object
+      properties:
+        type:
+          maxLength: 1
+          type: string
+          description: 'Provides the type of exclusion code. Values: C=Country, S=State'
+          example: C
+        code:
+          maxLength: 3
+          type: string
+          description: State and Country Codes
+          example: AGO
+  securitySchemes:
+    BearerToken:
+      type: apiKey
+      description: Enter 'Bearer ' followed by the access token.
+      name: Authorization
+      in: header
+x-original-swagger-version: "2.0"

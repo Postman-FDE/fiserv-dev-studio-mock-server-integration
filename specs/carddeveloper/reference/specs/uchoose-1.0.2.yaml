@@ -1,0 +1,847 @@
+
+---
+openapi: 3.0.0
+info:
+  title: uChoose Rewards
+  description: This API helps user/account holder to get the SSO(Single-sign-on) URL, Add Rewards, View Rewards and Redeem Awards.
+  version: 1.0.3
+servers:
+- url: https://swaggerhub.onefiserv.net/virts/DEV_STUDIO_LATEST/uChoose_Rewards/1.0.0
+security:
+- BearerToken: []
+tags:
+- name: uChoose Rewards
+  description: This API helps user/account holder to get the SSO(Single-sign-on) URL, Add Rewards, View Rewards and Redeem Awards
+paths:
+  /v1/sso-url:
+    post:
+      tags:
+      - uChoose Rewards
+      description: |-
+        Return a URL link to the participant for a Single Sign On (SSO) session to the Rewards website.
+                <br><br>
+                For more information go to <a href="/product/CardDeveloper/docs/resources.md/#uchoose" title="Click to open">Resources.</a>
+      parameters:
+      - name: x-fapi-financial-id
+        in: header
+        description: Required. Enter the client id.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 8
+          minLength: 1
+          pattern: ^[0-9]*$
+          type: string
+      - name: x-fapi-interaction-id
+        in: header
+        description: Enter the transaction/correlation id
+        required: false
+        style: simple
+        explode: false
+        schema:
+          maxLength: 40
+          minLength: 15
+          pattern: ^[^-][a-zA-Z0-9-][^-]$
+          type: string
+      - name: Authorization
+        in: header
+        description: "Retrieve an access token through the Access Token API. Access token is required in every request. To view documentation on access token <a className='text-app-action-blue' href='/product/CardDeveloper/docs/?path=docs/gettingstarted/access-tokens.md' title='Click to open'>click here.</a> Tokens expire after 15 minutes. Provide the value as follows in the header. Authorization: Bearer <Access Token Value>"
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetSSORequest'
+        required: true
+      responses:
+        "200":
+          description: Successful
+          headers:
+            x-fapi-interaction-id:
+              description: Represents a transaction ID created with each request.
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetSSOResponse'
+        "400":
+          description: Bad Request
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 200/100
+                    description: User does not have the authority to view this data
+        "401":
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 401
+                    description: Invalid access token
+        "404":
+          description: Resource Not Found
+          content: {}
+        "415":
+          description: Unsupported Media Type
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 415
+                    description: unsupported Media Type
+        "429":
+          description: Too Many Requests
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 429
+                    description: Rate limit quota violation. Quota limit  exceeded.
+        "500":
+          description: Server Error
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errorResponse:
+                    code: 500-01
+                    message: internal server error
+                    developerInfo:
+                      developerMessage: internal server error
+                      moreInfo: There was a problem handling your request.  Please try again.  If the problem persists please contact Fiserv ETSD at 888-243-2543 (you unique messageID included below)
+                      messageid: 25557-84290371-1
+      x-child-product-name: uChoose Rewards
+      x-group-name: Rewards
+      x-proxy-name: Single sign on v1
+      x-codegen-request-body-name: request
+  /v1/addpoints:
+    post:
+      tags:
+      - uChoose Rewards
+      description: |-
+        The cardholder is able to receive points in real time as a reward for certain behaviors for the respective Financial Institution like paying bill online, signing up for e-Statements, etc.
+                <br><br>
+                For more information go to <a href="/product/CardDeveloper/docs/resources.md/#uchoose" title="Click to open">Resources.</a>
+      parameters:
+      - name: x-fapi-financial-id
+        in: header
+        description: Required. Enter the client id.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 8
+          minLength: 1
+          pattern: ^[0-9]*$
+          type: string
+      - name: x-fapi-interaction-id
+        in: header
+        description: Enter the transaction/correlation id
+        required: false
+        style: simple
+        explode: false
+        schema:
+          maxLength: 40
+          minLength: 15
+          pattern: ^[^-][a-zA-Z0-9-][^-]$
+          type: string
+      - name: Authorization
+        in: header
+        description: "Retrieve an access token through the Access Token API. Access token is required in every request. To view documentation on access token <a className='text-app-action-blue' href='/product/CardDeveloper/docs/?path=docs/gettingstarted/access-tokens.md' title='Click to open'>click here.</a> Tokens expire after 15 minutes. Provide the value as follows in the header. Authorization: Bearer <Access Token Value>"
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/addPointsRequest'
+        required: true
+      responses:
+        "200":
+          description: Successful
+          headers:
+            x-fapi-interaction-id:
+              description: Represents a transaction ID created with each request.
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/addPointsResponse'
+        "400":
+          description: Bad Request
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 200/100
+                    description: User does not have the authority to view this data
+        "401":
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 401
+                    description: Invalid access token
+        "404":
+          description: Resource Not Found
+          content: {}
+        "415":
+          description: Unsupported Media Type
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 415
+                    description: unsupported Media Type
+        "429":
+          description: Too Many Requests
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 429
+                    description: Rate limit quota violation. Quota limit  exceeded.
+        "500":
+          description: Server Error
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errorResponse:
+                    code: 500-01
+                    message: internal server error
+                    developerInfo:
+                      developerMessage: internal server error
+                      moreInfo: There was a problem handling your request.  Please try again.  If the problem persists please contact Fiserv ETSD at 888-243-2543 (you unique messageID included below)
+                      messageid: 25557-84290371-1
+      x-child-product-name: uChoose Rewards
+      x-group-name: Rewards
+      x-proxy-name: Add points v1
+      x-codegen-request-body-name: request
+  /v1/points:
+    post:
+      tags:
+      - uChoose Rewards
+      description: |-
+        Return the cardholder’s point balance.
+                <br><br>
+                For more information go to <a href="/product/CardDeveloper/docs/resources.md/#uchoose" title="Click to open">Resources.</a>
+      parameters:
+      - name: x-fapi-financial-id
+        in: header
+        description: Required. Enter the client id.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 8
+          minLength: 1
+          pattern: ^[0-9]*$
+          type: string
+      - name: x-fapi-interaction-id
+        in: header
+        description: Enter the transaction/correlation id
+        required: false
+        style: simple
+        explode: false
+        schema:
+          maxLength: 40
+          minLength: 15
+          pattern: ^[^-][a-zA-Z0-9-][^-]$
+          type: string
+      - name: Authorization
+        in: header
+        description: "Retrieve an access token through the Access Token API. Access token is required in every request. To view documentation on access token <a className='text-app-action-blue' href='/product/CardDeveloper/docs/?path=docs/gettingstarted/access-tokens.md' title='Click to open'>click here.</a> Tokens expire after 15 minutes. Provide the value as follows in the header. Authorization: Bearer <Access Token Value>"
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetPointRequest'
+        required: true
+      responses:
+        "200":
+          description: Successful
+          headers:
+            x-fapi-interaction-id:
+              description: Represents a transaction ID created with each request.
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPointResponse'
+        "400":
+          description: Bad Request
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 200/100
+                    description: User does not have the authority to view this data
+        "401":
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 401
+                    description: Invalid access token
+        "404":
+          description: Resource Not Found
+          content: {}
+        "415":
+          description: Unsupported Media Type
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 415
+                    description: unsupported Media Type
+        "429":
+          description: Too Many Requests
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 429
+                    description: Rate limit quota violation. Quota limit  exceeded.
+        "500":
+          description: Server Error
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errorResponse:
+                    code: 500-01
+                    message: internal server error
+                    developerInfo:
+                      developerMessage: internal server error
+                      moreInfo: There was a problem handling your request.  Please try again.  If the problem persists please contact Fiserv ETSD at 888-243-2543 (you unique messageID included below)
+                      messageid: 25557-84290371-1
+      x-child-product-name: uChoose Rewards
+      x-group-name: Rewards
+      x-proxy-name: View points v1
+      x-codegen-request-body-name: request
+  /v1/redeempoints:
+    post:
+      tags:
+      - uChoose Rewards
+      description: |-
+        Remove points from a program participant, reducing the available point balance. Points redeemed through web services are immediately unavailable to program participants.
+                <br><br>
+                For more information go to <a href="/product/CardDeveloper/docs/resources.md/#uchoose" title="Click to open">Resources.</a>
+      parameters:
+      - name: x-fapi-financial-id
+        in: header
+        description: Required. Enter the client id.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 8
+          minLength: 1
+          pattern: ^[0-9]*$
+          type: string
+      - name: x-fapi-interaction-id
+        in: header
+        description: Enter the transaction/correlation id
+        required: false
+        style: simple
+        explode: false
+        schema:
+          maxLength: 40
+          minLength: 15
+          pattern: ^[^-][a-zA-Z0-9-][^-]$
+          type: string
+      - name: Authorization
+        in: header
+        description: "Retrieve an access token through the Access Token API. Access token is required in every request. To view documentation on access token <a className='text-app-action-blue' href='/product/CardDeveloper/docs/?path=docs/gettingstarted/access-tokens.md' title='Click to open'>click here.</a> Tokens expire after 15 minutes. Provide the value as follows in the header. Authorization: Bearer <Access Token Value>"
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/redeemPointsRequest'
+        required: true
+      responses:
+        "200":
+          description: Successful
+          headers:
+            x-fapi-interaction-id:
+              description: Represents a transaction ID created with each request.
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/redeemPointsResponse'
+        "400":
+          description: Bad Request
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 200/100
+                    description: User does not have the authority to view this data
+        "401":
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 401
+                    description: Invalid access token
+        "404":
+          description: Resource Not Found
+          content: {}
+        "415":
+          description: Unsupported Media Type
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 415
+                    description: unsupported Media Type
+        "429":
+          description: Too Many Requests
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 429
+                    description: Rate limit quota violation. Quota limit  exceeded.
+        "500":
+          description: Server Error
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errorResponse:
+                    code: 500-01
+                    message: internal server error
+                    developerInfo:
+                      developerMessage: internal server error
+                      moreInfo: There was a problem handling your request.  Please try again.  If the problem persists please contact Fiserv ETSD at 888-243-2543 (you unique messageID included below)
+                      messageid: 25557-84290371-1
+      x-child-product-name: uChoose Rewards
+      x-group-name: Rewards
+      x-proxy-name: Redeem points v1
+      x-codegen-request-body-name: request
+components:
+  schemas:
+    GetSSORequest:
+      required:
+      - client
+      - rewardsKeyInfo
+      type: object
+      properties:
+        client:
+          $ref: '#/components/schemas/Client'
+        rewardsKeyInfo:
+          $ref: '#/components/schemas/rewardsKeyInfo'
+        email:
+          type: string
+          description: Optional. If an email address is not provided in the initial request, cardholders will be required to manually enter an email the first time they access the Rewards website.
+          example: sandbox.app@fiserv.com
+    GetSSOResponse:
+      type: object
+      properties:
+        destURL:
+          type: string
+          description: If an email address is not provided in the initial request, the URL example above prompts the participant to enter an email. If an email address was provided, a different URL is generated to enable navigation directly to the Rewards page.
+          example: '"https://uat.uchooserewards.com/members/ssoredirect.php?sid=21XXPqWyH842807&amp;xmembid=32398882&amp;redoip=y"'
+    Client:
+      required:
+      - applicationName
+      - auditId
+      - id
+      - vendorName
+      type: object
+      properties:
+        id:
+          type: string
+          description: Client organization Identifier
+          example: "11122203"
+        applicationName:
+          type: string
+          description: Client application identifier
+          example: CM
+        vendorName:
+          type: string
+          description: Client vendor identifier
+          example: ITI
+        auditId:
+          maxLength: 13
+          type: string
+          description: 'AuditID identifies the entity on whose behalf the request is made.  This value often identifies a user.   '
+          example: "123456"
+    addPointsRequest:
+      required:
+      - addPoints
+      - client
+      - rewardsKeyInfo
+      type: object
+      properties:
+        client:
+          $ref: '#/components/schemas/Client'
+        rewardsKeyInfo:
+          $ref: '#/components/schemas/rewardsKeyInfo'
+        addPoints:
+          $ref: '#/components/schemas/addPoints'
+    addPoints:
+      required:
+      - description
+      type: object
+      properties:
+        points:
+          type: integer
+          description: The number of points to be given to the user. If points field is empty, system will consider as adding 0 points.
+          example: 19
+        description:
+          type: string
+          description: Text to be added to the comment stored with the score.
+          example: Add
+        vest:
+          type: boolean
+          description: If True, the points are vested and immediately available for redemption. False is default, if nothing is passed in this field.
+          example: true
+    addPointsResponse:
+      required:
+      - pointsInfo
+      - scoreId
+      type: object
+      properties:
+        pointsInfo:
+          $ref: '#/components/schemas/pointsInfo'
+        scoreId:
+          type: integer
+          description: Reference number for the score created as a result of this service call.
+          example: 603205187
+        Client:
+          $ref: '#/components/schemas/addPointsResponse_Client'
+    rewardsKeyInfo:
+      required:
+      - useMultiAuth
+      type: object
+      properties:
+        cardNumber:
+          maxLength: 22
+          type: string
+          description: The participant  card number. NOTE - Enter either card number, account number, or both.
+          example: "4447489111111119"
+        accountNumber:
+          maxLength: 22
+          type: string
+          description: The primary Rewards account number. NOTE - Enter either account number, card number or both.
+          example: "3445454545"
+        useMultiAuth:
+          type: boolean
+          description: If true, the total points will include all multi-authed accounts.
+          example: false
+    GetPointRequest:
+      required:
+      - client
+      - rewardsKeyInfo
+      type: object
+      properties:
+        client:
+          $ref: '#/components/schemas/Client'
+        rewardsKeyInfo:
+          $ref: '#/components/schemas/rewardsKeyInfo'
+    GetPointResponse:
+      type: object
+      properties:
+        pointsInfo:
+          $ref: '#/components/schemas/pointsInfo'
+    pointsInfo:
+      type: object
+      properties:
+        pointsToDate:
+          type: integer
+          description: Total points earned to date.
+          example: 0
+        availablePoints:
+          type: integer
+          description: Total points not redeemed. Includes both vested and unvested points.
+          example: 0
+        vestedPoints:
+          type: integer
+          description: Points that can be redeemed.
+          example: 0
+        ccName:
+          type: string
+          description: Name on the card
+          example: A1
+        ccType:
+          type: string
+          description: Credit card issuer
+          example: MASTERCARD
+        ccStatus:
+          type: boolean
+          description: Reward earning status for the card (actively earning points or not).
+          example: true
+        earnStart:
+          type: string
+          description: The earliest date that the card can earn rewards.
+          format: yyyy-mm-dd
+          example: 2017-10-19T00:00:00.000+0000
+        earnEnd:
+          type: string
+          description: The last date that the card can earn rewards.
+          format: yyyy-mm-dd
+          example: 2050-12-31T00:00:00.000+0000
+    redeemPointsRequest:
+      required:
+      - client
+      - redeemPoints
+      - rewardsKeyInfo
+      type: object
+      properties:
+        client:
+          $ref: '#/components/schemas/Client'
+        rewardsKeyInfo:
+          $ref: '#/components/schemas/rewardsKeyInfo'
+        redeemPoints:
+          $ref: '#/components/schemas/redeemPoints'
+    redeemPoints:
+      required:
+      - description
+      - points
+      - reference
+      type: object
+      properties:
+        points:
+          type: integer
+          description: The number of points to be deducted from the card.
+          example: 19
+        description:
+          type: string
+          description: Text to be added to the comment stored with the burn.
+          example: b
+        reference:
+          type: string
+          description: A reference ID to be stored with the burn.
+          example: B
+    redeemPointsResponse:
+      required:
+      - pointsInfo
+      - redeemID
+      type: object
+      properties:
+        pointsInfo:
+          $ref: '#/components/schemas/pointsInfo'
+        redeemID:
+          type: integer
+          description: The unique ID of the redemption.
+          example: 78901
+    addPointsResponse_Client:
+      required:
+      - applicationName
+      - auditId
+      - id
+      - vendorName
+      type: object
+      properties:
+        id:
+          type: string
+          description: Client organization Identifier
+          example: "11122203"
+        applicationName:
+          type: string
+          description: Client application identifier
+          example: CM
+        vendorName:
+          type: string
+          description: Client vendor identifier
+          example: ITI
+        auditId:
+          maxLength: 13
+          type: string
+          description: 'AuditID identifies the entity on whose behalf the request is made.  This value often identifies a user.   '
+          example: Saint Michael
+      example: "11122203"
+  securitySchemes:
+    BearerToken:
+      type: apiKey
+      description: Enter 'Bearer ' followed by the access token.
+      name: Authorization
+      in: header
+x-original-swagger-version: "2.0"

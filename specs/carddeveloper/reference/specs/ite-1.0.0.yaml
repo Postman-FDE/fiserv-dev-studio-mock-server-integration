@@ -1,0 +1,1835 @@
+openapi: 3.0.0
+info:
+  title: Transaction Enrichment
+  description: "This API provides an enriched transactions with additional data attributes, including **merchant names**, **location**, **merchant logos**, **categories**, **transaction type** and **merchant contact information**."
+  version: 2.0.1-Jan-2026
+servers:
+- url: https://swaggerhub-live.apps.swift.cert.onefiserv.net/virts/DEV_STUDIO_LATEST/Transaction_Enrichment/2.0.1-Jan-2026
+  description: SwaggerHub API Auto Mocking
+- url: https://swaggerhub.onefiserv.net/virts/DEV_STUDIO_LATEST/Transaction_Enrichment/1.0.0-Sept-2025
+  description: SwaggerHub API Auto Mocking
+- url: https://card.api.fiservapps.com/cs/v1/premium/transactions/enrichment
+  description: Production url
+- url: https://card-sandbox.api.fiservapps.com/cs/v1/premium/transactions/enrichment
+  description: Sandbox url
+security:
+- BearerAuth: []
+tags:
+- name: Transaction Enrichment
+  description: "This API provides an enriched transactions with additional data attributes, including **merchant names**, **location**, **merchant logos**, **categories**, **transaction type** and **merchant contact information**."
+paths:
+  /v1/transactions/enrichment:
+    post:
+      tags:
+      - Transaction Enrichment
+      description: This API provides enriched transaction for both Credit and Debit transaction.
+      operationId: enrichTransaction
+      parameters:
+      - name: Authorization
+        in: header
+        description: "Retrieve an access token through the Access Token API. Access token is required in every request. To view documentation on access token <a href=\"../docs/?path=docs/gettingstarted/access-tokens.md\" title=\"Click to open\">click here.</a> Tokens expire after 15 minutes. Provide the value as follows in the header. Authorization:: Bearer <Access Token Value>"
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: Bearer USlfM8dilzKZPcuGGP3BfVLd7Snk
+      - name: userId
+        in: header
+        description: Optional. User on behalf of whom the request is being made. userId must be alphanumeric.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: johndoe
+      - name: x-fapi-financial-id
+        in: header
+        description: Required. Provide 8 digit client id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 12345678
+      - name: deploymentToken
+        in: header
+        description: Required. DeploymentToken provided by Fiserv Implementation Specialists.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: INTCSAUTH1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransactionEnrichmentRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransactionEnrichmentResponse"
+        "400":
+          description: Invalid Request
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/4xxError"
+        "401":
+          description: Unauthorized access
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/4xxError"
+        "403":
+          description: Forbidden
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/4xxError"
+        "404":
+          description: Not Found
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/4xxError"
+        "405":
+          description: Method Not Allowed
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/4xxError"
+        "406":
+          description: Unacceptable
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/4xxError"
+        "415":
+          description: Unsupported Media Type
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/4xxError"
+        "422":
+          description: Unprocessable Entity
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/4xxError"
+        "429":
+          description: Too Many Requests
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/4xxError"
+        "500":
+          description: Internal Server Error
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errorResponse:
+                    code: 500-01
+                    message: internal server error
+                    developerInfo:
+                      developerMessage: internal server error
+                      moreInfo: There was a problem handling your request.  Please try again.  If the problem persists please contact Fiserv ETSD at 888-243-2543 (you unique messageID included below)
+                      messageid: 25557-84290371-1
+      deprecated: false
+      x-child-product-name: Accounts
+      x-proxy-name: Get account transactions v1
+      x-group-name: Account Transaction
+  /v2/transactions/enrichment:
+    post:
+      tags:
+      - Transaction Enrichment
+      description: "Users can retrieve either SUMMARY (default) or DETAIL records when performing a transaction search. The SUMMARY view provides a limited set of fields, while the DETAIL view includes all available fields. For Debit transactions, up to 250 records can be fetched. For Credit transactions, users can retrieve up to 750 records—comprising 250 each of pending, posted, and declined transactions. Additionally, enriched fields are available for both summary and detail views. "
+      operationId: enrichTransactionv2
+      parameters:
+      - name: Authorization
+        in: header
+        description: "Retrieve an access token through the Access Token API. Access token is required in every request. To view documentation on access token <a href=\"../docs/?path=docs/gettingstarted/access-tokens.md\" title=\"Click to open\">click here.</a> Tokens expire after 15 minutes. Provide the value as follows in the header. Authorization:: Bearer <Access Token Value>"
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: Bearer USlfM8dilzKZPcuGGP3BfVLd7Snk
+      - name: userId
+        in: header
+        description: Optional. User on behalf of whom the request is being made. userId must be alphanumeric.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: johndoe
+      - name: x-fapi-financial-id
+        in: header
+        description: Required. Provide 8 digit client id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 12345678
+      - name: filter
+        in: query
+        description: "User can retrieve SUMMARY or DETAIL records for transaction search. Default value is SUMMARY. DETAIL includes all the transaction search fields. SUMMARY includes only a subset of search fields. \n"
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: summary
+      - name: pageOffset
+        in: query
+        description: The starting point in the result set
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: "2"
+      - name: pageLimit
+        in: query
+        description: The number of records to be returned. the maximum value for page limit is 25.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: "25"
+      requestBody:
+        description: searchTransactionRequest
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SearchTransactionRequestV2"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SearchTransactionsResponseV2"
+        "206":
+          description: Partial Content Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SearchTransactionsPartialResponseV2"
+        "400":
+          description: Invalid Request
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/4xxError"
+        "401":
+          description: Unauthorized access
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/4xxError"
+        "403":
+          description: Forbidden
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/4xxError"
+        "404":
+          description: Not Found
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/4xxError"
+        "405":
+          description: Method Not Allowed
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/4xxError"
+        "406":
+          description: Unacceptable
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/4xxError"
+        "415":
+          description: Unsupported Media Type
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/4xxError"
+        "422":
+          description: Unprocessable Entity
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/4xxError"
+        "429":
+          description: Too Many Requests
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/4xxError"
+        "500":
+          description: Internal Server Error
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errorResponse:
+                    code: 500-01
+                    message: internal server error
+                    developerInfo:
+                      developerMessage: internal server error
+                      moreInfo: There was a problem handling your request. Please try again. If the problem persists please contact Support
+                      messageid: 25557-84290371-1
+      deprecated: false
+      x-child-product-name: Cards
+      x-group-name: Transaction
+      x-proxy-name: Get transactions v3
+components:
+  schemas:
+    TransactionEnrichmentRequest:
+      required:
+      - transactionDescription
+      type: object
+      properties:
+        transactionDescription:
+          type: string
+          description: Merchant name (ISO Field 48 or 43) or transaction description. Allowed length is 200 ytes.
+          example: BILL PAY WellsFargo HomeE MOBILE XXXXXXX6091998 ON 03-01
+        extendedFields:
+          $ref: "#/components/schemas/ExtendedFields"
+    ExtendedFields:
+      type: object
+      properties:
+        mccCode:
+          type: string
+          description: Merchant category code
+          example: "6011"
+        merchantCity:
+          type: string
+          description: City in which merchant is located
+          example: NJ
+        merchantState:
+          type: string
+          description: State in which merchant is located
+          example: NJ
+        merchantPostalCode:
+          type: string
+          description: Postal code for the merchant’s location
+          example: "12345"
+        acquirerId:
+          type: string
+          description: Acquirer ID
+          example: "12345678"
+        merchantId:
+          type: string
+          description: Merchant ID
+          example: "12345678"
+        terminalId:
+          type: string
+          description: Terminal ID
+          example: "12345678"
+        tokenRequestorId:
+          type: string
+          description: Token requestor ID
+          example: "12345"
+        userId:
+          type: string
+          description: "ID used to uniquely identify the user or card, must be tokenized without any PAI/PII"
+          example: TEST
+        transactionId:
+          type: string
+          description: ID used to uniquely identify the transaction
+          example: "12345678912"
+        transactionAmount:
+          type: string
+          description: Amount of the transaction
+          example: "1.00"
+        transactionCurrency:
+          type: string
+          description: Transaction currency code (ISO 4217)
+          example: US Dollers
+        transactionTime:
+          type: string
+          description: Time at which the transaction occurred
+          example: US
+        transactionStatus:
+          type: string
+          description: "Pending; Posted; Denied; Reversal card, ach, billpay, zelle, rtp, p2p, others."
+          example: Posted
+        accountTransactionType:
+          type: string
+          description: "For billpay transactions, set accountTransactionType = billpay;"
+          example: Billpay
+        transactionType:
+          type: string
+          description: In-store; eCommerce; ATM; Recurring; MOTO; Others
+          example: In-store
+        responseCode:
+          type: string
+          description: Response code (ISO 8583 Field 39)
+          example: "00"
+        posEntryMode:
+          type: string
+          description: ISO 8583 Field 22. Required if transaction type is not available
+          example: "20"
+    TransactionEnrichmentResponse:
+      type: object
+      properties:
+        enrichmentStatus:
+          type: string
+          description: MERCHANT_AND_STORE_RESOLVED ; MERCHANT_RESOLVED; MERCHANT_NAME_CLEANSED; MERCHANT_CATEGORIZED; UN_ENRICHED.
+          example: MERCHANT_AND_STORE_RESOLVED
+        enrichedMerchantName:
+          type: string
+          description: "Enriched merchant name if store resolved, return the corresponding merchant name;  if merchant resolved, return the merchant name;  if standard merchant name is available under either of the circumstances, return the standard merchant name."
+          example: Wells Fargo
+        enrichedTransactionDescription:
+          type: string
+          description: Enriched transaction description
+          example: Wells Fargo Home Equity
+        transactionCategory:
+          type: string
+          description: Merchant Category
+          example: Transfers & Adjustments
+        transactionSubCategory:
+          type: string
+          description: Merchant Sub-category
+          example: Other Transfers & Adjustments
+        additionalMerchantDescription:
+          type: string
+          description: Additional merchant category description (e.g. 3rd party category descriptions; MCC descriptions)
+          example: ATM Cash Deposit Wells Fargo Bank
+        logoUrl:
+          type: string
+          description: Merchant’s logo URL
+          example: https://djar1aebo4jz2.cloudfront.net/logo/5d11cffd-d5da-4aa6-8c6b-590abcf36247.png
+        enrichedMerchantAddress:
+          type: string
+          description: Enriched Merchant’s street address.
+          example: 4580 Jimmy Lee Smith Pkwy
+        enrichedMerchantCity:
+          type: string
+          description: Enriched Merchant’s city
+          example: Hiram
+        enrichedMerchantState:
+          type: string
+          description: Enriched Merchant’s state
+          example: GA
+        enrichedMerchantPostalCode:
+          type: string
+          description: Enriched Merchant’s postal code
+          example: "30141"
+        enrichedMerchantCountry:
+          type: string
+          description: Enriched Merchant’s country
+          example: US
+        enrichedMerchantLatitude:
+          type: string
+          description: Enriched Merchant’s latitude
+          example: "33.890003"
+        enrichedMerchantLongitude:
+          type: string
+          description: Enriched Merchant’s longitude
+          example: "-84.75211"
+        enrichedMerchantLocationType:
+          type: string
+          description: Type of Enriched Merchant’s location (STORE; TERMINAL_CENTROID)
+          example: STORE
+        phone:
+          type: string
+          description: Merchant’s phone number.
+          example: "18008693557"
+        url:
+          type: string
+          description: "If standard merchant url is available under either of the circumstances, return the standard merchant url."
+          example: https://www.1234orthok.com
+        hours:
+          type: array
+          description: Merchant’s hours of operation. Time range should be 00:00 to 23:59.
+          items:
+            $ref: "#/components/schemas/Hours"
+        transactionType:
+          type: string
+          description: "cp(in-store transactions), cnp(online, ecommerce), atm"
+          example: cnp
+        accountTransactionType:
+          type: string
+          description: "Card, Billpay, ATM, Transfer, ACH, Zelle, etc"
+          example: Card
+        paymentServiceProvider:
+          type: string
+          description: Payment Service Provider
+          example: Digital River
+    Hours:
+      type: object
+      properties:
+        monday:
+          $ref: "#/components/schemas/DayHours"
+        tuesday:
+          $ref: "#/components/schemas/DayHours"
+        wednesday:
+          $ref: "#/components/schemas/DayHours"
+        thursday:
+          $ref: "#/components/schemas/DayHours"
+        friday:
+          $ref: "#/components/schemas/DayHours"
+        saturday:
+          $ref: "#/components/schemas/DayHours"
+        sunday:
+          $ref: "#/components/schemas/DayHours"
+      additionalProperties: false
+    DayHours:
+      type: array
+      items:
+        maxItems: 2
+        minItems: 2
+        type: array
+        items:
+          pattern: "^([01][0-9]|2[0-3]):[0-5][0-9]$"
+          type: string
+    TransactionEnrichmentResponseV2:
+      type: object
+      properties:
+        enrichmentStatus:
+          type: string
+          description: MERCHANT_AND_STORE_RESOLVED ; MERCHANT_RESOLVED; MERCHANT_NAME_CLEANSED; MERCHANT_CATEGORIZED; UN_ENRICHED.
+          example: MERCHANT_AND_STORE_RESOLVED
+        enrichedMerchantName:
+          type: string
+          description: "Enriched merchant name if store resolved, return the corresponding merchant name;  if merchant resolved, return the merchant name;  if standard merchant name is available under either of the circumstances, return the standard merchant name."
+          example: Wells Fargo
+        enrichedTransactionDescription:
+          type: string
+          description: Enriched transaction description
+          example: Wells Fargo Home Equity
+        transactionCategory:
+          type: string
+          description: Merchant Category
+          example: Transfers & Adjustments
+        transactionSubCategory:
+          type: string
+          description: Merchant Sub-category
+          example: Other Transfers & Adjustments
+        additionalMerchantDescription:
+          type: string
+          description: Additional merchant category description (e.g. 3rd party category descriptions; MCC descriptions)
+          example: ATM Cash Deposit Wells Fargo Bank
+        logoUrl:
+          type: string
+          description: Merchant’s logo URL
+          example: https://djar1aebo4jz2.cloudfront.net/logo/5d11cffd-d5da-4aa6-8c6b-590abcf36247.png
+        enrichedMerchantAddress:
+          type: string
+          description: Enriched Merchant’s street address.
+          example: 4580 Jimmy Lee Smith Pkwy
+        enrichedMerchantCity:
+          type: string
+          description: Enriched Merchant’s city
+          example: Hiram
+        enrichedMerchantState:
+          type: string
+          description: Enriched Merchant’s state
+          example: GA
+        enrichedMerchantPostalCode:
+          type: string
+          description: Enriched Merchant’s postal code
+          example: "30141"
+        enrichedMerchantCountry:
+          type: string
+          description: Enriched Merchant’s country
+          example: US
+        enrichedMerchantLatitude:
+          type: string
+          description: Enriched Merchant’s latitude
+          example: "33.890003"
+        enrichedMerchantLongitude:
+          type: string
+          description: Enriched Merchant’s longitude
+          example: "-84.75211"
+        enrichedMerchantLocationType:
+          type: string
+          description: Type of Enriched Merchant’s location (STORE; TERMINAL_CENTROID)
+          example: STORE
+        phone:
+          type: string
+          description: Merchant’s phone number.
+          example: "18008693557"
+        url:
+          type: string
+          description: "If standard merchant url is available under either of the circumstances, return the standard merchant url."
+          example: https://www.1234orthok.com
+        hours:
+          type: array
+          description: Merchant’s hours of operation. Time range should be 00:00 to 23:59.
+          items:
+            $ref: "#/components/schemas/Hours"
+    SearchTransactionRequestV2:
+      type: object
+      properties:
+        cardNumber:
+          type: string
+          description: |
+            Unique number assigned to each cardholder record. Either cardNumber or nonTransToken must be included in the request. If both are included, only cardNumber will be used. Maximum length 19 digits.
+          format: numeric
+          example: "4000200030004000"
+        nonTransToken:
+          type: string
+          description: |
+            Non-transactional token associated with a card. Non-transactional token associated with a card.
+            Either cardNumber or nonTransToken must be included in the request. If both are included, only cardNumber is used. Length can be between 16 and 19.
+          format: alphanumeric
+          example: piUVBJKZGfks4000
+        memberNumber:
+          maxLength: 1
+          type: string
+          description: "The Member number is associated with the card. If not passed, defaults to ALL. Transaction summary ia returned as an array for all member numbers when defaulted to All."
+          format: numeric
+          example: "0"
+        responseFormat:
+          type: string
+          description: "Determines the format of Card number and/or Non-transactional token in the response.  \nValues are -\n- TOKEN_ONLY - Non-transactional token only.\n- MASKED_DETAILS_AND_TOKEN - Both Masked Details and Non-transactional token.\n- UNMASKED_DETAILS_AND_TOKEN - Both Clear details and Non-transactional token.\n"
+          example: MASKED_DETAILS_AND_TOKEN
+          default: MASKED_DETAILS_AND_TOKEN
+          enum:
+          - TOKEN_ONLY
+          - MASKED_DETAILS_AND_TOKEN
+          - UNMASKED_DETAILS_AND_TOKEN
+        enrichTransaction:
+          type: string
+          description: This flag determines whether enriched transaction data should be included.
+          format: boolean
+          example: "true"
+        filterCriteria:
+          type: array
+          items:
+            $ref: "#/components/schemas/FilterCriteria"
+    FilterCriteria:
+      type: object
+      properties:
+        filterBy:
+          type: string
+          description: "Filter applied to transactions search. One or many filter combinations are allowed. Applies to debit and credit cards.  \n- MERCHANT_NAME - Merchant Name.  \n- AMOUNT_FROM - Minimum amount. Valid format is 0.00. \n- AMOUNT_TO - Maximum amount. Valid format is 0.00.  \n- FROM_DATE - Start date. Valid Format is YYYY-MM-DD.  \n- TO_DATE - End date. Valid format is YYYY-MM-DD.  \n- STATUS - For debit transactions valid status are APPROVED, REVERSED and DECLINED. For credit transactions valid status are  POSTED/DECLINED/PENDING/APPROVED/REVERSED.  \n- TRANSACTION_CODE - Describes the type of transaction done on card. For values refer field transactionType.  \n- MESSAGE_TYPE - Message based on activity done on the transaction. For values refer field MessageType.  Applies only to debit cards.  \n- SYSTEM_RECORD_ID - The ID that uniquely identifies the transaction. Mapped to the lifecycle key.  \n- SEQUENCE_NUMBER - Chronological numeric identifier for the transaction.  \n- RETRIEVAL_REF_NUMBER - Transaction identifier typically assigned by the acquirer or transaction originator.  \n"
+          example: MERCHANT_NAME
+          enum:
+          - MERCHANT_NAME
+          - AMOUNT_FROM
+          - AMOUNT_TO
+          - FROM_DATE
+          - TO_DATE
+          - STATUS
+          - TRANSACTION_CODE
+          - MESSAGE_TYPE
+          - SYSTEM_RECORD_ID
+          - SEQUENCE_NUMBER
+          - RETRIEVAL_REF_NUMBER
+        filterValue:
+          type: string
+          description: "Values for selected filters. If the filterBy field is set to MERCHANT_NAME, this field contains the name of the merchant, such as 'ExampleCo'. See filterBy field for more information."
+          example: Store1
+    SearchTransactionsResponseV2:
+      type: object
+      properties:
+        totalTransactionCount:
+          type: integer
+          description: Total number of transactions for the provided request information.
+          example: 250
+        transactionCountPerPage:
+          type: integer
+          description: Total number of transactions per page for the provided request information.
+          example: 25
+          default: 25
+        cardNumber:
+          type: string
+          description: |
+            Unique number assigned to each cardholder record. Either cardNumber or nonTransToken must be included in the request. If both are included, only cardNumber will be used. Maximum length 19 digits.
+          format: alphanumeric
+          example: 400020XXXXXX4000
+        nonTransToken:
+          type: string
+          description: |
+            Non-transactional token associated with a card. Non-transactional token associated with a card.
+            Either cardNumber or nonTransToken must be included in the request. If both are included, only cardNumber is used. Length can be between 16 and 19.
+          format: alphanumeric
+          example: piUVBJKZGfks4000
+        transactions:
+          type: array
+          items:
+            $ref: "#/components/schemas/TransactionV2"
+    TransactionV2:
+      type: object
+      properties:
+        transactionSummary:
+          $ref: "#/components/schemas/TransactionSummaryV2"
+        transactionDetails:
+          $ref: "#/components/schemas/TransactionDetailsV2"
+        enrichedTransactionDetails:
+          $ref: "#/components/schemas/TransactionEnrichmentResponseV2"
+    TransactionSummaryV2:
+      type: object
+      properties:
+        authorizationCode:
+          type: string
+          description: |
+            Authorization approval code, generated for approved transactions only. Applies to debit and credit cards.
+          example: "000000"
+        responseCode:
+          type: string
+          description: |
+            Authorization response approval or denial code.  Applies to debit and credit cards.
+          example: "000"
+        responseCodeDescription:
+          type: string
+          description: |
+            This field provide description for response code. Applies to debit and credit cards.
+          example: APPROVED - NO BALANCES
+        responseDetails:
+          type: string
+          description: |
+            Details about response received for transaction. Applies to debit and credit cards.
+          example: 96-M Error processing PIN
+        status:
+          type: string
+          description: |
+            Status of the transaction.
+          example: 64-PI LOST
+        tranCode:
+          type: string
+          description: |
+            Indicates the specific transaction (action taken), the From account, and the To account. Applies to debit and credit cards.
+          example: "253"
+        transactionId:
+          type: string
+          description: "Detail about transaction id. Applies to debit and credit cards.  \n"
+          example: "{\"lifeCycleKey\":\"12323301232312331\",\"activeKey\":\"0210\",\"duID\":\"11348539120200526\"}"
+        transactionStatus:
+          type: string
+          description: |
+            Detail about transaction status. Applies to debit and credit cards.
+          example: APPROVED
+        transactionType:
+          type: string
+          description: |
+            Detail about transaction type. Applies to debit and credit cards.
+          example: WITHDRAWAL
+        transactionDescription:
+          type: string
+          description: |
+            Description of the transaction. Applies to both debit and credit cards.
+          example: MERCHANT ACCOUNT
+        acquirerRefNum:
+          type: string
+          description: |
+            Assigned by the network based on information provided by the acquirer. Can be used for network corrections. Applies to debit cards only.
+          example: "1055556060"
+        amtCharged:
+          type: string
+          description: |
+            Contains the transaction amount on a forced authorization (120) or on a forced post clearing transaction (220). For a partially approved transaction,this is the amount approved. The amount includes surcharges but does not include switch, cardholder, or interchange fees. On a preauthorization response (110) or an authorization response (210), an amount displayed is a balance returned in the response. This could be the ledger or available balance. On a partial reversal, Amount 2 is the new amount that replaces the amount displayed in Amount 1.Applies to debit cards only.
+          example: "1299.00"
+        eciMastercard:
+          type: string
+          description: "Electronic commerce indicator (ECI) provides information regarding the security level and authentication method used for an electronic commerce Debit Mastercard® transaction. Applies to debit cards only.  \nPossible Positions 1 and 2 values  \n- 21  -  Channel encryption; cardholder certificate not used  \n- 22  -  Masterpass-generated transaction  \n- 24  -  Digital Secure Remote Payment (DSRP) transaction  \n- 91  -  No security protocol; cardholder certificate not used.  \nPossible Position 3 values  \n- 0  -  Universal cardholder authentication field (UCAF) data collection – Is not supported by the merchant an Identity Check merchant has chosen not to undertake Identity Check on this transaction or identity Check failed authentication and merchant desires to proceed with transaction  \n- 1  -  UCAF data collection is supported by the merchant and UCAF data must be present (transaction contains an attempts AAV  \n- 2  -  UCAF data collection is supported by the merchant and UCAF data must be present (transaction contains a fully authenticated AAV)  \n- 3  -  UCAF data collection is supported by the merchant and UCAF (Mastercard assigned static AAV) must be present  \n- 4  -  Merchant has chosen to share authentication data within authorization; UCAF collection not supported  \n- 5  -  Reserved for future use  \n- 6  -  Merchant Risk-Based Decisioning  \n- 7  -  Partial Shipment or recurring payment; liability depends on the original UCAF values provided and matching with the original transaction.Applies to debit cards only.  \n"
+          example: "3"
+        eciVisa:
+          type: string
+          description: "Electronic commerce indicator (ECI)—Visa. Provides information regarding the security level and authentication method used for an electronic commerce Visa Check transaction.  Applies to debit cards only.  \nPosition 4 - Mail/Phone/Electronic Commerce and Payment Indicator  \n- Space - POS Customer Present (POS Check Service Only)  \n- 1 - Single transaction of a mail/phone order  \n- 2 - Recurring transaction  \n- 3 - Installment payment  \n- 4 - Unknown classification/Other mail order  \n- 5 - Secure electronic commerce transaction  \n- 6 - Non-authenticated security transaction at a 3-D Secure-capable merchant, and merchant attempted to authenticate the cardholder using 3-D Secure  \n- 7 - Non-authenticated security transaction.Applies to debit cards only.  \n- 8 - Non-secure transaction  \n"
+          example: "3"
+        expirationDateMismatch:
+          type: boolean
+          description: |
+            Indicates if an expiration date mismatch exists. Applies to debit cards only. Applies to debit cards only.
+          example: false
+        journalDateTime:
+          type: string
+          description: |
+            System assigned timestamp in Eastern Time. Applies to debit cards only.
+          format: date-time
+          example: 2025-07-07T13:05:49Z
+        effectiveDate:
+          type: string
+          description: |
+            Date when the transaction came into effect. Applies to credit cards only.
+          format: date
+          example: 2025-07-07
+        industryTransactionIdentifier:
+          type: string
+          description: "Identifier of the transaction assigned by Visa, American Express, or Discover Network For Visa transactions, the identifier means that the approved transaction meets Custom Payment Service (CPS) requirements. Applies to credit only for Pending, Posted and Declined transactions."
+          example: "123456789007894"
+        issuerTraceNumber:
+          type: string
+          description: "TFiserv-assigned identifier of a transaction associated with an authorization. Applies to credit only for Pending, Posted and Declined transactions."
+        memberNumber:
+          type: string
+          description: |
+            Unique number associated with each member of the card. Based on the card prefix setup. Editable when adding a record.
+            If the member number is not passed, defaults to 0 (zero).
+            Applies to debit cards only.
+          example: "0"
+        merchantCategoryCode:
+          type: string
+          description: "Merchant category code (MCC) associated with the transaction. National code that classifies the card acceptor’s type of business, product, or service. Applies to both debit and credit cards."
+          example: "6011"
+        merchantCity:
+          type: string
+          description: Regulation E City and State where terminal is located. Applies to debit cards only.
+          example: Newark
+        merchantName:
+          type: string
+          description: Merchant Name. Applies to debit cards only.
+          example: Store1
+        merchantState:
+          type: string
+          description: "Merchant State  \nAL Alabama | AK Alaska | AS American Samoa (US Territory) | AZ Arizona | AR Arkansas  \nCA California | CO Colorado | CT Connecticut | DE Delaware | DC District of Columbia  \nFM Federated States of Micronesia (US Territory) | FSM Federated States of Micronesia (US Territory)  \nFL Florida | GA Georgia | GU Guam (US Territory) | GUM Guam (US Territory) | HI Hawaii  \nID Idaho | IL Illinois | IN Indiana | IA Iowa | KS Kansas | KY Kentucky  \nLA Louisiana | ME Maine | MH Marshall Islands (US Territory) | MHL Marshall Islands (US Territory)  \nMD Maryland | MA Massachusetts | MI Michigan | MN Minnesota | MS Mississippi  \nMO Missouri | MT Montana | NE Nebraska | NV Nevada | NH New Hampshire | NJ New Jersey  \nNM New Mexico | NY New York | NC North Carolina | ND North Dakota  \nMP Northern Mariana Islands (US Territory) | MNP Northern Mariana Islands (US Territory)  \nOH Ohio | OK Oklahoma | OR Oregon | PW Palau (US Territory) | PLW Palau (US Territory)  \nPA Pennsylvania | PR Puerto Rico (US Territory) | PRL Puerto Rico (US Territory) | RI Rhode Island  \nSC South Carolina | SD South Dakota | TN Tennessee | TX Texas | UT Utah  \nVT Vermont | VA Virginia | VI Virgin Islands (US Territory) | VIR Virgin Islands (US Territory)  \nWA Washington | WV West Virginia | WI Wisconsin | WY Wyoming . Applies to debit cards only. \n"
+          example: NJ
+        merchantCountry:
+          type: string
+          description: |
+            Country where the merchant is located. Applies to both debit and credit cards
+          example: USA
+        merchantPostalCode:
+          type: string
+          description: |
+            Postal Code of the merchant location. Applies to both debit and credit cards
+          example: "12345"
+        messageType:
+          type: string
+          description: "The combination of message type code and description for transaction message. Applies to debit cards only.  \n- 100- Pre-Auth Request  \n- 102- Pre-Auth Reversal  \n- 110- Preauthorization  \n- 120- Pre-Auth Stand In  \n- 121- Pre-Auth Adv Repeat  \n- 130- Auth Advice Resp  \n- 200- Request  \n- 202- Auth Reversal  \n- 210- Auth/Completion  \n- 220- Forced Completion  \n- 221- Advice Repeat  \n- 230- Advice Response  \n- 320- Batch Upload  \n- 330- Batch Upload Resp  \n- 420- Reversal  \n- 421- Advice Rev Repeat  \n- 430- Reversal Response  \n- 500- Batch Settl Request  \n- 510- Batch Settl Resp  \n- 800- Network Mgmt Req  \n- 810- Network Mgmt Resp  \n- 820- Network Mgmt Advice  \n"
+          example: 420- Reversal
+        network:
+          type: string
+          description: |
+            Identifies the network that routed the transaction.Applies to debit and credit cards both.
+          example: 655100 - Mastercard Credit - Affiliate Member
+        messageId:
+          type: string
+          description: "Identifier for the ISO message type used for this transaction. Applies to credit cards   \n"
+        pinTransaction:
+          type: boolean
+          description: |
+            Indicates if a PIN was used for the transactio. Applies to debit cards only.
+          example: true
+        posDataInputCapability:
+          type: string
+          description: |
+            Indicates the capability of the terminal to enter the card number and expiration date into the system. Applies to debit cards only.
+          example: "2"
+        posDataInputMode:
+          type: string
+          description: |
+            Indicates the method used to input the information from the card to the terminal. Applies to debit cards only.
+          example: 2 - Swipe
+        preAuthAmt:
+          type: string
+          description: |
+            Contains the transaction amount on a preauthorization response (110) or an authorization response (210). For a partially approved transaction, this is the amount approved. For a denied transaction, this is the requested amount. The amount includes surcharges but does not include switch, cardholder, or interchange fees. On a forced post preauthorization (120) or forced post clearing transaction (220), the clearing amount shown in Amount 2 is duplicated in Amount 1. On a reversal, Amount 1 is the amount to be reversed. Applies to debit cards only.
+          example: "1.00"
+        retrievalRefNumber:
+          type: string
+          description: |
+            Retrieval Reference Number
+          example: "518813000031"
+        subResponseCode:
+          type: string
+          description: |
+            Optional 1-character field further defining specific denial codes that are only applicable on certain response codes; they are case-sensitive and meanings vary based on response and response sub code combination. Applies to debit cards only.
+          example: M
+        systemRecordId:
+          type: string
+          description: |
+            System record Id.
+          example: ""
+        terminalId:
+          type: string
+          description: |
+            Identifier indicating the terminal where the transaction was performed. Applies to debit cards only.
+          example: VMDIEOS1
+        transactionAmount:
+          type: string
+          description: |
+            Amount on a particular transaction. Valid format is 0.00. Applies to debit and credit cards.
+          example: "1299.00"
+        transactionDateTime:
+          type: string
+          description: |
+            Date and Time when transaction was created. Applies to debit and credit cards.
+          format: date-time
+          example: 2025-07-07T22:35:49Z
+        unmatchedCompletionFlag:
+          type: boolean
+          description: |
+            Indicates unmatched completion flag. Applies to debit cards only.
+          example: false
+    TransactionDetailsV2:
+      type: object
+      properties:
+        authorizationCode:
+          type: string
+          description: |
+            Authorization approval code, generated for approved transactions only. Applies to debit and credit cards.
+          example: "000000"
+        responseCode:
+          type: string
+          description: |
+            Authorization response approval or denial code.  Applies to debit and credit cards.
+          example: "000"
+        responseCodeDescription:
+          type: string
+          description: |
+            This field provide description for response code. Applies to debit and credit cards.
+          example: APPROVED - NO BALANCES
+        responseDetails:
+          type: string
+          description: |
+            Details about response received for transaction. Applies to debit and credit cards.
+          example: 96-M Error processing PIN
+        status:
+          type: string
+          description: |
+            Status of the transaction.
+          example: 64-PI LOST
+        tranCode:
+          type: string
+          description: |
+            Indicates the specific transaction (action taken), the From account, and the To account. Applies to debit and credit cards.
+          example: "253"
+        transactionId:
+          type: string
+          description: "Detail about transaction id. Applies to debit and credit cards.  \n"
+          example: "{\"lifeCycleKey\":\"12323301232312331\",\"activeKey\":\"0210\",\"duID\":\"11348539120200526\"}"
+        transactionStatus:
+          type: string
+          description: |
+            Detail about transaction status. Applies to debit and credit cards.
+          example: APPROVED
+        transactionType:
+          type: string
+          description: |
+            Detail about transaction type. Applies to debit and credit cards.
+          example: WITHDRAWAL
+        acquirerRefNum:
+          type: string
+          description: |
+            Assigned by the network based on information provided by the acquirer. Can be used for network corrections. Applies to debit cards only.
+          example: "1055556060"
+        amtCharged:
+          type: string
+          description: |
+            Contains the transaction amount on a forced authorization (120) or on a forced post clearing transaction (220). For a partially approved transaction,this is the amount approved. The amount includes surcharges but does not include switch, cardholder, or interchange fees. On a preauthorization response (110) or an authorization response (210), an amount displayed is a balance returned in the response. This could be the ledger or available balance. On a partial reversal, Amount 2 is the new amount that replaces the amount displayed in Amount 1.Applies to debit cards only.
+          example: "1299.00"
+        eciMastercard:
+          type: string
+          description: "Electronic commerce indicator (ECI) provides information regarding the security level and authentication method used for an electronic commerce Debit Mastercard® transaction. Applies to debit cards only.  \nPossible Positions 1 and 2 values  \n- 21  -  Channel encryption; cardholder certificate not used  \n- 22  -  Masterpass-generated transaction  \n- 24  -  Digital Secure Remote Payment (DSRP) transaction  \n- 91  -  No security protocol; cardholder certificate not used.  \nPossible Position 3 values  \n- 0  -  Universal cardholder authentication field (UCAF) data collection – Is not supported by the merchant an Identity Check merchant has chosen not to undertake Identity Check on this transaction or identity Check failed authentication and merchant desires to proceed with transaction  \n- 1  -  UCAF data collection is supported by the merchant and UCAF data must be present (transaction contains an attempts AAV  \n- 2  -  UCAF data collection is supported by the merchant and UCAF data must be present (transaction contains a fully authenticated AAV)  \n- 3  -  UCAF data collection is supported by the merchant and UCAF (Mastercard assigned static AAV) must be present  \n- 4  -  Merchant has chosen to share authentication data within authorization; UCAF collection not supported  \n- 5  -  Reserved for future use  \n- 6  -  Merchant Risk-Based Decisioning  \n- 7  -  Partial Shipment or recurring payment; liability depends on the original UCAF values provided and matching with the original transaction.Applies to debit cards only.  \n"
+          example: "3"
+        eciVisa:
+          type: string
+          description: "Electronic commerce indicator (ECI)—Visa. Provides information regarding the security level and authentication method used for an electronic commerce Visa Check transaction.  Applies to debit cards only.  \nPosition 4 - Mail/Phone/Electronic Commerce and Payment Indicator  \n- Space - POS Customer Present (POS Check Service Only)  \n- 1 - Single transaction of a mail/phone order  \n- 2 - Recurring transaction  \n- 3 - Installment payment  \n- 4 - Unknown classification/Other mail order  \n- 5 - Secure electronic commerce transaction  \n- 6 - Non-authenticated security transaction at a 3-D Secure-capable merchant, and merchant attempted to authenticate the cardholder using 3-D Secure  \n- 7 - Non-authenticated security transaction.Applies to debit cards only.  \n- 8 - Non-secure transaction  \n"
+          example: "3"
+        expirationDateMismatch:
+          type: boolean
+          description: |
+            Indicates if an expiration date mismatch exists. Applies to debit cards only. Applies to debit cards only.
+          example: false
+        journalDateTime:
+          type: string
+          description: |
+            System assigned timestamp in Eastern Time. Applies to debit cards only.
+          format: date-time
+          example: 2025-07-07T13:05:49Z
+        effectiveDate:
+          type: string
+          description: |
+            Date when the transaction came into effect. Applies to credit cards only.
+          format: date
+          example: 2025-07-07
+        memberNumber:
+          type: string
+          description: |
+            Unique number associated with each member of the card. Based on the card prefix setup. Editable when adding a record.
+            If the member number is not passed, defaults to 0 (zero).
+            Applies to debit cards only.
+          example: "0"
+        merchantCategoryCode:
+          type: string
+          description: "Merchant category code (MCC) associated with the transaction. National code that classifies the card acceptor’s type of business, product, or service. Applies to both debit and credit cards."
+          example: "6011"
+        merchantCity:
+          type: string
+          description: Regulation E City and State where terminal is located. Applies to debit cards only.
+          example: Newark
+        merchantName:
+          type: string
+          description: Merchant Name. Applies to debit cards only.
+          example: Store1
+        merchantState:
+          type: string
+          description: "Merchant State  \nAL Alabama | AK Alaska | AS American Samoa (US Territory) | AZ Arizona | AR Arkansas  \nCA California | CO Colorado | CT Connecticut | DE Delaware | DC District of Columbia  \nFM Federated States of Micronesia (US Territory) | FSM Federated States of Micronesia (US Territory)  \nFL Florida | GA Georgia | GU Guam (US Territory) | GUM Guam (US Territory) | HI Hawaii  \nID Idaho | IL Illinois | IN Indiana | IA Iowa | KS Kansas | KY Kentucky  \nLA Louisiana | ME Maine | MH Marshall Islands (US Territory) | MHL Marshall Islands (US Territory)  \nMD Maryland | MA Massachusetts | MI Michigan | MN Minnesota | MS Mississippi  \nMO Missouri | MT Montana | NE Nebraska | NV Nevada | NH New Hampshire | NJ New Jersey  \nNM New Mexico | NY New York | NC North Carolina | ND North Dakota  \nMP Northern Mariana Islands (US Territory) | MNP Northern Mariana Islands (US Territory)  \nOH Ohio | OK Oklahoma | OR Oregon | PW Palau (US Territory) | PLW Palau (US Territory)  \nPA Pennsylvania | PR Puerto Rico (US Territory) | PRL Puerto Rico (US Territory) | RI Rhode Island  \nSC South Carolina | SD South Dakota | TN Tennessee | TX Texas | UT Utah  \nVT Vermont | VA Virginia | VI Virgin Islands (US Territory) | VIR Virgin Islands (US Territory)  \nWA Washington | WV West Virginia | WI Wisconsin | WY Wyoming . Applies to debit cards only. \n"
+          example: NJ
+        merchantCountry:
+          type: string
+          description: |
+            Country where the merchant is located. Applies to both debit and credit cards
+          example: USA
+        merchantPostalCode:
+          type: string
+          description: |
+            Postal Code of the merchant location. Applies to both debit and credit cards
+          example: "12345"
+        messageType:
+          type: string
+          description: "The combination of message type code and description for transaction message. Applies to debit cards only.  \n- 100- Pre-Auth Request  \n- 102- Pre-Auth Reversal  \n- 110- Preauthorization  \n- 120- Pre-Auth Stand In  \n- 121- Pre-Auth Adv Repeat  \n- 130- Auth Advice Resp  \n- 200- Request  \n- 202- Auth Reversal  \n- 210- Auth/Completion  \n- 220- Forced Completion  \n- 221- Advice Repeat  \n- 230- Advice Response  \n- 320- Batch Upload  \n- 330- Batch Upload Resp  \n- 420- Reversal  \n- 421- Advice Rev Repeat  \n- 430- Reversal Response  \n- 500- Batch Settl Request  \n- 510- Batch Settl Resp  \n- 800- Network Mgmt Req  \n- 810- Network Mgmt Resp  \n- 820- Network Mgmt Advice  \n"
+          example: 420- Reversal
+        network:
+          type: string
+          description: |
+            Identifies the network that routed the transaction.Applies to debit and credit cards both.
+          example: 655100 - Mastercard Credit - Affiliate Member
+        messageId:
+          type: string
+          description: "Identifier for the ISO message type used for this transaction. Applies to credit cards   \n"
+          example: "210"
+        pinTransaction:
+          type: string
+          description: |
+            Indicates if a PIN was used for the transaction.
+          example: 1 - Yes
+        posDataInputCapability:
+          type: string
+          description: |
+            Indicates the capability of the terminal to enter the card number and expiration date into the system. Applies to debit cards only.
+          example: "2"
+        posDataInputMode:
+          type: string
+          description: |
+            Indicates the method used to input the information from the card to the terminal. Applies to debit cards only.
+          example: 2 - Swipe
+        preAuthAmt:
+          type: string
+          description: |
+            Contains the transaction amount on a preauthorization response (110) or an authorization response (210). For a partially approved transaction, this is the amount approved. For a denied transaction, this is the requested amount. The amount includes surcharges but does not include switch, cardholder, or interchange fees. On a forced post preauthorization (120) or forced post clearing transaction (220), the clearing amount shown in Amount 2 is duplicated in Amount 1. On a reversal, Amount 1 is the amount to be reversed. Applies to debit cards only.
+          example: "1.00"
+        retrievalRefNumber:
+          type: string
+          description: |
+            Retrieval Reference Number
+          example: "518813000031"
+        subResponseCode:
+          type: string
+          description: |
+            Optional 1-character field further defining specific denial codes that are only applicable on certain response codes; they are case-sensitive and meanings vary based on response and response sub code combination. Applies to debit cards only.
+          example: M
+        systemRecordId:
+          type: string
+          description: |
+            System record Id.
+          example: 377761184|12080251120230113|0120
+        terminalId:
+          type: string
+          description: |
+            Identifier indicating the terminal where the transaction was performed. Applies to debit cards only.
+          example: VMDIEOS1
+        transactionAmount:
+          type: string
+          description: |
+            Amount on a particular transaction. Valid format is 0.00. Applies to debit and credit cards.
+          example: "1299.00"
+        transactionDateTime:
+          type: string
+          description: |
+            Date and Time when transaction was created. Applies to debit and credit cards.
+          format: date-time
+          example: 2025-07-07T22:35:49Z
+        unmatchedCompletionFlag:
+          type: boolean
+          description: |
+            Indicates unmatched completion flag. Applies to debit cards only.
+          example: false
+        acquiringId:
+          type: string
+          description: |
+            Acquiring Institution ID code identifies the Acquiring Institution Or Merchant Bank for this transaction. MC - 5 to 11 digits. VISA - 6 to 11 digits. Applies to both Debit and Credit cards.
+          example: "10111111119"
+        applicationTranCounter:
+          type: string
+          description: |
+            This field contains a count of the transactions performed within the card application. The count is incremented by one each time a transaction is initiated.
+            Multiple authorization requests for the same transaction will have the same ATC; for example, when online PIN fails and the next authorization represents a different PIN try for the same transaction, the ATC will be the same. For reversals and advices, the ATC is the value from the original message.
+            This field maps to Field 55, Tag 9F36—Applicaton Transaction Counter. Applies to both Debit and Credit cards.
+          example: "01"
+        cardAcceptorIdCode:
+          type: string
+          description: |
+            Identification number assigned to the establishment where the transaction was acquired. Applies to both Debit and Credit cards.
+          example: "123450678901234"
+        cardEntryMode:
+          type: string
+          description: |
+            Indicates if card was keyed in (manual entry) or swiped/machine read. Applies to both Debit and Credit cards.
+          example: Swiped/Machine read
+        cavvResult:
+          type: string
+          description: |
+            Indicates the Cardholder Authentication Verification Value (CAVV) results code that identifies the outcome of CAVV validation. The value in field also indicates who performed the authentication, either Visa or the issuer, and the classification of the transaction. Applies to both Debit and Credit cards.
+          example: "1"
+        cvResult:
+          type: string
+          description: |
+            Card verification result. Identifies the card magnetic strip verification. Applies to both Debit and Credit cards.
+          example: Failed
+        cvvResult:
+          type: string
+          description: |
+            Defines outcome of CVV valid. Applies to both Debit and Credit cards.
+          example: NP
+        enfactNearTimeScore:
+          type: string
+          description: |
+            EnFact Near Time/Case Management Score. EnFact predictive model score assigned to the transaction after authorization. Applies to both Debit and Credit cards.
+          example: "150"
+        enfactRealTimeDecision:
+          type: string
+          description: "EnFact authorization recommendation based on an EnFact fraud rule assigned during authorization.  \n- A - Approve  \n- D - Deny  \n- T - Timed Out  \n- E - Error  \n- U - Falcon Server Unavailable  \n- R - Deny - Retain Card  \n- X - Engin to Falcon Timeout  \n- S - Stop Sending to Falcon . Applies to both Debit and Credit cards.          \n"
+          example: A
+        enfactRealTimeScore:
+          type: string
+          description: |
+            The real time score associated with a transaction during authorization. Applies to both Debit and Credit cards.
+          example: "150"
+        enfactRecommendation:
+          type: string
+          description: |
+            Identifies if the EnFact rules denied the transaction.Applies to both Debit and Credit cards.
+          example: approve
+        expirationDate:
+          type: string
+          description: "Expiration Date specifies the month and year after which an issuer designates a cardholder’s card to be “expired.Applies to both Debit and Credit cards.” \n"
+          example: "2609"
+        messageReasonCode:
+          type: string
+          description: |
+            Code explaining the reason for an online acquirer advice, reversal, or partial reversal.Applies to both Debit and Credit cards.
+          example: "420"
+        networkScore:
+          type: string
+          description: ' - Visa - Mastercard - Pulse - star. Applies to both Debit and Credit cards.'
+          example: Visa
+        ruleManagerRecommendation:
+          type: string
+          description: "RuleManager transaction recommendation sent back to the authorization platform.Applies to both Debit and Credit cards.  \n- C - Continue  \n- D - Deny  \n- E - Error  \n- O - Offline for Maintenance  \n- P - Pass  \n- R - Deny and Retain  \n- T - Timeout\n"
+          example: C
+        ruleManagerRuleName:
+          type: string
+          description: |
+            Mastercard expert monitoring system score or Visa advanced authorization score.Applies to both Debit and Credit cards.
+          example: GlobalRule
+        settlementCurrencyCode:
+          type: string
+          description: |
+            Currency Code for the settlement amount.Applies to both Debit and Credit cards.
+          example: "840"
+        stateCode:
+          type: string
+          description: |
+            Originating Center State Postal Code.Applies to both Debit and Credit cards.
+          example: NJ
+        systemAuditNumber:
+          type: string
+          description: |
+            Number a message initiator assigns to uniquely identify a transaction.Applies to both Debit and Credit cards.
+          example: "4565"
+        terminalCountryCode:
+          type: string
+          description: |
+            This field is carried in VISA SMART DEBIT SMART CREDIT (VSDC) transactions and identifies the country where the merchant terminal is located. A leading zero is required to pad the first unused half-byte of this field. The zero is filler and is not part of the code.This field maps to Field 55, Tag 9F1A—Terminal Country Code. Applies to both Debit and Credit cards.
+          example: USA
+        transactionBlockerResult:
+          type: string
+          description: "Identifies how the transaction was handled by TranBlocker.Applies to both Debit and Credit cards.  \n- 0 Not Checked  \n- 1 Timeout  \n- 2 Successful  \n- 3 Denote and Continue  \n- 4 Deny  \n- 5 Retain \n"
+          example: '0 Not Checked '
+        acqPostDate:
+          type: string
+          description: "Date the acquirer posted the transaction. For interchange transactions, this field contains the following\nIf Card Services performs settlement, the field contains the actual acquirer posting date.\nIf Card Services does not perform settlement, the field contains the network settlement date. Applies to debit cards only \n"
+          example: 23-JUN-20
+        atcResult:
+          type: string
+          description: "Application Transaction Counter Result. Indicates if the ATC passed or failed authentication or was not processed or checked.Applies to debit cards only \n"
+          example: NP
+        avsResult:
+          type: string
+          description: "Address verification service result.Applies to debit cards only. \nValid Values-\nA  Address matches, ZIP/postal code does not\nB  Street address matches, postal code in wrong format\nC  Street address and postal code in wrong format\nD  Street address and postal code match (international issuer)\nE  Error response for Merchant Category Code\nF  Cardholder name incorrect, address matches\nG  Card issued by a non-US issuer that does not participate in AVS\nI  Address information not verified by international issuer\nM  Street address and postal code match (international issuer)\nN  No match on address or ZIP/postal code\nO  Cardholder name and billing address match\nP  Postal code matches, street address not verified due to incompatible formats\nR  Retry – system timed out or unavailable\nS  Service not supported by issuer\nU  Address information is unavailable\nW  Nine-digit ZIP code matches, address does not\nX  Exact AVS match – address and nine-digit ZIP code match\nY  Address and five-digit ZIP code match\nZ  Five-digit ZIP code matches, address does not\n"
+          example: A
+        camResult:
+          type: string
+          description: "Card Authentication Method Result. Indicates if the application request cryptogram (ARQC) passed or failed authentication, or was not processed or checked. Applies to debit cards only \n"
+          example: "04"
+        cardCountryCode:
+          type: string
+          description: |
+            Country location of the card issuer.Applies to debit cards only.
+          example: USA
+        cardCounty:
+          type: string
+          description: |
+            County location of the card issuer.Applies to debit cards only.
+          example: "000"
+        cardholderAddress:
+          type: string
+          description: |
+            Address provided for address verification.Applies to debit cards only.
+          example: '12345    1010 Kharadi Pune   '
+        cardLogo:
+          type: string
+          description: |
+            Card issuer's 4-character alphanumeric client identifier.Applies to debit cards only.
+          example: ABCD
+        cashbackAmount:
+          type: string
+          description: |
+            Amount of cash returned to a cardholder during a transaction.Applies to debit cards only.
+          example: "10.00"
+        cvrResult:
+          type: string
+          description: |
+            Card Verification Result. CVR provided by the EMV card on the transaction request. Applies to debit cards only.
+          example: "2"
+        cvrResultStat:
+          type: string
+          description: |
+            Card Verification Results Result. Indicates if the CVR passed or failed authentication, or was not processed or checked. Applies to debit cards only.
+          example: NP
+        cvv2Cvc2Result:
+          type: boolean
+          description: "Card verification value (CVV2)/card validation code (CVC2) result. Indicates the result of verifying the CV2 from the card’s signature panel.  Applies to debit cards only.   \n"
+          example: false
+        depositType:
+          type: string
+          description: |
+            Indicates if the deposit is a check, cash, or mixed deposit. Applies to debit cards only.
+          example: Cash
+        eCommerce:
+          type: boolean
+          description: |
+            Indicates if the transaction was eCommerce. Applies to debit cards only.
+          example: false
+        emvApplicationID:
+          type: string
+          description: |
+            EMV application identifier. EMV application ID (AID) is used to uniquely identify each EMV application that a terminal supports. Every application identifier has an associated card scheme and parameters relating to how the application needs to be processed. A terminal may contain any number of such applications. Applies to debit cards only.
+          example: 'A0000000031010 '
+        emvCard:
+          type: boolean
+          description: |
+            Indicates if the card used in the transaction is EMV. Possible values Yes or No. Applies to debit cards only.
+          example: true
+        emvCardSequence:
+          type: string
+          description: |
+            Distinguishes among separate cards having the same PAN. Issuers may encode chip cards with Card Sequence Numbers. Acquirers with chip-reading capability may pass this information encoded on the chip.Applies to debit cards only.
+          example: "000"
+        emvFallback:
+          type: boolean
+          description: |
+            Indicates if the transaction is EMV fallback. Possible values Yes or No. Applies to debit cards only.
+          example: true
+        emvTerminal:
+          type: boolean
+          description: |
+            Indicates if the terminal is EMV capable. Possible values Yes or No. Applies to debit cards only.
+          example: true
+        emvTransaction:
+          type: boolean
+          description: |
+            Indicates if it is an EMV transaction. Possible values Yes or No. Applies to debit cards only.
+          example: true
+        entryMode:
+          type: string
+          description: |
+            Method used to input the information from the card to the terminal.Applies to debit cards only.
+          example: 2 - Swipe
+        fromAccount:
+          type: string
+          description: |
+            Number of the account impacted by a cardholder transaction. Applies to debit cards only.
+          example: XXXXXXXXXX6789
+        fromAccountType:
+          type: string
+          description: |
+            Type of the account impacted by a cardholder transaction. Applies to debit cards only.
+          example: Checking
+        international:
+          type: boolean
+          description: |
+            Indicates if the transaction was international.Applies to debit cards only.
+          example: false
+        locAmt1:
+          type: string
+          description: |
+            Local amount 1. Amount 1 field in the acquirer's currency. Contains the same value as Amount 1 if the acquirer's currency is U.S. Applies to debit cards only.
+          example: "15000.00"
+        locAmt2:
+          type: string
+          description: |
+            Local amount 2. Amount 2 field in the acquirer's currency. Contains the same value as Amount 2 if the acquirer's currency is U.S. Applies to debit cards only.
+          example: "0.00"
+        merchantAdviceCode:
+          type: string
+          description: |
+            Merchant advice code Applies to debit cards only.
+            Valid Values-
+            01  New account information available – check Account Updater
+            02  Try again later
+            03  Do not try again
+            04  Token requirements not fulfilled
+            05  Negotiated value not approved
+            21  Payment cancelled
+            22  Merchant does not qualify for product code
+            24–30  Retry after X hours/days (e.g., 24 = retry after 1 hour, 30 = retry after 10 days)
+            40  Non-reloadable prepaid card
+            41  Single-use virtual card number
+            42  Sanctions score exceeds threshold
+          example: "01"
+        merchantId:
+          type: string
+          description: |
+            Merchant identification number where the transaction originated. Applies to debit cards only.
+          example: "123450678901234"
+        mobileDenial:
+          type: string
+          description: |
+            Indicates the control policy selected by the cardholder through CardValet/CardHub which denied the transaction. Applies to debit cards only.
+          example: 'Tokenization failure '
+        mvv:
+          type: string
+          description: |
+            Identifies merchants that qualify for preferred interchange rates on POS transactions. If not present, standard interchange rates apply to the transaction. Assigned by Interlink and Visa. Applies to debit cards only.
+          example: "Yes"
+        offline:
+          type: boolean
+          description: |
+            Offline EMV processing indicates the card and terminal authorized a transaction without the transaction being routed to the host for processing
+            Card Services EMV solution does not presently support offline processing capabilities so this field will display No. For cards not issued by Fiserv, this may display Yes. Applies to debit cards only.
+            Values
+            Y = Offline EMV transaction
+            N = Online EMV transaction
+          example: false
+        pinPresent:
+          type: string
+          description: "Personal identification number present. Indicates if PIN was used or not, and whether the transaction routed through a standard PIN’d network or a typical Signature network.\n- 0 = Undetermined\n- 1 = Signature Network with PIN \n- 2 = Signature Network without PIN \n- 3 = Debit Network without PIN\n- 4 = Debit Network with PIN.Applies to debit cards only.\n"
+          example: "1"
+        pointOfService:
+          type: string
+          description: "Indicates the type of device used to acquire the transaction or the purpose of the transaction. Applies to debit cards only.  \n- 002 - ON-PREMISE  \n- 004 - ELECTRONIC CASH REGISTER  \n- 006 - PRE-AUTHORIZED REQUEST  \n- 007 - PRE-AUTHORIZED REQUEST-NO PIN  \n- 014 - GENERIC  \n- 051 - VERIFICATION OF FUNDS  \n- 054 - GAS PUMP  \n- 062 - OFF-PREMISE  \n- 064 - SCRIP DISPENSE  \n- 072 - RETAIL  \n- 074 - ADMINISTRATIVE  \n- 081 - PAYIT OR BANKIT TRANSACTION (ITP)  \n- 086 - PIN, NO TRACK2  \n- 087 - MERCHANT AUTHORIZED TRANSACTION  \n- 088 - PAPER CAPTURE  \n- 089 - TRACK READ (PAN AND EXP), NO PIN  \n- 090 - NO PIN, NO TRACK2  \n- 091 - NO PIN, TRACK2  \n- 092 - INTERNATIONAL  \n- 094 - SHARED BRANCH STAND ALONE  \n- 096 - SHARED BRANCH FRANCHISE  \n- 097 - SHARED BRANCH OUTLET  \n"
+          example: 002 - ON-PREMISE
+        posDataCode:
+          type: string
+          description: |
+            12-digit code indicating specific conditions present at the time of the transaction at the POS identifying terminal capability, terminal environment, and security data. Applies to debit cards only.
+          example: "250000100020"
+        posEntryMode:
+          type: string
+          description: |
+            Point of Sale (POS) entry mode.Applies to debit cards only.
+          example: "000"
+        productType:
+          type: string
+          description: |
+            Product Type - ATM or POS. Applies to debit cards only.
+          example: ATM
+        recurringPaymentInd:
+          type: string
+          description: |
+            Mastercard expert monitoring system score or Visa advanced authorization score. Applies to debit cards only.
+          example: 22120121310C
+        reversalCode:
+          type: string
+          description: |
+            The reason for a reversal. Applies to debit cards only.
+          example: 00 - NON REVERSAL
+        secureEci:
+          type: string
+          description: "Electronic commerce indicator (ECI) provides network information regarding the security level and authentication method used for an electronic commerce transaction. Applies to debit cards only.  \n"
+          example: "00"
+        sequenceNumber:
+          type: string
+          description: |
+            Chronological numeric identifier for the transaction, assigned by the terminal. Applies to debit cards only.Applies to debit cards only.
+          example: "000031"
+        surchargeAmount:
+          type: string
+          description: |
+            Amount of the ATM-level surcharge assessed by the terminal owner for the transaction. Applies to debit cards only.
+          example: "0.00"
+        surchargeReservalAmount:
+          type: string
+          description: |
+            Surcharge amount to settlement of the original nonreversal transaction. Applies to debit cards only.
+          example: "0.00"
+        terminalLogo:
+          type: string
+          description: |
+            Client identifier of terminal owner.Applies to debit cards only.
+          example: ABCD
+        terminalPinCapable:
+          type: boolean
+          description: |
+            Indicates the ability of the terminal to accept PIN.Applies to debit cards only.
+          example: false
+        terminalState:
+          type: string
+          description: "Terminal State.Applies to debit cards only. \n"
+          example: NJ
+        terminalStreet:
+          type: string
+          description: |
+            Street address where the terminal is located. Applies to debit cards only.
+          example: NJ
+        toAccount:
+          type: string
+          description: "Number of the account impacted by a cardholder transaction. Applies to debit cards only. \n"
+          example: XXXXXXXXXX6789
+        toAccountType:
+          type: string
+          description: |
+            Type of the account impacted by a cardholder transaction.Applies to debit cards only.
+          example: Checking
+        tokenRequestorId:
+          type: string
+          description: |
+            Wallet details. Possible values Apple pay - Google Pay - Samsung pay - Fitbit Pay - Garmin pay. Applies to debit cards only.
+          example: Apple pay
+        tokenTransaction:
+          type: string
+          description: |
+            Token Transaction. A tokenized payment transaction uses a token PAN that is an alternate 13- to 19-digit value provisioned for the real or true PAN. The real PAN is the card number assigned by the FI. For token provisioning transactions, this field is not applicable and the value is always N. Applies to debit cards only.
+          example: "No"
+        tokenType:
+          type: string
+          description: "Token Requestor Id. Applies to debit cards only. \n"
+          example: PSP Token
+        transactionNetAmount:
+          type: string
+          description: |
+            Requested amount presented to the FI, or the amount approved if partially approved, regardless of the. Applies to debit cards only.
+          example: "20.00"
+        transactionSource:
+          type: string
+          description: "Transacrion Source. Applies to debit cards only. \n"
+          example: ATM
+        tvrResult:
+          type: string
+          description: |
+            Terminal Verification Result. TVR status provided by the terminal on the transaction request.Applies to debit cards only.
+          example: "0000000000"
+        tvrResultStat:
+          type: string
+          description: |
+            Terminal Verification Results Status Result. Indicates if the TVR passed or failed authentication or was not processed or checked.Applies to debit cards only.
+          example: NP
+        acquiringCountryCode:
+          type: string
+          description: "Code of the country where the acquiring institution is located.Applies to credit cards only. \n"
+          example: IND
+        additionalData1:
+          type: string
+          description: |
+            Any optional data received on the response.Applies to credit cards only.
+          example: "150000000001"
+        additionalData2:
+          type: string
+          description: |
+            Any optional data received on the response. Applies to credit cards only.
+          example: "150000000001"
+        appInterchangeProfile:
+          type: string
+          description: |
+            Field 138 is carried in VSDC transactions and provides a series of indicators that reflect the specific functions supported by the chip card account, for example, whether cardholder verification is supported.This field maps to Field 55, Tag 82—Application Interchange Profile. Applies to credit cards only.
+          example: "2000"
+        availableUsage:
+          type: string
+          description: |
+            Amount of available credit on the account. Applies to credit cards only.
+          example: "0000000000"
+        avsOptionCode:
+          type: string
+          description: |
+            Address Verification Service (AVS) Request indicates that verification of the cardholder billing address is requested in the authorization message. Applies to credit cards only.
+          example: "00"
+        avsPostalCode:
+          type: string
+          description: |
+            Identifies the cardholder postal code and street address that is used for certain types of verification. Applies to credit cards only.
+          example: "123451114"
+        cardAcceptorCity:
+          type: string
+          description: |
+            Indicates the city where the call originated. Applies to credit cards only.
+          example: NJ
+        cardAcceptorName:
+          type: string
+          description: |
+            Indicates the name of the establishment where the transaction was acquired. Applies to credit cards only.
+          example: NJ
+        cardAcceptorTermId:
+          type: string
+          description: |
+            Identifies a terminal at the card acceptor location of acquiring institutions or merchant POS systems. The terminal ID should be printed on all transaction receipts in ATM and POS transactions where the terminal is capable of generating customer receipts.Applies to credit cards only.
+          example: WD772002
+        cardSequenceNumber:
+          type: string
+          description: |
+            Card Sequence Number distinguishes among separate cards having the same PAN. Applies to credit cards only.
+          example: "01"
+        cvcResultCode:
+          type: string
+          description: |
+            The result code of CVC (Card Verification Code). Applies to credit cards only.
+            Valid Values-
+            M  CVV2/CVC2 Match – The value provided matches the one on file
+            N  CVV2/CVC2 No Match – The value provided does not match
+            P  CVV2/CVC2 Not Processed – The check was not performed
+            S  CVV2/CVC2 Should be on card but not indicated – Merchant did not provide it
+            U  Issuer not certified or unable to verify CVV2/CVC2
+            X  No response from CVV2/CVC2 validation service
+            0  CVV2/CVC2 service not available
+            T  Temporary CVV/CVC used for new card purchase
+            E  Invalid length of unpredictable number
+            Y  Invalid device support
+          example: M
+        cvvCVVtwo:
+          type: string
+          description: |
+            The CVV2/CVC2 value that is printed on the signature panel of Visa and Mastercard plastics. This value is made available for issuers that want to validate the CVV2/CVC2 value themselves. The value will only be passed to an issuer if provided by the acquirer.  Provided transactions in which the debit card is not present. Applies to credit cards only.
+          example: "123"
+        fraudDecision:
+          type: string
+          description: |
+            Decision returned by the third-party fraud interface. Applies to credit cards only.
+          example: decline
+        industryTransactionIdentifier:
+          type: string
+          description: "Identifier of the transaction assigned by Visa, American Express, or Discover Network For Visa transactions, the identifier means that the approved transaction meets Custom Payment Service (CPS) requirements. Applies to credit only for Pending, Posted and Declined transactions."
+          example: "123456789007894"
+        issuerTraceNumber:
+          type: string
+          description: "TFiserv-assigned identifier of a transaction associated with an authorization. Applies to credit only for Pending, Posted and Declined transactions."
+          example: "516305026425153"
+        originalResponseCode:
+          type: string
+          description: |
+            Original response code from the original transaction. For an instance, when V.I.P. encounters a duplicate transaction, this field contains the field 39 response code from the original transaction. Applies to credit cards only.
+          example: "000"
+        pinVerified:
+          type: string
+          description: |
+            Indicates if PIN verification took place on the client platform. Applies to credit cards only.
+          example: "Y"
+        posCode:
+          type: string
+          description: "Identifies the Point of Service   condition code. It describes the condition under which the transaction took place at POS.Applies to credit cards only. \n"
+          example: "002"
+        posMode:
+          type: string
+          description: |
+            Numeric codes to indicate the method by which the PAN was entered into the interchange system and to indicate the POS terminal PIN entry capabilities.Applies to credit cards only.
+          example: "000"
+        referenceNumber:
+          type: string
+          description: |
+            Reference number assigned to the transaction. Applies to credit cards only.
+          example: "109000481050"
+        reversalreason:
+          type: string
+          description: |
+            Reason for reversal transaction. Applies to credit cards only.
+          example: "2105"
+        riskCodeOne:
+          type: string
+          description: |
+            Field 62.22, positions 1-2 is a Visa private-use field that contains additional Advanced Authorization online risk assessment information to assist issuers in the authorization decision-making process. The condition codes provide descriptive information for high-risk assessments.These positions may contain a Compromised Account Risk Condition Code (CARCC) related to a high-risk even in the Compromised Account Management System (CAMS).Applies to credit cards only.
+          example: "123456"
+        riskReasonCodeOne:
+          type: string
+          description: |
+            Field 62.21, position 3 is.an alphanumeric combination that will act as a key to explain the risk score model. Applies to credit cards only.
+          example: "1234"
+        riskScore:
+          type: string
+          description: |
+            Field 62.21, positions 1-2 is a Visa private-use field that contains online risk assessment information from Advanced Authorization. This information assists issuers in the authorization decision-making process.This value indicates the degree of risk associated with a transaction. This two-byte transaction risk score is represented by a numeric value from 01–99. Applies to credit cards only.
+          example: "99"
+        settlementAmount:
+          type: string
+          description: |
+            Amount paid to merchant. Applies to credit cards only.
+          example: "1100.00"
+          x-encrypted: "N"
+        settlementConversionRate:
+          type: string
+          description: |
+            Conversion Rate applied on settlement amount.Applies to credit cards only.
+          example: "0"
+        tagCode:
+          type: string
+          description: |
+            Indicates whether the merchant terminal supports a specific program or service.Applies to credit cards only.
+          example: 52120151310C
+        tagData:
+          type: string
+          description: "Identifies the electronic commerce indicators representing the security level and cardholder authentication associated with the transaction. Applies to credit cards only.\nValid Values-\n00  No authentication attempted or failed  \n01  Authentication attempted via 3DS (stand-in or partial)  \n02  Full 3D Secure authentication successful  \n05  3DS authentication successful (Visa, Amex, etc.)\n06  Exempt from Strong Customer Authentication (SCA)  \n07  Authentication failed or not attempted (SCA exemption used)\n"
+          example: "01"
+        tranAmtOriginal:
+          type: string
+          description: "Original amount of funds requested by the cardholder in the transaction currency (US Dollars). This amount includes cashback and surcharge fees and is exclusive of ISA and CCA fees.Applies to credit cards only. \n"
+          example: "1533.00"
+        tranFeeAmount:
+          type: string
+          description: |
+            Fee amount charged on transaction.Applies to credit cards only.
+          example: "20.00"
+        transmissionDateTime:
+          type: string
+          description: |
+            Date and Time when transaction was created. Applies to debit and credit cards.
+          format: date-time
+          example: 2025-07-18T10:35:31.622Z
+        authorizationResponseDescription:
+          type: string
+          description: |
+            Description of the authorization response. Applies to credit cards for declined transactions only.
+          example: PI CLOSED
+        declinedReasonCode:
+          type: string
+          description: |
+            Reason code and description for declined transactions. Applies to credit cards for declined and pending transactions only.
+          example: 63 - PI CLOSED
+        expandedReasonCode:
+          type: string
+          description: |
+            Code for expanded reason.Applies to credit cards for declined and pending transactions only.
+          example: "99999"
+        merchantNumber:
+          type: string
+          description: |
+            Identifies the merchant where the transaction originated.Applies to credit cards for declined, pending and posted transactions.
+          example: "443011000000018"
+        transactionAccountNumber:
+          type: string
+          description: |
+            In case of Credit, this field value differs. This is card used for Auth and account number/card number in case of Posted transactions. Applies to credit cards for declined, pending and posted transactions.
+          example: 123456XXXXXX4067
+        transactionCode:
+          type: string
+          description: |
+            Specific code provided for each transaction. Applies to credit cards for declined, pending and posted transactions.
+          example: "253"
+        transactionDescription:
+          type: string
+          description: |
+            Description of the transaction. Applies to credit cards for declined, pending and posted transactions.
+          example: MERCHANT ACCOUNT
+        enteredExpirationDate:
+          type: string
+          description: |
+            Entered expiration date.Applies to credit cards for pending transactions only.
+          format: YYYY-MM
+          example: 2022-12
+        originalAuthAdjustmentAmount:
+          type: string
+          description: "Any adjustment done on original authorized amount. For an example, if authorized amount is 100 and transaction amount is 60, 40 is the adjustment amount. Applies to credit cards for posted and pending transactions only. \n"
+          example: "40.00"
+        posEntryModeCode:
+          type: string
+          description: "Point of Sale (POS) entry mode code. Applies to credit cards for pending transactions only. \n"
+          example: "01"
+        cardholderAccountNumber:
+          type: string
+          description: |
+            The cardholderAccountNumber is used as control account number in case of consolidated billing on subordinate account transaction. Applies to credit cards for posted transactions only.
+          example: XXXXXXXXXX6789
+        detailTransactionIdentifier:
+          type: string
+          description: "Detail about transaction id. Applies to credit cards for pending transactions only.  \n"
+          example: "000000000000000"
+        postingDate:
+          type: string
+          description: "Posting date of the transaction.Applies to credit cards for posted transactions only. \n"
+          example: 2021-10-14
+        promotionId:
+          type: string
+          description: |
+            Promotion identification. Identifies the promotion to which the transaction was posted.Applies to credit cards for posted transactions only.
+          example: "12345678"
+    SearchTransactionsPartialResponseV2:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Total number of transactions for the provided request information.
+          example: 1
+        cardNumber:
+          type: string
+          description: |
+            Unique number assigned to each cardholder record. Either cardNumber or nonTransToken must be included in the request. If both are included, only cardNumber will be used. Maximum length 19 digits.
+          format: alphanumeric
+          example: 400020XXXXXX4000
+        nonTransToken:
+          type: string
+          description: |
+            Non-transactional token associated with a card. Non-transactional token associated with a card.
+            Either cardNumber or nonTransToken must be included in the request. If both are included, only cardNumber is used. Length can be between 16 and 19.
+          format: alphanumeric
+          example: piUVBJKZGfks4000
+        memberNumber:
+          type: string
+          description: |
+            Member Number associated with the card. This field is only used if the user is selecting member number for a given cardholder, not used when searching all transactions. Applies to debit cards only.
+          example: "0"
+        transactions:
+          type: array
+          items:
+            $ref: "#/components/schemas/TransactionV2"
+        warningInfo:
+          $ref: "#/components/schemas/Warning"
+    Warning:
+      type: object
+      properties:
+        message:
+          type: string
+          description: An explanation specific to this occurrence of the problem.
+        spanId:
+          type: string
+          description: Id generated on each service.
+        traceId:
+          type: string
+          description: Id generated from a request on the first service and passed to other downstream services.
+        warningDetails:
+          type: array
+          description: List of multiple errors that may cause/trigger the general error.
+          items:
+            $ref: "#/components/schemas/WarningDetail"
+    WarningDetail:
+      type: object
+      properties:
+        code:
+          type: string
+          description: "Unique code for error [artifact Id] - [code of the error(logic, action, etc)]."
+        detail:
+          type: string
+          description: Details of the error.
+          example: "Please refine your search criteria, Search results are >=250"
+        spanId:
+          type: string
+          description: Id generated per request on each service.
+        timestamp:
+          type: string
+          description: Date time of the error from a services.
+    "4xxError":
+      type: object
+      properties:
+        type:
+          type: string
+          description: An URI reference that identifies the problem type
+          example: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title:
+          type: string
+          description: Short summary of the problem.
+          example: Invalid Request
+        detail:
+          type: string
+          description: Specific explanation to the occurrence of the problem.
+          example: We had a problem getting your credit and debit card information.
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurrence of the problem.
+          example: /v1/cards/details
+        status:
+          type: number
+          description: The HTTP status code generated by the origin server for this occurrence of the problem.
+          example: 400
+  headers:
+    interactionId:
+      description: unique transaction ID created for each request for tracking purposes
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: 95ad42fb-afd1-2121-b794-3ed29342ks42
+  securitySchemes:
+    BearerAuth:
+      type: http
+      description: Enter 'Bearer ' followed by the access token.
+      scheme: bearer

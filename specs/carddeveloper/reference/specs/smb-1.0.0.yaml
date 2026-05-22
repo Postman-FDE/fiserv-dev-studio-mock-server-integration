@@ -1,0 +1,1682 @@
+---
+openapi: 3.0.0
+info:
+  title: SMB
+  description: Small Business API Documentation
+  version: 1.1.0-Jan-2026
+servers:
+- url: https://swaggerhub-live.apps.swift.cert.onefiserv.net/virts/DEV_STUDIO_LATEST/SMB/1.0.0-Nov-2025
+  description: SwaggerHub API Auto Mocking
+- url: https://card.api.fiservapps.com/cs/smb
+  description: Production url
+- url: https://card-sandbox.api.fiservapps.com/cs/smb
+  description: Sandbox url
+security:
+- bearerAuth: []
+tags:
+- name: Details
+  description: Fetch Small Business details - company and linked cards
+- name: Origination
+  description: "Manage Small Business - Add , Update , Delete company"
+paths:
+  /v1/smb/cards/search:
+    post:
+      tags:
+      - Details
+      description: "This method is used to retrieve list of card records by using companyId. Max 75 card record details per call. Applicable for DEBIT. <br><br> For more information go to <a className='text-app-action-blue' href='/product/CardDeveloper/docs/resources.md/#account' title='Click to open'>Resources.</a>"
+      operationId: getSMBCardInfo
+      parameters:
+      - name: Authorization
+        in: header
+        description: "Retrieve an access token through the Access Token API. Access token is required in every request. To view documentation on access token <a className='text-app-action-blue' href='/product/CardDeveloper/docs/?path=docs/gettingstarted/access-tokens.md' title='Click to open'>click here.</a> Tokens expire after 15 minutes. Provide the value as follows in the header. Authorization: Bearer <Access Token Value>"
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: Bearer USlfM8dilzKZPcuGGP3BfVLd7Snk
+      - name: userId
+        in: header
+        description: userId of user who is making API call. This is used for auditing purpose to track down API calls if multiple users are calling APIs under same appId.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: johndoe
+      - name: x-fapi-financial-id
+        in: header
+        description: An 8‑digit unique identifier assigned to each financial institution during their initial onboarding process.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 12345678
+      requestBody:
+        description: SMB Card Search request
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SMBCardsSearchRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SMBCardsSearchResponse"
+        "400":
+          description: Invalid Request
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Error"
+        "401":
+          description: Unauthorized access
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401Error"
+        "403":
+          description: Forbidden
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/403Error"
+        "404":
+          description: Not Found
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/404Error"
+        "422":
+          description: Unprocessable Entity
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+        "500":
+          description: Internal Server Error
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errorResponse:
+                    code: 500-01
+                    message: internal server error
+                    developerInfo:
+                      developerMessage: internal server error
+                      moreInfo: There was a problem handling your request. Please try again. If the problem persists please contact Support
+                      messageid: 25557-84290371-1
+      deprecated: false
+      x-child-product-name: SMB
+      x-group-name: Details
+      x-proxy-name: Get SMB cards info v1
+  /v1/smb/name/search:
+    post:
+      tags:
+      - Details
+      description: "This method is used to get the list of company by using companyName. This will act as wildcard search. Max 75 company details per call. Applicable for DEBIT. <br><br> For more information go to <a className='text-app-action-blue' href='/product/CardDeveloper/docs/resources.md/#account' title='Click to open'>Resources.</a>"
+      operationId: getSMBNameInfo
+      parameters:
+      - name: Authorization
+        in: header
+        description: "Retrieve an access token through the Access Token API. Access token is required in every request. To view documentation on access token <a className='text-app-action-blue' href='/product/CardDeveloper/docs/?path=docs/gettingstarted/access-tokens.md' title='Click to open'>click here.</a> Tokens expire after 15 minutes. Provide the value as follows in the header. Authorization: Bearer <Access Token Value>"
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: Bearer USlfM8dilzKZPcuGGP3BfVLd7Snk
+      - name: userId
+        in: header
+        description: userId of user who is making API call. This is used for auditing purpose to track down API calls if multiple users are calling APIs under same appId.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: johndoe
+      - name: x-fapi-financial-id
+        in: header
+        description: An 8‑digit unique identifier assigned to each financial institution during their initial onboarding process.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 12345678
+      requestBody:
+        description: SMB search by name
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SMBNameSearchRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SMBNameSearchResponse"
+        "400":
+          description: Invalid Request
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Error"
+        "401":
+          description: Unauthorized access
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401Error"
+        "403":
+          description: Forbidden
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/403Error"
+        "404":
+          description: Not Found
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/404Error"
+        "422":
+          description: Unprocessable Entity
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+        "500":
+          description: Internal Server Error
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errorResponse:
+                    code: 500-01
+                    message: internal server error
+                    developerInfo:
+                      developerMessage: internal server error
+                      moreInfo: There was a problem handling your request. Please try again. If the problem persists please contact Support
+                      messageid: 25557-84290371-1
+      deprecated: false
+      x-child-product-name: SMB
+      x-group-name: Details
+      x-proxy-name: Get SMB name info v1
+  /v1/smb/details/search:
+    post:
+      tags:
+      - Details
+      description: "This method is used to get the details of a company. Search can be based on company id or company tax id. Applicable for DEBIT. <br><br> For more information go to <a className='text-app-action-blue' href='/product/CardDeveloper/docs/resources.md/#account' title='Click to open'>Resources.</a>"
+      operationId: getSMBDetailInfo
+      parameters:
+      - name: Authorization
+        in: header
+        description: "Retrieve an access token through the Access Token API. Access token is required in every request. To view documentation on access token <a className='text-app-action-blue' href='/product/CardDeveloper/docs/?path=docs/gettingstarted/access-tokens.md' title='Click to open'>click here.</a> Tokens expire after 15 minutes. Provide the value as follows in the header. Authorization: Bearer <Access Token Value>"
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: Bearer USlfM8dilzKZPcuGGP3BfVLd7Snk
+      - name: userId
+        in: header
+        description: userId of user who is making API call. This is used for auditing purpose to track down API calls if multiple users are calling APIs under same appId.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: johndoe
+      - name: x-fapi-financial-id
+        in: header
+        description: An 8‑digit unique identifier assigned to each financial institution during their initial onboarding process.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 12345678
+      requestBody:
+        description: SMB Id Search request
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SMBDetailsSearchRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SMBDetailsSearchResponse"
+        "400":
+          description: Invalid Request
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Error"
+        "401":
+          description: Unauthorized access
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401Error"
+        "403":
+          description: Forbidden
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/403Error"
+        "404":
+          description: Not Found
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/404Error"
+        "422":
+          description: Unprocessable Entity
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+        "500":
+          description: Internal Server Error
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errorResponse:
+                    code: 500-01
+                    message: internal server error
+                    developerInfo:
+                      developerMessage: internal server error
+                      moreInfo: There was a problem handling your request. Please try again. If the problem persists please contact Support
+                      messageid: 25557-84290371-1
+      deprecated: false
+      x-child-product-name: SMB
+      x-group-name: Details
+      x-proxy-name: Get SMB details info v1
+  /v1/smb:
+    put:
+      tags:
+      - Origination
+      description: "This method will be used to enable Financial Institutions to delete a company record , there should be no cards associated to the company. Applicable for DEBIT. <br><br> For more information go to <a className='text-app-action-blue' href='/product/CardDeveloper/docs/resources.md/#account' title='Click to open'>Resources.</a>"
+      operationId: deleteCompany
+      parameters:
+      - name: Authorization
+        in: header
+        description: "Retrieve an access token through the Access Token API. Access token is required in every request. To view documentation on access token <a className='text-app-action-blue' href='/product/CardDeveloper/docs/?path=docs/gettingstarted/access-tokens.md' title='Click to open'>click here.</a> Tokens expire after 15 minutes. Provide the value as follows in the header. Authorization: Bearer <Access Token Value>"
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: Bearer USlfM8dilzKZPcuGGP3BfVLd7Snk
+      - name: userId
+        in: header
+        description: userId of user who is making API call. This is used for auditing purpose to track down API calls if multiple users are calling APIs under same appId.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: johndoe
+      - name: x-fapi-financial-id
+        in: header
+        description: An 8 digit unique financial institute id assigned to each FI while FI onboarding.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 12345678
+      requestBody:
+        description: SMB Id Delete request
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SMBDeleteRequest"
+        required: true
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Invalid Request
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Error"
+        "401":
+          description: Unauthorized access
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401Error"
+        "403":
+          description: Forbidden
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/403Error"
+        "404":
+          description: Not Found
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/404Error"
+        "422":
+          description: Unprocessable Entity
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+        "500":
+          description: Internal Server Error
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errorResponse:
+                    code: 500-01
+                    message: internal server error
+                    developerInfo:
+                      developerMessage: internal server error
+                      moreInfo: There was a problem handling your request. Please try again. If the problem persists please contact Support
+                      messageid: 25557-84290371-1
+      deprecated: false
+      x-child-product-name: SMB
+      x-group-name: Origination
+      x-proxy-name: Delete company v1
+    post:
+      tags:
+      - Origination
+      description: "This method will be used to enable Financial Institutions to add a company record. Applicable for DEBIT. <br><br> For more information go to <a className='text-app-action-blue' href='/product/CardDeveloper/docs/resources.md/#account' title='Click to open'>Resources.</a>"
+      operationId: addCompany
+      parameters:
+      - name: Authorization
+        in: header
+        description: "Retrieve an access token through the Access Token API. Access token is required in every request. To view documentation on access token <a className='text-app-action-blue' href='/product/CardDeveloper/docs/?path=docs/gettingstarted/access-tokens.md' title='Click to open'>click here.</a> Tokens expire after 15 minutes. Provide the value as follows in the header. Authorization: Bearer <Access Token Value>"
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: Bearer USlfM8dilzKZPcuGGP3BfVLd7Snk
+      - name: userId
+        in: header
+        description: userId of user who is making API call. This is used for auditing purpose to track down API calls if multiple users are calling APIs under same appId.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: johndoe
+      - name: x-fapi-financial-id
+        in: header
+        description: An 8‑digit unique identifier assigned to each financial institution during their initial onboarding process.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 12345678
+      requestBody:
+        description: Create company request
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SMBCreateRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SMBCreateResponse"
+        "400":
+          description: Invalid Request
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Error"
+        "401":
+          description: Unauthorized access
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401Error"
+        "403":
+          description: Forbidden
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/403Error"
+        "404":
+          description: Not Found
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/404Error"
+        "422":
+          description: Unprocessable Entity
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+        "500":
+          description: Internal Server Error
+          headers:
+            x-fapi-interaction-id:
+              $ref: "#/components/headers/interactionId"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errorResponse:
+                    code: 500-01
+                    message: internal server error
+                    developerInfo:
+                      developerMessage: internal server error
+                      moreInfo: There was a problem handling your request. Please try again. If the problem persists please contact Support
+                      messageid: 25557-84290371-1
+      deprecated: false
+      x-child-product-name: SMB
+      x-group-name: Origination
+      x-proxy-name: Add company v1
+    patch:
+      tags:
+      - Origination
+      description: "This method will be used to enable Financial Institutions to update company details. Applicable for DEBIT. <br><br> For more information go to <a className='text-app-action-blue' href='/product/CardDeveloper/docs/resources.md/#account' title='Click to open'>Resources.</a>"
+      operationId: updateCompany
+      parameters:
+      - name: Authorization
+        in: header
+        description: "Retrieve an access token through the Access Token API. Access token is required in every request. To view documentation on access token <a className='text-app-action-blue' href='/product/CardDeveloper/docs/?path=docs/gettingstarted/access-tokens.md' title='Click to open'>click here.</a> Tokens expire after 15 minutes. Provide the value as follows in the header. Authorization: Bearer <Access Token Value>"
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: Bearer USlfM8dilzKZPcuGGP3BfVLd7Snk
+      - name: userId
+        in: header
+        description: userId of user who is making API call. This is used for auditing purpose to track down API calls if multiple users are calling APIs under same appId
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: johndoe
+      - name: x-fapi-financial-id
+        in: header
+        description: An 8‑digit unique identifier assigned to each financial institution during their initial onboarding process.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 12345678
+      requestBody:
+        description: Update company details request
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SMBUpdateRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SMBUpdateResponse"
+        "400":
+          description: Invalid Request
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400Error'
+        "401":
+          description: Unauthorized access
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401Error'
+        "403":
+          description: Forbidden
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/403Error'
+        "404":
+          description: Not Found
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404Error'
+        "422":
+          description: Unprocessable Entity
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+        "500":
+          description: Internal Server Error
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errorResponse:
+                    code: 500-01
+                    message: internal server error
+                    developerInfo:
+                      developerMessage: internal server error
+                      moreInfo: There was a problem handling your request. Please try again. If the problem persists please contact Support
+                      messageid: 25557-84290371-1
+      deprecated: false
+      x-child-product-name: SMB
+      x-group-name: Origination
+      x-proxy-name: Update company v1
+components:
+  schemas:
+    SMBCardsSearchRequest:
+      title: SMBCardSearchRequest
+      required:
+      - bin
+      - companyId
+      type: object
+      properties:
+        responseFormat:
+          type: string
+          description: "Determines how the user wants to see the response - masked or unmasked. This is an optional field and if not provided, then MASKED will be the default value."
+          example: MASKED
+          enum:
+          - MASKED
+          - UNMASKED
+        companyId:
+          maxLength: 8
+          minLength: 8
+          type: string
+          description: A unique identifier assigned to a company.
+          example: "12345678"
+        bin:
+          maxLength: 12
+          minLength: 6
+          type: string
+          description: "Bank Identification Number of the FI. The BIN enables card networks and processors to determine how to route transactions, apply appropriate rules, and authenticate the card type and issuer."
+          example: "123456"
+        cardContext:
+          maxLength: 300
+          type: string
+          description: "This value appears in the response when there are more than 75 cardholder records. As part of the subsequent request to retrieve the next set of cardholder records this value must be sent. If this field is not present in response, no additional records are available."
+          example: U2QAAAAAAAAAAAAAAAYAAAAGAAAABgAAAAZBSwAIbwoAAAAAAAAAAAAAADcwMDAwMDg4OEUwNzYzMjQ4MDQ0MzAyNDcwMTQyODQ0MzAyNDcwMTQyODA5NjkgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+    SMBCardsSearchResponse:
+      title: SMBCardSearchResponse
+      properties:
+        count:
+          type: string
+          description: Represents the total number of card records returned in the response.
+          example: "3"
+        moreRecords:
+          type: string
+          description: Indicates if additional cards records are present to be displayed
+          example: "true"
+          enum:
+          - "Yes"
+          - "No"
+        cardContext:
+          maxLength: 300
+          type: string
+          description: "This value appears in the response when there are more than 75 cardholder records. As part of the subsequent request to retrieve the next set of cardholder records this value must be sent. If this field is not present in response, no additional records are available."
+          example: U2QAAAAAAAAAAAAAAAYAAAAGAAAABgAAAAZBSwAIbwoAAAAAAAAAAAAAADcwMDAwMDg4OEUwNzYzMjQ4MDQ0MzAyNDcwMTQyODQ0MzAyNDcwMTQyODA5NjkgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+        cardList:
+          type: array
+          description: List of cards associated with the company.
+          items:
+            $ref: "#/components/schemas/cardDetails"
+    cardDetails:
+      title: cardDetails
+      properties:
+        bin:
+          maxLength: 12
+          minLength: 6
+          type: string
+          description: "Bank Identification Number of the FI. The BIN enables card networks and processors to determine how to route transactions, apply appropriate rules, and authenticate the card type and issuer."
+          example: "123456"
+        cardNumber:
+          maxLength: 19
+          minLength: 16
+          type: string
+          description: "This field contains the Primary Account Number (PAN) assigned to the cardholder record, uniquely identifying the cardholder’s card account. This will be displayed as per the response format provided in request."
+          example: 400010XXXXXX3000
+        cardMemberNumber:
+          maxLength: 1
+          minLength: 1
+          type: string
+          description: "his field contains the member identifier associated with the card, derived from the card prefix configuration. It applies only to debit cards. This identifier helps distinguish between multiple cardholders linked to the same account and supports accurate routing of activation logic and cardholder-specific processing."
+          format: numeric
+          example: "1"
+        cardholderName:
+          maxLength: 26
+          type: string
+          description: Name of the cardholder
+          format: alphanumeric
+          example: "Doe, John M"
+        cardExpiryDate:
+          type: string
+          description: "This field specifies the expiration date of the card in MM/YY format. It indicates when the card is set to expire and is used for card validity checks, renewal processes, and account maintenance activities."
+          format: MM/YY
+          example: 10/23
+        cardStatus:
+          type: string
+          description: "This field specifies the current lifecycle status of the card at the portfolio or plastic level. It helps determine how the card is managed across systems, including activation, usage, restrictions, and deactivation.\n \nSupported values \n- ACTIVE – Card is active and available for use\n- CAPTURE – Card is captured and no longer usable\n- DEACTIVATE – Card is deactivated and cannot be used\n- ISSUED – Card has been issued but not yet activated\n- RESTRICTED – Card has limited functionality due to restrictions"
+          example: ACTIVE
+          enum:
+          - ACTIVE
+          - CAPTURE
+          - DEACTIVATE
+          - ISSUED
+          - RESTRICTED
+        statusReasoncode:
+          type: string
+          description: "This field specifies the reason for the current status of the selected card. It is required when updating the card status to CAPTURE or DEACTIVATE.\n \nSupported values \n- NONE – No specific reason provided\n- CLOSED – Account or card is closed\n-CUSTOMER_REQUEST – Status change requested by the customer\n- LOST – Card reported as lost\n- STOLEN – Card reported as stolen\n- ABUSED – Card misused or abused\n- DAMAGED – Card is physically damaged\n- REVOKED – Card revoked by the issuer"
+          example: NONE
+          enum:
+          - NONE
+          - CLOSED
+          - CUSTOMER_REQUEST
+          - LOST
+          - STOLEN
+          - ABUSED
+          - DAMAGED
+          - REVOKED
+        companyId:
+          maxLength: 8
+          minLength: 8
+          type: string
+          description: A unique identifier assigned to a company.
+          format: numeric
+          example: "12345678"
+        companyRole:
+          type: string
+          description: "Role of the cardholder in the company .\n \nPossible values \n- O  -  Owner\n- E  -  Employer"
+          example: O
+    SMBNameSearchRequest:
+      title: SMBNameSearchRequest
+      required:
+      - companyName
+      type: object
+      properties:
+        companyName:
+          maxLength: 40
+          minLength: 3
+          type: string
+          description: Name of the company.
+          example: ABC
+        companyContext:
+          maxLength: 300
+          type: string
+          description: "This value appears in the response when there are more than 75 company records. As part of the subsequent request to retrieve the next set of company records this value must be sent. If this field is not present in response, no additional records are available."
+          example: U2QAAAAAAAAAAAAAAAYAAAAGAAAABgAAAAZBSwAIbwoAAAAAAAAAAAAAADcwMDAwMDg4OEUwNzYzMjQ4MDQ0MzAyNDcwMTQyODQ0MzAyNDcwMTQyODA5NjkgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+    SMBNameSearchResponse:
+      title: SMBNameSearchResponse
+      type: object
+      properties:
+        count:
+          type: string
+          description: Indicates if additional company records are present to be displayed.
+          example: "3"
+        moreRecords:
+          type: string
+          description: Indicates if more company records are present.
+          example: "Yes"
+          enum:
+          - "true"
+          - "false"
+        companyContext:
+          maxLength: 300
+          type: string
+          description: "This value appears in the response when there are more than 75 company records. As part of the subsequent request to retrieve the next set of cardholder records this value must be sent. If this field is not present in response, no additional records are available."
+          example: U2QAAAAAAAAAAAAAAAYAAAAGAAAABgAAAAZBSwAIbwoAAAAAAAAAAAAAADcwMDAwMDg4OEUwNzYzMjQ4MDQ0MzAyNDcwMTQyODQ0MzAyNDcwMTQyODA5NjkgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+        companyList:
+          type: array
+          description: List of companies associated with the name.
+          items:
+            $ref: "#/components/schemas/companyDetails"
+    companyDetails:
+      properties:
+        companyId:
+          maxLength: 8
+          minLength: 8
+          type: string
+          description: A unique identifier assigned to a company.
+          format: numeric
+          example: "12345678"
+        companyName:
+          maxLength: 40
+          minLength: 1
+          type: string
+          description: Name of the company.
+          example: ABC01
+        addressLine1:
+          maxLength: 30
+          minLength: 1
+          type: string
+          description: First address line of company's mailing address.
+          example: 123 Any Ave
+        addressLine2:
+          maxLength: 30
+          type: string
+          description: Continuation of address line of company's mailing address.
+          example: 123 Any Ave
+        city:
+          maxLength: 25
+          minLength: 1
+          type: string
+          description: City in which the company is located.
+          example: PARSIPPANY
+        state:
+          maxLength: 2
+          type: string
+          description: Name of the state in which the company is located.
+          example: NJ
+    SMBDetailsSearchRequest:
+      title: SMBDetaiInfoSearchRequest
+      required:
+      - bin
+      - companyId
+      type: object
+      properties:
+        responseFormat:
+          type: string
+          description: "Determines how the user wants to see the response - masked or unmasked. This is an optional field and if not provided, then MASKED will be the default value."
+          example: MASKED
+          enum:
+          - MASKED
+          - UNMASKED
+        companyId:
+          maxLength: 8
+          minLength: 8
+          type: string
+          description: A unique identifier assigned to a company.
+          example: "12345678"
+        taxId:
+          maxLength: 20
+          type: string
+          description: Represents TaxId of the company.
+          example: "123005678"
+        bin:
+          maxLength: 12
+          minLength: 6
+          type: string
+          description: "Bank Identification Number of the FI. The BIN enables card networks and processors to determine how to route transactions, apply appropriate rules, and authenticate the card type and issuer."
+          example: "1234567"
+    SMBDetailsSearchResponse:
+      title: SMBDetailInfoSearchResponse
+      type: object
+      properties:
+        companyId:
+          maxLength: 8
+          minLength: 8
+          type: string
+          description: A unique identifier assigned to a company.
+          example: "12345678"
+        clientId:
+          maxLength: 8
+          minLength: 8
+          type: string
+          description: An 8‑digit unique identifier assigned to each financial institution during their initial onboarding process.
+          example: "10000001"
+        bin:
+          type: string
+          description: "Bank Identification Number of the FI. The BIN enables card networks and processors to determine how to route transactions, apply appropriate rules, and authenticate the card type and issuer."
+          example: "1234567"
+        companyName:
+          maxLength: 40
+          minLength: 1
+          type: string
+          description: Name of the company.
+          example: ABCD
+        addressLine1:
+          maxLength: 30
+          minLength: 1
+          type: string
+          description: First address line of company's mailing address.
+          example: 123 Any Ave
+        addressLine2:
+          maxLength: 30
+          type: string
+          description: Continuation of address line of company's mailing address.
+          example: 123 Any Lane
+        city:
+          maxLength: 25
+          minLength: 1
+          type: string
+          description: City in which the company is located.
+          example: Newark
+        country:
+          maxLength: 3
+          type: string
+          description: ISO code representing the country of the company-related commercial card address.
+          example: USA
+        state:
+          maxLength: 2
+          type: string
+          description: Name of the state in which the company is located.
+          example: NJ
+        zipCode:
+          maxLength: 15
+          type: string
+          description: |
+            Postal code or zipcode associated with the address.This field is mandatory if the country is USA.
+            - For USA- This must be a zip code of 5 or 9 numeric digits.
+            - For Non-USA country code- This field is optional
+          format: alphanumeric
+          example: "12345"
+        emailAddress:
+          maxLength: 50
+          type: string
+          description: Email Address of the company.
+          format: email
+          example: jdoe@example.com
+        phoneNumber:
+          maxLength: 16
+          minLength: 1
+          type: string
+          description: Phone number of the company.
+          example: "1005550001"
+        taxId:
+          maxLength: 20
+          type: string
+          description: Represents TaxId of the company. This will be displayed as per the response format provided in request.
+          example: xxxxx5678
+        primaryContactName:
+          maxLength: 30
+          type: string
+          description: Primary contact of company.
+          example: ABC
+        openDate:
+          type: string
+          description: Date on which the company was created.
+          example: 2020-07-15
+    SMBDeleteRequest:
+      title: SMB- Delete company request
+      required:
+      - bin
+      - companyId
+      properties:
+        companyId:
+          maxLength: 8
+          minLength: 8
+          type: string
+          description: A unique identifier assigned to a company.
+          example: "12345678"
+        bin:
+          maxLength: 12
+          minLength: 6
+          type: string
+          description: "Bank Identification Number of the FI. The BIN enables card networks and processors to determine how to route transactions, apply appropriate rules, and authenticate the card type and issuer."
+          example: "1234567"
+    SMBCreateRequest:
+      title: SMB- Create company request
+      required:
+      - addressLine1
+      - bin
+      - city
+      - companyName
+      - country
+      - emailAddress
+      - phoneNumber
+      - primaryContactName
+      - taxId
+      properties:
+        responseFormat:
+          type: string
+          description: "Determines how the user wants to see the response - masked or unmasked. This is an optional field and if not provided, then MASKED will be the default value."
+          example: MASKED
+          enum:
+          - MASKED
+          - UNMASKED
+        bin:
+          maxLength: 12
+          minLength: 6
+          type: string
+          description: "Bank Identification Number of the FI. The BIN enables card networks and processors to determine how to route transactions, apply appropriate rules, and authenticate the card type and issuer."
+          example: "1234567"
+        companyName:
+          maxLength: 40
+          minLength: 1
+          type: string
+          description: Name of the company.
+          example: ABCD
+        addressLine1:
+          maxLength: 30
+          minLength: 1
+          type: string
+          description: First address line of company's mailing address.
+          example: 123 Any Ave
+        addressLine2:
+          maxLength: 30
+          type: string
+          description: Continuation of address line of company's mailing address.
+          example: 123 Any Lane
+        city:
+          maxLength: 25
+          minLength: 1
+          type: string
+          description: City in which the company is located.
+          example: Newark
+        country:
+          maxLength: 3
+          minLength: 3
+          type: string
+          description: ISO code representing the country of the company-related commercial card address.
+          example: USA
+        state:
+          maxLength: 2
+          type: string
+          description: Name of the state. Mandatory if  country is USA.
+          example: NJ
+        zipCode:
+          maxLength: 15
+          type: string
+          description: |
+            Postal code or zipcode associated with the address.This field is mandatory if the country is USA.
+            - For USA- This must be a zip code of 5 or 9 numeric digits.
+            - For Non-USA country code- This field is optional
+          format: alphanumeric
+          example: "12345"
+        emailAddress:
+          maxLength: 50
+          type: string
+          description: Email Address of the company.
+          format: email
+          example: jdoe@example.com
+        phoneNumber:
+          maxLength: 16
+          type: string
+          description: Phone number of the company.
+          example: "1005550001"
+        taxId:
+          maxLength: 20
+          type: string
+          description: Represents TaxId of the company.
+          example: "123005678"
+        primaryContactName:
+          maxLength: 30
+          minLength: 1
+          type: string
+          description: Primary contact of company.
+          example: ABC
+    SMBCreateResponse:
+      title: SMB- Create company response
+      properties:
+        companyId:
+          maxLength: 8
+          minLength: 8
+          type: string
+          description: A unique identifier assigned to a company.
+          example: "12345678"
+        bin:
+          maxLength: 12
+          minLength: 6
+          type: string
+          description: "Bank Identification Number of the FI. The BIN enables card networks and processors to determine how to route transactions, apply appropriate rules, and authenticate the card type and issuer."
+          example: "1234567"
+        companyName:
+          maxLength: 40
+          minLength: 1
+          type: string
+          description: Name of the company.
+          example: ABCD
+        addressLine1:
+          maxLength: 30
+          minLength: 1
+          type: string
+          description: First address line of company's mailing address.
+          example: 123 Any Ave
+        addressLine2:
+          maxLength: 30
+          minLength: 1
+          type: string
+          description: Continuation of address line of company's mailing address.
+          example: 123 Any Lane
+        city:
+          maxLength: 25
+          minLength: 1
+          type: string
+          description: City in which the company is located.
+          example: Newark
+        country:
+          maxLength: 3
+          type: string
+          description: ISO code representing the country of the company-related commercial card address.
+          example: USA
+        state:
+          maxLength: 2
+          type: string
+          description: Name of the state.
+          example: NJ
+        zipCode:
+          maxLength: 15
+          type: string
+          description: |
+            Postal code or zipcode associated with the address.This field is mandatory if the country is USA.
+            - For USA- This must be a zip code of 5 or 9 numeric digits.
+            - For Non-USA country code- This field is optional
+          format: alphanumeric
+          example: "12345"
+        emailAddress:
+          maxLength: 50
+          type: string
+          description: Email Address of the company.
+          format: email
+          example: jdoe@example.com
+        phoneNumber:
+          maxLength: 16
+          type: string
+          description: Phone number of the company.
+          example: "1005550001"
+        taxId:
+          maxLength: 20
+          type: string
+          description: Represents TaxId of the company . This will be displayed as per the response format provided in request
+          example: xxxxx5678
+        primaryContactName:
+          maxLength: 30
+          minLength: 1
+          type: string
+          description: Primary Contact of company.
+          example: ABC
+        openDate:
+          type: string
+          description: Date on which the company was created.
+          example: 2020-07-15
+    SMBUpdateRequest:
+      title: SMB- Update company request
+      required:
+      - bin
+      - companyId
+      properties:
+        responseFormat:
+          type: string
+          description: "Determines how the user wants to see the response - masked or unmasked. This is an optional field and if not provided, then MASKED will be the default value."
+        companyId:
+          maxLength: 8
+          minLength: 8
+          type: string
+          description: A unique identifier assigned to a company.
+          example: "12345678"
+        bin:
+          maxLength: 12
+          minLength: 6
+          type: string
+          description: "Bank Identification Number of the FI. The BIN enables card networks and processors to determine how to route transactions, apply appropriate rules, and authenticate the card type and issuer."
+          example: "1234567"
+        companyName:
+          maxLength: 40
+          type: string
+          description: Name of the company.
+          example: ABCD
+        addressLine1:
+          maxLength: 30
+          type: string
+          description: First address line of company's mailing address.
+          example: 123 Any Ave
+        addressLine2:
+          maxLength: 30
+          type: string
+          description: Continuation of address line of company's mailing address.
+          example: 123 Any Lane
+        city:
+          maxLength: 25
+          type: string
+          description: City in which the company is located.
+          example: Newark
+        country:
+          maxLength: 3
+          type: string
+          description: ISO code representing the country of the company-related commercial card address.
+          example: USA
+        state:
+          maxLength: 2
+          type: string
+          description: Name of the state. Mandatory for country - USA.
+          example: NJ
+        zipCode:
+          maxLength: 15
+          type: string
+          description: |
+            Postal code or zipcode associated with the address.This field is mandatory if the country is USA.
+            - For USA- This must be a zip code of 5 or 9 numeric digits.
+            - For Non-USA country code- This field is optional
+          format: alphanumeric
+          example: "12345"
+        emailAddress:
+          maxLength: 50
+          type: string
+          description: Email Address of the company.
+          format: email
+          example: jdoe@example.com
+        phoneNumber:
+          maxLength: 16
+          type: string
+          description: Phone number of the company.
+          example: "1005550001"
+        taxId:
+          maxLength: 20
+          type: string
+          description: Represents TaxId of the company..
+          example: "123005678"
+        primaryContactName:
+          maxLength: 30
+          type: string
+          description: Primary Contact of company.
+          example: ABC
+    SMBUpdateResponse:
+      title: SMB- Update company response
+      properties:
+        companyId:
+          maxLength: 8
+          minLength: 8
+          type: string
+          description: A unique identifier assigned to a company.
+          example: "12345678"
+        bin:
+          maxLength: 12
+          minLength: 6
+          type: string
+          description: "Bank Identification Number of the FI. The BIN enables card networks and processors to determine how to route transactions, apply appropriate rules, and authenticate the card type and issuer."
+          example: "1234567"
+        companyName:
+          maxLength: 40
+          minLength: 1
+          type: string
+          description: Name of the company.
+          example: ABCD
+        addressLine1:
+          maxLength: 30
+          minLength: 1
+          type: string
+          description: First address line of company's mailing address.
+          example: 123 Any Ave
+        addressLine2:
+          maxLength: 30
+          type: string
+          description: Continuation of address line of company's mailing address.
+          example: 123 Any Lane
+        city:
+          maxLength: 25
+          minLength: 1
+          type: string
+          description: City in which the company is located.
+          example: Newark
+        country:
+          maxLength: 3
+          type: string
+          description: ISO code representing the country of the company-related commercial card address.
+          example: USA
+        state:
+          maxLength: 2
+          type: string
+          description: Name of the state.
+          example: NJ
+        zipCode:
+          maxLength: 15
+          type: string
+          description: |
+            Postal code or zipcode associated with the address.This field is mandatory if the country is USA.
+            - For USA- This must be a zip code of 5 or 9 numeric digits.
+            - For Non-USA country code- This field is optional
+          format: alphanumeric
+          example: "12345"
+        emailAddress:
+          maxLength: 50
+          type: string
+          description: Email Address of the company.
+          format: email
+          example: jdoe@example.com
+        phoneNumber:
+          maxLength: 16
+          type: string
+          description: Phone number of the company.
+          example: "1005550001"
+        taxId:
+          maxLength: 20
+          type: string
+          description: Represents TaxId of the company . This will be displayed as per the response format provided in request.
+          example: xxxxx5678
+        primaryContactName:
+          maxLength: 25
+          type: string
+          description: Primary Contact of company.
+          example: ABC
+        openDate:
+          type: string
+          description: Date on which the company was created.
+          example: 2020-07-15
+    Error:
+      required:
+      - code
+      - message
+      - spanId
+      - timestamp
+      - traceId
+      type: object
+      properties:
+        type:
+          type: string
+          description: "A URI reference [RFC3986] that identifies the problem type. When this member is not present, its value is assumed to be about:blank."
+        message:
+          type: string
+          description: A human-readable explanation specific to this occurrence of the problem
+        instance:
+          type: string
+          description: ' A URI reference that identifies the specific occurrence of the problem.'
+        title:
+          type: string
+          description: "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization."
+        timestamp:
+          type: string
+          description: Date time of the error from a services.
+        code:
+          type: string
+          description: "Code generated code to identify better and quick the error type and services who trigger it [HTTP Method] - [artifact Id] - [code of the error(logic, action, etc)]. Example: 400-666-301 - where: 400=Http Status Code - 666=Id of the services that throw the error - 301=Not enough credit."
+        spanId:
+          type: string
+          description: Id generated given request on each service
+        traceId:
+          type: string
+          description: Id generated from a request on the first service and pass to other downstream services.
+        moreDetails:
+          type: array
+          description: List of multiple errors that may cause/triggerthe general error.
+          items:
+            $ref: "#/components/schemas/ErrorDetails"
+    ErrorDetails:
+      type: object
+      properties:
+        code:
+          type: string
+          description: "Unique code for error [artifact Id] - [code of the error(logic, action, etc)]"
+        detail:
+          type: string
+          description: Human details  of the error.
+    "400Error":
+      type: object
+      properties:
+        type:
+          type: string
+          description: An URI reference that identifies the problem type
+          example: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title:
+          type: string
+          description: Short summary of the problem.
+          example: Bad Request
+        detail:
+          type: string
+          description: Specific explanation to the occurrence of the problem.
+          example: CONTENT-TYPE header required. Supported content-type is application/json
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurrence of the problem.
+          example: /api/basepath
+        status:
+          type: number
+          description: The HTTP status code generated by the origin server for this occurrence of the problem.
+          example: 400
+    "401Error":
+      type: object
+      properties:
+        type:
+          type: string
+          description: An URI reference that identifies the problem type
+          example: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title:
+          type: string
+          description: Short summary of the problem.
+          example: Unauthorized
+        detail:
+          type: string
+          description: Specific explanation to the occurrence of the problem.
+          example: Invalid Access Token
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurrence of the problem.
+          example: /api/basepath
+        status:
+          type: number
+          description: The HTTP status code generated by the origin server for this occurrence of the problem.
+          example: 401
+    "403Error":
+      type: object
+      properties:
+        type:
+          type: string
+          description: An URI reference that identifies the problem type
+          example: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title:
+          type: string
+          description: Short summary of the problem.
+          example: Forbidden
+        detail:
+          type: string
+          description: Specific explanation to the occurrence of the problem.
+          example: Authorization failure
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurrence of the problem.
+          example: /api/basepath
+        status:
+          type: number
+          description: The HTTP status code generated by the origin server for this occurrence of the problem.
+          example: 403
+    "404Error":
+      type: object
+      properties:
+        type:
+          type: string
+          description: An URI reference that identifies the problem type
+          example: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title:
+          type: string
+          description: Short summary of the problem.
+          example: Resource Not found
+        detail:
+          type: string
+          description: Specific explanation to the occurrence of the problem.
+          example: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurrence of the problem.
+          example: /api/basepath
+        status:
+          type: number
+          description: The HTTP status code generated by the origin server for this occurrence of the problem.
+          example: 404
+    "415Error":
+      type: object
+      properties:
+        type:
+          type: string
+          description: An URI reference that identifies the problem type
+          example: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title:
+          type: string
+          description: Short summary of the problem.
+          example: Unsupported Media Type
+        detail:
+          type: string
+          description: Specific explanation to the occurrence of the problem.
+          example: unsupported Media Type
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurrence of the problem.
+          example: /api/basepath
+        status:
+          type: number
+          description: The HTTP status code generated by the origin server for this occurrence of the problem.
+          example: 415
+    Warning:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A human-readable explanation specific to this occurrence of the problem.
+          example: "Input validation error-cardNumber : size must be between 16 and 19."
+        spanId:
+          type: string
+          description: Id generated given request on each service
+        traceId:
+          type: string
+          description: Id generated from a request on the first service and pass to other downstream services.
+        warningDetails:
+          type: array
+          description: List of multiple errors that may cause/triggerthe general error.
+          items:
+            $ref: "#/components/schemas/WarningDetail"
+    WarningDetail:
+      type: object
+      properties:
+        code:
+          type: string
+          description: "Unique code for error [artifact Id] - [code of the error(logic, action, etc)]"
+        detail:
+          type: string
+          description: Human details  of the error.
+        spanId:
+          type: string
+          description: Id generated given request on each service
+        timestamp:
+          type: string
+          description: Date time of the error from a services.
+  parameters:
+    omahaUserIdParam:
+      name: omahaUserId
+      in: header
+      description: Optis omaha user associated with user given in Authorization header. Configured in System while onboarding Clients
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+      example: R6AX
+      x-mandatory: CREDIT
+      x-validations: "Non Blank and Alphanumeric only ,No CRLF"
+    creditOrgIdsParam:
+      name: creditOrgIds
+      in: header
+      description: "List of System,Print,Agent(SPA) values assigned to user given in Authorization header Configured in System while onboarding Clients, can change based on User Management activity"
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+      example: "1176644200100000"
+      x-mandatory: CREDIT
+      x-validations: "Allowed Values are ALL_CREDIT or comma separated values. Value1,Value2. No CRLF"
+    ldapLogosParam:
+      name: ldapLogos
+      in: header
+      description: "List of single or multiple network/actual logos assigned to user given in Authorization header Configured in System while onboarding Clients, can change based on User Management activity"
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+      example: NBMB
+      x-mandatory: "CREDIT, DEBIT"
+      x-validations: "Allowed Values are ALL_EPOC or comma separated values, Value1,Value2. No CRLF"
+    tandemUserIdParam:
+      name: tandemUserId
+      in: header
+      description: "Tandem user id associated with user given in Authorization header Configured in System while onboarding Clients,can change based on User Management activity"
+      required: false
+      style: simple
+      explode: false
+      schema:
+        maxLength: 5
+        type: integer
+      example: "255"
+      x-mandatory: "CREDIT, DEBIT"
+    tandemGroupIdParam:
+      name: tandemGroupId
+      in: header
+      description: "Tandem user group associated with user given in Authorization header Configured in System while onboarding Clients,can change based on User Management activity"
+      required: false
+      style: simple
+      explode: false
+      schema:
+        maxLength: 5
+        type: integer
+      example: "545"
+      x-mandatory: "CREDIT, DEBIT"
+    certDnParam:
+      name: certDn
+      in: header
+      description: Distinguished Name of user given in Authorization header Configured in System while onboarding Clients
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+      example: "cn=svc_jboss,ou=Services,O=fiserveft"
+      x-mandatory: "CREDIT, DEBIT"
+      x-validations: "Not blank,No CRLF,Starts with CN="
+    userIdParam:
+      name: userId
+      in: header
+      description: userId of user who is making API call. This is used for auditing purpose to track down API calls if multiple users are calling APIs under same appId
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+      example: FDSCARD
+      x-mandatory: "CREDIT, DEBIT"
+      x-validations: "Not blank,No CRLF"
+    appIdParam:
+      name: appId
+      in: header
+      description: "Unique onboarded applicationId for Domain API Clients, This is used for auditing purpose"
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+      example: "APIMPortal, CardConsole"
+      x-mandatory: "CREDIT, DEBIT"
+      x-validations: "Not blank,No CRLF"
+    clientIdParam:
+      name: x-fapi-financial-id
+      in: header
+      description: An 8‑digit unique identifier assigned to each financial institution during their initial onboarding process.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        maxLength: 8
+        type: integer
+      example: "10000001"
+      x-mandatory: "CREDIT, DEBIT"
+      x-validations: "Not Blank,8 digit numeric only"
+    authorizationParam:
+      name: Authorization
+      in: header
+      description: "Retrieve an access token through the Access Token API. Access token is required in every request. To view documentation on access token <a className='text-app-action-blue' href='/product/CardDeveloper/docs/?path=docs/gettingstarted/access-tokens.md' title='Click to open'>click here.</a> Tokens expire after 15 minutes. Provide the value as follows in the header. Authorization: Bearer <Access Token Value>"
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+      example: "Basic Base64(webServiceUserId): Base64(webServicePassword)"
+      x-mandatory: "CREDIT, DEBIT"
+      x-validations: "Not Blank,No CRLF, in specific format, Basic Base64(<webServiceUserId>:<webServicePassword>)checked in LDAP for existence (Gateway only)"
+  headers:
+    interactionId:
+      description: unique transaction ID created for each request for tracking purposes
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: 95ad42fb-afd1-2121-b794-3ed29342ks42
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer

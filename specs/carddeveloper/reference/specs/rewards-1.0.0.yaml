@@ -1,0 +1,1307 @@
+openapi: 3.0.0
+info:
+  title: Rewards
+  description: "uChoose Rewards API. This API provides functionality to clients for searching, viewing, consuming uChoose Offers and Points."
+  version: 2.1.0_April_2026
+servers:
+- url: https://swaggerhub.onefiserv.net/virts/DEV_STUDIO_LATEST/Rewards/1.0.0
+  description: SwaggerHub API Auto Mocking
+- url: https://card.api.fiservapps.com/cs/rewards
+  description: Production url
+- url: https://card-certification.api.fiservapps.com/cs/rewards
+  description: Certification url
+- url: https://card-sandbox.api.fiservapps.com/cs/rewards
+  description: Sandbox url
+security:
+- BearerAuth: []
+tags:
+- name: View Offer
+  description: Provides ability to search and activate in-store offers for loyalty members.
+paths:
+  /v1/offers/search:
+    post:
+      tags:
+      - View Offer
+      description: "Search uChoose reward offers for loyalty members. This API allows searching featured offers which are based on personal shopping behaviour, preferences and rules specific to the client's program. Also it allows searching for non-targetted offers based on different search criteria.\n        <br><br>\n        For more information go to <a href=\"/product/CardDeveloper/docs/resources.md/#rewards\" title=\"Click to open\">Resources.</a>"
+      operationId: searchOffers
+      parameters:
+      - name: filter
+        in: query
+        description: 'Optional. Restricts search to targeted offers for loyalty members when used.  Targeted offers are a specially selected subset of all available offers. Valid value is featured Offers, blank'
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: featuredOffers
+      - name: Authorization
+        in: header
+        description: "Retrieve an access token through the Access Token API. Access token is required in every request. To view documentation on access token <a className='text-app-action-blue' href='/product/CardDeveloper/docs/?path=docs/gettingstarted/access-tokens.md' title='Click to open'>click here.</a> Tokens expire after 15 minutes. Provide the value as follows in the header. Authorization: Bearer <Access Token Value>"
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: Bearer USlfM8dilzKZPcuGGP3BfVLd7Snk
+      - name: userId
+        in: header
+        description: User who is making this request. This is optional, if passed will be used for granular level auditing.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: FDSCARD
+      - name: x-fapi-financial-id
+        in: header
+        description: Required. Provide 8 digit integer client id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: "12345678"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OfferSearchRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OfferSearchResponse'
+        "400":
+          description: Invalid Request
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400Error'
+        "401":
+          description: Unauthorized access
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401Error'
+        "403":
+          description: Forbidden
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/403Error'
+        "404":
+          description: Not Found
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404Error'
+        "405":
+          description: Method Not Allowed
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+        "406":
+          description: Unacceptable
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+        "409":
+          description: Resource conflict
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/409Error'
+        "415":
+          description: Unsupported Media Type
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/415Error'
+        "422":
+          description: Unprocessable Entity
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+        "429":
+          description: Too Many Requests
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+        "500":
+          description: Internal Server Error
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errorResponse:
+                    code: 500-01
+                    message: internal server error
+                    developerInfo:
+                      developerMessage: internal server error
+                      moreInfo: There was a problem handling your request.  Please try again.  If the problem persists please contact Fiserv ETSD at 888-243-2543 (unique messageID included below)
+                      messageid: 25557-84290371-1
+      x-child-product-name: Rewards
+      x-group-name: View Offer
+      x-proxy-name: Search offers v1
+  /v1/offers/activation:
+    patch:
+      tags:
+      - View Offer
+      description: "Activate an offer, makes a loyalty member eligible to receive the rewards provided by the requested offer.\n        <br><br>\n        For more information go to <a href=\"/product/CardDeveloper/docs/resources.md/#rewards\" title=\"Click to open\">Resources.</a>"
+      operationId: offerActivation
+      parameters:
+      - name: Authorization
+        in: header
+        description: "Retrieve an access token through the Access Token API. Access token is required in every request. To view documentation on access token <a className='text-app-action-blue' href='/product/CardDeveloper/docs/?path=docs/gettingstarted/access-tokens.md' title='Click to open'>click here.</a> Tokens expire after 15 minutes. Provide the value as follows in the header. Authorization: Bearer <Access Token Value>"
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: Bearer USlfM8dilzKZPcuGGP3BfVLd7Snk
+      - name: userId
+        in: header
+        description: User who is making this request. This is optional, if passed will be used for granular level auditing.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: FDSCARD
+      - name: x-fapi-financial-id
+        in: header
+        description: Required. Provide 8 digit integer client id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: "12345678"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActivateOfferRequest'
+      responses:
+        "204":
+          description: Successful
+        "400":
+          description: Invalid Request
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400Error'
+        "401":
+          description: Unauthorized access
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401Error'
+        "403":
+          description: Forbidden
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/403Error'
+        "404":
+          description: Not Found
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404Error'
+        "405":
+          description: Method Not Allowed
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+        "406":
+          description: Unacceptable
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+        "409":
+          description: Resource conflict
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/409Error'
+        "415":
+          description: Unsupported Media Type
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/415Error'
+        "422":
+          description: Unprocessable Entity
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+        "429":
+          description: Too Many Requests
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+        "500":
+          description: Internal Server Error
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errorResponse:
+                    code: 500-01
+                    message: internal server error
+                    developerInfo:
+                      developerMessage: internal server error
+                      moreInfo: There was a problem handling your request.  Please try again.  If the problem persists please contact Fiserv ETSD at 888-243-2543 (unique messageID included below)
+                      messageid: 25557-84290371-1
+      x-child-product-name: Rewards
+      x-group-name: View Offer
+      x-proxy-name: Offer activation v1
+  /v1/offers/{offerId}:
+    post:
+      tags:
+      - View Offer
+      description: "Retrieve the details of a specific offer based on its unique ID.\n        <br><br>\n        For more information go to <a href=\"/product/CardDeveloper/docs/resources.md/#rewards\" title=\"Click to open\">Resources.</a>"
+      operationId: offerDetail
+      parameters:
+      - name: Authorization
+        in: header
+        description: "Retrieve an access token through the Access Token API. Access token is required in every request. To view documentation on access token <a className='text-app-action-blue' href='/product/CardDeveloper/docs/?path=docs/gettingstarted/access-tokens.md' title='Click to open'>click here.</a> Tokens expire after 15 minutes. Provide the value as follows in the header. Authorization: Bearer <Access Token Value>"
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: Bearer USlfM8dilzKZPcuGGP3BfVLd7Snk
+      - name: userId
+        in: header
+        description: User who is making this request. This is optional, if passed will be used for granular level auditing.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: FDSCARD
+      - name: x-fapi-financial-id
+        in: header
+        description: Required. Provide 8 digit integer client id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: "12345678"
+      - name: offerId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: Numeric ID of the user to get
+          example: "103557"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OfferDetailRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OfferDetailResponse'
+        "400":
+          description: Invalid Request
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400Error'
+        "401":
+          description: Unauthorized access
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401Error'
+        "403":
+          description: Forbidden
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/403Error'
+        "404":
+          description: Not Found
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404Error'
+        "405":
+          description: Method Not Allowed
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+        "406":
+          description: Unacceptable
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+        "415":
+          description: Unsupported Media Type
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/415Error'
+        "422":
+          description: Unprocessable Entity
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+        "429":
+          description: Too Many Requests
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+        "500":
+          description: Internal Server Error
+          headers:
+            x-fapi-interaction-id:
+              $ref: '#/components/headers/interactionId'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errorResponse:
+                    code: 500-01
+                    message: internal server error
+                    developerInfo:
+                      developerMessage: internal server error
+                      moreInfo: There was a problem handling your request.  Please try again.  If the problem persists please contact Fiserv ETSD at 888-243-2543 (unique messageID included below)
+                      messageid: 25557-84290371-1
+      x-child-product-name: Rewards
+      x-group-name: View Offer
+      x-proxy-name: Offer detail v1
+components:
+  schemas:
+    "400Error":
+      type: object
+      properties:
+        type:
+          type: string
+          description: An URI reference that identifies the problem type
+          example: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title:
+          type: string
+          description: Short summary of the problem.
+          example: Bad Request
+        detail:
+          type: string
+          description: Specific explanation to the occurence of the problem.
+          example: CONTENT-TYPE header required. Supported content-type is application/json
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurence of the problem.
+          example: /api/basepath
+        status:
+          type: number
+          description: The HTTP status code generated by the origin server for this occurance of the problem.
+          example: 400
+    "401Error":
+      type: object
+      properties:
+        type:
+          type: string
+          description: An URI reference that identifies the problem type
+          example: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title:
+          type: string
+          description: Short summary of the problem.
+          example: Unauthorized
+        detail:
+          type: string
+          description: Specific explanation to the occurence of the problem.
+          example: Invalid Access Token.
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurence of the problem.
+          example: /api/basepath
+        status:
+          type: number
+          description: The HTTP status code generated by the origin server for this occurance of the problem.
+          example: 401
+    "403Error":
+      type: object
+      properties:
+        type:
+          type: string
+          description: An URI reference that identifies the problem type
+          example: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title:
+          type: string
+          description: Short summary of the problem.
+          example: Forbidden
+        detail:
+          type: string
+          description: Specific explanation to the occurence of the problem.
+          example: Authorization failure.
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurence of the problem.
+          example: /api/basepath
+        status:
+          type: number
+          description: The HTTP status code generated by the origin server for this occurance of the problem.
+          example: 403
+    "404Error":
+      type: object
+      properties:
+        type:
+          type: string
+          description: An URI reference that identifies the problem type
+          example: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title:
+          type: string
+          description: Short summary of the problem.
+          example: offer Not Found or expired
+        detail:
+          type: string
+          description: Specific explanation to the occurence of the problem.
+          example: No matching search results found or you do not have sufficient access rights to get search results matching your criteria.
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurence of the problem.
+          example: /api/basepath
+        status:
+          type: number
+          description: The HTTP status code generated by the origin server for this occurance of the problem.
+          example: 404
+    "409Error":
+      type: object
+      properties:
+        type:
+          type: string
+          description: An URI reference that identifies the problem type
+          example: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title:
+          type: string
+          description: Short summary of the problem.
+          example: Resource conflict
+        detail:
+          type: string
+          description: Specific explanation to the occurence of the problem.
+          example: Could not active offer. Offer is already activated.
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurence of the problem.
+          example: /api/basepath
+        status:
+          type: number
+          description: The HTTP status code generated by the origin server for this occurance of the problem.
+          example: 409
+    "415Error":
+      type: object
+      properties:
+        type:
+          type: string
+          description: An URI reference that identifies the problem type
+          example: https://developer.fiserv.com/product/CardDeveloper/docs/?path=docs/response-codes.md&branch=main
+        title:
+          type: string
+          description: Short summary of the problem.
+          example: Unsupported Media Type
+        detail:
+          type: string
+          description: Specific explanation to the occurence of the problem.
+          example: Unsupported Media Type.
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurence of the problem.
+          example: /api/basepath
+        status:
+          type: number
+          description: The HTTP status code generated by the origin server for this occurance of the problem.
+          example: 415
+    ActivateOfferRequest:
+      required:
+      - cardNumber
+      - offerId
+      type: object
+      properties:
+        cardNumber:
+          maxLength: 19
+          minLength: 16
+          type: string
+          description: "This field contains the 16–19 digit number printed on a card that uniquely identifies the cardholder’s account. It is used across the card’s lifecycle, including enrollment, activation, and transaction processing. In the context of rewards, it helps associate eligible transactions with the correct card for earning and redeeming benefits. The value is sensitive and should be handled securely."
+          format: numeric
+          example: "4000200030004000"
+        offerId:
+          maxLength: 10
+          minLength: 1
+          type: string
+          description: "This field holds a unique identifier for a specific offer. It helps track, retrieve, and manage offers across different systems and user interactions. The value is important for linking user actions, such as activation or redemption, to the correct offer. It remains consistent throughout the offer’s lifecycle."
+          format: numeric
+          example: "103557"
+    Category:
+      type: object
+      properties:
+        categoryId:
+          type: string
+          description: "This field holds a unique identifier for the category an offer belongs to, such as dining, travel, or retail. It helps organize and group offers for easier browsing and filtering. The value supports categorization and improves relevance in offer presentation. It remains consistent across offer types."
+          example: "8389"
+        categoryDescription:
+          type: string
+          description: "This field provides a short explanation of the category an offer belongs to, such as dining, travel, or retail. It helps users understand the type of offers grouped under that category. The value supports better navigation and improves clarity in offer presentation."
+          example: "Apparel, Accessories & Shoes"
+    OfferSearchRequest:
+      required:
+      - cardNumber
+      type: object
+      properties:
+        cardNumber:
+          maxLength: 19
+          minLength: 16
+          type: string
+          description: "This field contains the 16–19 digit number printed on a card that uniquely identifies the cardholder’s account. It is used across the card’s lifecycle, including enrollment, activation, and transaction processing. In the context of rewards, it helps associate eligible transactions with the correct card for earning and redeeming benefits. The value is sensitive and should be handled securely."
+          format: numeric
+          example: "4000200030004000"
+        offerId:
+          maxLength: 10
+          minLength: 1
+          type: string
+          description: "This field holds a unique identifier for a specific offer. It helps track, retrieve, and manage offers across different systems and user interactions. The value is important for linking user actions, such as activation or redemption, to the correct offer. It remains consistent throughout the offer’s lifecycle."
+          example: "103557"
+        merchantPartnerName:
+          type: string
+          description: "This field contains the name or keyword used to identify a merchant partner. It helps match offers to merchants based on partial or full name inputs. The value is used for display, filtering, and offer targeting purposes."
+          example: The 1St Lady Boutique OR Boutique
+        shopType:
+          type: string
+          description: "This field indicates the type of shopping experience associated with an offer, such as online or in-store. It helps categorize offers and tailor them to user preferences or merchant capabilities. The value supports filtering and segmentation of offers. It is important for ensuring relevant offer presentation."
+          example: IN_STORE
+          default: IN_STORE
+          enum:
+          - ONLINE
+          - IN_STORE
+        searchScope:
+          type: string
+          description: This field defines the geographical or locale-based scope within which an offer is valid or searchable. It helps narrow down offers based on user location or regional availability. The value supports localization and relevance in offer discovery. It is useful for tailoring experiences to specific markets.
+          example: LOCAL
+          default: LOCAL
+          enum:
+          - NATIONAL
+          - LOCAL
+          - ONLINE
+        requiresActivation:
+          type: boolean
+          description: This field indicates whether an offer needs to be activated by the user before it can be used. It helps filter offers based on activation requirements and user readiness. The value is important for managing user engagement and offer eligibility.
+          example: false
+          default: false
+        activated:
+          type: boolean
+          description: This field shows whether the user has already activated a specific offer. It applies only to offers that require activation. The value helps personalize the user experience by showing active or inactive offers. It is useful for tracking user interactions and offer status.
+          example: true
+          default: false
+        categoryId:
+          type: string
+          description: "This field holds a unique identifier for the category an offer belongs to, such as dining, travel, or retail. It helps organize and group offers for easier browsing and filtering. The value supports categorization and improves relevance in offer presentation. It remains consistent across offer types."
+          example: "38460"
+        partnerId:
+          type: string
+          description: "This field contains a unique identifier for the merchant partner associated with an offer. It helps link offers to the correct partner for tracking, display, and reporting purposes. The value remains consistent across systems and is important for managing partner-specific promotions. It supports accurate retrieval and organization of offers by merchant."
+          example: "39203"
+        keyword:
+          type: string
+          description: This field contains a word or phrase used to search for relevant offers. It helps match user input with available promotions or merchant names. The value supports flexible filtering and improves the accuracy of search results. It is commonly used in offer discovery and personalization.
+          example: shoe
+        letter:
+          maxLength: 1
+          type: string
+          description: This field holds the first letter or number of an offer name. It is used to organize offers alphabetically and support pagination or filtering. The value helps users browse offers more easily by grouping them based on starting characters. It is useful in sorted or indexed views.
+          example: S
+        startRange:
+          type: string
+          description: This field defines the lower boundary of a range used to retrieve offers. It helps control the number and order of offers returned in a response. The value is typically used in combination with endRange to manage pagination or filtering. It supports efficient data handling in offer queries.
+          example: "3"
+        endRange:
+          type: string
+          description: This field defines the upper boundary of a range used to retrieve offers. It works with startRange to limit and organize the results returned. The value helps manage pagination and ensures only relevant offers are included. It supports better performance and user experience in offer browsing.
+          example: "5"
+        fundingCategory:
+          type: string
+          description: "This field indicates the campaign or funding source associated with an offer. It helps classify offers based on how they are sponsored or supported. The value is useful for reporting, filtering, and managing offer groups. It supports internal tracking and campaign segmentation."
+          example: FEATURED
+          default: NONE
+          enum:
+          - NONE
+          - FEATURED
+          - SELECT
+          - SPOTLIGHT
+        radius:
+          type: integer
+          description: "This field specifies the distance, in miles, within which in-store offers should be included. It helps narrow down offers based on proximity to a location. The value supports location-based filtering and improves relevance for users searching nearby deals. It is commonly used in geo-targeted offer queries."
+          example: 50
+          default: 25
+        zipCode:
+          maxLength: 5
+          minLength: 5
+          type: string
+          description: This field contains the postal code used to find in-store offers in a specific area. It helps filter offers based on geographic location. The value supports regional targeting and improves the accuracy of location-based searches. It is useful for users looking for nearby deals.
+          example: "38018"
+        city:
+          type: string
+          description: This field holds the name of the city where in-store offers are available. It helps filter and display offers based on user location or merchant presence. The value supports geographic relevance and improves targeting. It is commonly used in location-based offer queries.
+          example: Cordova
+        state:
+          maxLength: 2
+          minLength: 2
+          type: string
+          description: This field contains the name or abbreviation of the state where in-store offers are available. It helps narrow down offers based on regional availability. The value supports location filtering and improves relevance for users in specific areas. It is used in conjunction with other location fields.
+          example: TN
+        latitude:
+          type: number
+          description: This field holds the latitude coordinate used to find nearby in-store offers. It helps define a central point for location-based filtering. The value supports geo-targeting and improves the accuracy of offer results. It is typically used with longitude and radius. Latitude and Longitude both are required for location-based search.
+          example: 35.144207
+        longitude:
+          type: number
+          description: This field contains the longitude coordinate used to locate nearby in-store offers. It works with latitude to define a specific location for filtering. The value supports geographic targeting and helps return relevant offers based on proximity. It is essential for map-based or location-aware queries. Latitude and Longitude both are required for location-based search.
+          example: -89.795442
+        storesPerPage:
+          type: string
+          description: This field defines how many store records should be returned in a single page of results. It helps control the volume of data shown to users at once. The value supports pagination and improves performance and usability in store listings.
+          example: "999"
+        storePageCount:
+          type: string
+          description: "This field indicates the current page number in the store results, based on the total number of stores and the storesPerPage value. It helps navigate through multiple pages of store data. The value is useful for managing pagination and ensuring consistent user experience."
+          example: "5"
+          default: "1000"
+        sortOrder:
+          type: string
+          description: "This field specifies the direction in which results should be sorted, such as ascending or descending. It helps organize offer or store data based on user preferences or system defaults. The value supports consistent and predictable sorting behavior."
+          example: ASC
+          default: DESC
+          enum:
+          - ASC
+          - DESC
+        sort:
+          type: string
+          description: "This field defines which attribute the results should be sorted by, such as offer name or merchant name. Only one field can be used for sorting at a time. The value helps customize the order of results to improve relevance and usability."
+          example: NONE
+          default: NONE
+          enum:
+          - NONE
+          - RANK
+          - MERCHANT_PARTNER_NAME
+          - OFFER
+          - OFFER_EXPIRATION_DATE
+          - DATE_CREATED
+          - SPEND
+          - CLICK_TREND
+        geoFilter:
+          type: boolean
+          description: "This field indicates whether to apply location-based filtering to the results. When set to true, only offers or stores near a specified location are included. The value helps personalize results based on physical proximity and user location."
+          example: true
+          default: true
+        matchType:
+          type: string
+          description: "This field controls how search keywords are matched with merchant names or offer titles. When set to multi_match, only exact matches are returned; otherwise, partial matches are allowed. The value helps refine search results for better accuracy or broader discovery."
+          example: SINGLE_MATCH
+          enum:
+          - MULTI_MATCH
+          - SINGLE_MATCH
+        offerRecordsPerPage:
+          type: string
+          description: This field defines how many offer records should be returned in a single page of results. It helps manage the volume of data shown to users and supports efficient pagination. The value improves performance and user experience in offer browsing.
+          example: "15"
+          default: "25"
+        pageCount:
+          type: string
+          description: This field indicates the current page number in the offer results. It helps users navigate through multiple pages of offers. The value works with offerRecordsPerPage to support smooth and organized browsing.
+          example: "1"
+          default: "1"
+    OfferSearchResponse:
+      type: object
+      properties:
+        offerSearchParameters:
+          $ref: '#/components/schemas/OfferSearchResponse_offerSearchParameters'
+    OfferDetailRequest:
+      required:
+      - cardNumber
+      type: object
+      properties:
+        cardNumber:
+          maxLength: 19
+          minLength: 16
+          type: string
+          description: "This field contains the 16–19 digit number printed on a card that uniquely identifies the cardholder’s account. It is used across the card’s lifecycle, including enrollment, activation, and transaction processing. In the context of rewards, it helps associate eligible transactions with the correct card for earning and redeeming benefits. The value is sensitive and should be handled securely."
+          format: numeric
+          example: "4000200030004000"
+    OfferDetailResponse:
+      type: object
+      properties:
+        offerId:
+          maxLength: 10
+          minLength: 1
+          type: string
+          description: "This field holds a unique identifier for a specific offer. It helps track, retrieve, and manage offers across different systems and user interactions. The value is important for linking user actions, such as activation or redemption, to the correct offer. It remains consistent throughout the offer’s lifecycle."
+          format: numeric
+          example: "103557"
+        offerValue:
+          type: string
+          description: "This field represents the numeric value associated with an offer, such as a discount amount, cashback percentage, or reward points. It helps quantify the benefit a user receives when redeeming the offer. The value is important for displaying offer details and comparing promotions. It may vary based on offer type and merchant configuration."
+          example: "10"
+        offerValueDescription:
+          type: string
+          description: This field contains a brief summary of the value or benefit provided by the offer. It may be left empty if a more detailed offer description is already present. The value helps users quickly understand what the offer provides and why it’s relevant.
+          example: Bonus Earned
+        offerTermsAndConditions:
+          type: string
+          description: "This field contains the terms and conditions that apply to an offer. It helps users understand the rules, limitations, and eligibility criteria before using the offer. The value supports transparency and ensures proper usage of promotions."
+          example: "<p>Offer valid through 03-31-2026. This offer cannot be combined with any other offer, coupon code(s), or promotion, unless available through this site. Offers are subject to change. Rewards are earned based on the net price of eligible goods and services purchased when using your enrolled bank card to make a qualifying purchase at participating US retailers. Rewards are earned based on the net price of eligible goods and services, excluding tax, shipping and handling, or any special services. Offer not valid on purchases of certain restricted consumer electronic products, charity/promotional items, gift cards, and on quantities of five or more of the same product purchased by resellers for the sole purchase of re-sale. Rewards are added to your account within 30 days of purchase or 30 days after travel completion, when applicable. Any return, exchange, or other adjustment of your qualifying purchase may result in your purchase being ineligible for rewards and any rewards already earned may be deducted from your account. Rewards will not be earned on purchases made with third-party partners where the customer is leaving the uChoose Rewards<sup><small>&reg;</small></sup> website. Purchases made with Google Wallet, Apple Pay, Samsung Pay, or PayPal may not be eligible for rewards. Other restrictions may apply.</p>"
+        offerExpirationDate:
+          type: string
+          description: This field indicates the date and time when an offer will no longer be valid. The value is formatted in UTC to ensure consistency across systems. It helps manage offer availability and informs users about the time left to redeem the offer. This field is important for scheduling and filtering active promotions.
+          format: YYYY-MM-DD
+          example: 2026-04-01
+        categories:
+          type: array
+          description: The list of categories that apply to the current offer.
+          items:
+            $ref: "#/components/schemas/Category"
+        shopType:
+          type: array
+          items:
+            type: string
+            description: "This field indicates the type of shopping experience associated with an offer, such as online or in-store. It helps categorize offers and tailor them to user preferences or merchant capabilities. The value supports filtering and segmentation of offers. It is important for ensuring relevant offer presentation.."
+            example: ONLINE
+            default: IN_STORE
+            enum:
+            - ONLINE
+            - IN_STORE
+            - BOTH
+        merchantPartnerName:
+          type: string
+          description: "This field contains the name or keyword used to identify a merchant partner. It helps match offers to merchants based on partial or full name inputs. The value is used for display, filtering, and offer targeting purposes."
+          example: Zenni Optical
+        merchantOfferDescription:
+          type: string
+          description: This field provides a user-friendly version of the offer description that includes the merchant’s name. It helps personalize the offer and make it more recognizable to users. The value supports display in promotional content and improves engagement.
+          example: Offer is valid on your next online purchase of $60 or more during the offer validity period. Additional terms may apply. Limited to one-time use. Offer expires 03-31-2026.
+        merchantNameOfferDescription:
+          type: string
+          description: This field provides a user-friendly version of the offer description that includes the merchant’s name. It helps personalize the offer and make it more recognizable to users. The value supports display in promotional content and improves clarity and engagement in offer listings.
+          example: Earn 5 Points per dollar at Rock Me Makeup on purchases of $50 or more.
+        merchantOfferExternalUrl:
+          type: string
+          description: This field provides a link to the offer on the merchant’s website. It helps users view more details or complete a transaction directly with the merchant. The value supports seamless navigation and enhances the user experience.
+          example: https://www.zennioptical.com/
+        merchantLogoFileNameUrl:
+          type: string
+          description: This field contains the URL or filename of the merchant’s logo used for display purposes. It helps visually identify the merchant associated with an offer. The value supports branding and improves user recognition in offer listings.
+          example: https://images.affinitysolutions.com/common/images/zenni_90x50_144b.png
+        activated:
+          type: boolean
+          description: This field shows whether the user has already activated a specific offer. It applies only to offers that require activation. The value helps personalize the user experience by showing active or inactive offers. It is useful for tracking user interactions and offer status.
+          example: false
+          default: false
+        requiresActivation:
+          type: boolean
+          description: This field indicates whether an offer needs to be activated by the user before it can be used. It helps filter offers based on activation requirements and user readiness. The value is important for managing user engagement and offer eligibility.
+          example: false
+          default: false
+        partnerId:
+          type: string
+          description: "This field contains a unique identifier for the merchant partner associated with an offer. It helps link offers to the correct partner for tracking, display, and reporting purposes. The value remains consistent across systems and is important for managing partner-specific promotions. It supports accurate retrieval and organization of offers by merchant."
+          example: "111039"
+        shortMerchantOffer:
+          type: string
+          description: "This field contains a brief version of the offer text, designed to appear alongside the merchant logo in list views. It helps present the offer in a compact and readable format. The value supports quick scanning and improves visual consistency in offer displays."
+          example: 10 Points per $1
+        threshold:
+          maxLength: 11
+          type: string
+          description: This field provides minimum spend required to qualify for offer
+          format: decimal
+          example: "60.00"
+        ratecap:
+          maxLength: 11
+          type: string
+          description: Maximum reward cap if applicable.
+          format: decimal
+          example: "0.00"
+        resoneTime:
+          type: boolean
+          description: "Indicates single-use offer (t = true, single use)"
+          example: true
+        expirationDaysLeft:
+          maxLength: 10
+          type: integer
+          description: Number of days until the offer expires
+          example: 6
+        impression:
+          maxLength: 350
+          type: string
+          description: URL for tracking impressions and user interactions.
+          example: https://hits.afssn.com/impressions?sid=40XxfCUgb983837&xid=417300&source=all_retailers&token=PCHszVMCkCfPLMuO5eeC4R4Qw5H5wL0CnoCwD8AU6SADa%2F5TiKtfQkq%2B%2Barfps7xS4p6ftf%2BykCdE64F%2F5fzYA%3D%3D&sig=9a5181f6f07863afebe411b6bb5e5c9c4c92cf6e77c20c9c1eb2ba1bfd894124
+        locationCount:
+          type: string
+          description: This field indicates the number of physical store locations where the offer is available. It helps users understand the reach and availability of in-store promotions. The value supports location-based filtering and improves relevance in offer presentation.
+          example: "999"
+        alphaIndex:
+          type: string
+          description: This field captures the first character of the merchant’s name. It is used to organize and filter merchants alphabetically in offer listings. The value supports quick navigation and improves user experience in sorted views.
+          example: z
+        spend:
+          type: string
+          description: This field shows the average dollar amount spent on a merchant’s offer over the past month. Higher values may indicate popular or trending offers. The value helps prioritize offers based on user engagement and spending behavior.
+          example: "67737"
+        clickTrend:
+          type: string
+          description: This field reflects the average click rate for a merchant’s offer over the last three months. Offers with higher click trends may be considered more popular or engaging. The value helps highlight offers that attract more user interest.
+          example: "0"
+        fundingCategory:
+          type: string
+          description: "This field indicates the campaign or funding source associated with an offer. It helps classify offers based on how they are sponsored or supported. The value is useful for reporting, filtering, and managing offer groups. It supports internal tracking and campaign segmentation."
+          example: FEATURED
+          default: NONE
+          enum:
+          - NONE
+          - FEATURED
+          - SELECT
+          - SPOTLIGHT
+        bonusEarned:
+          type: string
+          description: This field indicates whether the loyalty member has earned a bonus associated with the offer. It helps track user eligibility and reward status. The value supports personalized experiences and is useful for displaying earned benefits in user-facing views.
+          example: "false"
+        stores:
+          type: array
+          items:
+            $ref: "#/components/schemas/Stores"
+    Offers:
+      type: object
+      properties:
+        offerId:
+          type: string
+          description: "This field holds a unique identifier for a specific offer. It helps track, retrieve, and manage offers across different systems and user interactions. The value is important for linking user actions, such as activation or redemption, to the correct offer. It remains consistent throughout the offer’s lifecycle."
+          example: "103557"
+        merchantPartnerName:
+          type: string
+          description: "This field contains the name or keyword used to identify a merchant partner. It helps match offers to merchants based on partial or full name inputs. The value is used for display, filtering, and offer targeting purposes."
+          example: Zenni Optical
+        merchantLogoFileNameUrl:
+          type: string
+          description: This field contains the URL or filename of the merchant’s logo used for display purposes. It helps visually identify the merchant associated with an offer. The value supports branding and improves user recognition in offer listings.
+          example: https://images.affinitysolutions.com/common/images/zenni_90x50_144b.png
+        merchantPartnerId:
+          type: string
+          description: This field holds a unique identifier for the merchant partner linked to an offer. It helps associate offers with the correct merchant for tracking and display. The value is important for organizing and retrieving partner-specific promotions.
+          example: "111039"
+        offerTermsAndConditions:
+          type: string
+          description: "This field contains the terms and conditions that apply to an offer. It helps users understand the rules, limitations, and eligibility criteria before using the offer. The value supports transparency and ensures proper usage of promotions."
+          example: "<p>Offer valid through 03-31-2026. This offer cannot be combined with any other offer, coupon code(s), or promotion, unless available through this site. Offers are subject to change. Rewards are earned based on the net price of eligible goods and services purchased when using your enrolled bank card to make a qualifying purchase at participating US retailers. Rewards are earned based on the net price of eligible goods and services, excluding tax, shipping and handling, or any special services. Offer not valid on purchases of certain restricted consumer electronic products, charity/promotional items, gift cards, and on quantities of five or more of the same product purchased by resellers for the sole purchase of re-sale. Rewards are added to your account within 30 days of purchase or 30 days after travel completion, when applicable. Any return, exchange, or other adjustment of your qualifying purchase may result in your purchase being ineligible for rewards and any rewards already earned may be deducted from your account. Rewards will not be earned on purchases made with third-party partners where the customer is leaving the uChoose Rewards<sup><small>&reg;</small></sup> website. Purchases made with Google Wallet, Apple Pay, Samsung Pay, or PayPal may not be eligible for rewards. Other restrictions may apply.</p>"
+        merchantOfferExternalUrl:
+          type: string
+          description: This field provides a link to the offer on the merchant’s website. It helps users view more details or complete a transaction directly with the merchant. The value supports seamless navigation and enhances the user experience.
+          example: https://www.zennioptical.com/
+        offerValueDescription:
+          type: string
+          description: This field contains a brief summary of the value or benefit provided by the offer. It may be left empty if a more detailed offer description is already present. The value helps users quickly understand what the offer provides and why it’s relevant.
+          example: Bonus Earned
+        categories:
+          type: array
+          description: The list of categories to which the current offer is related.
+          items:
+            $ref: "#/components/schemas/Category"
+        offerExpirationDate:
+          type: string
+          description: This field indicates the date and time when an offer will no longer be valid. The value is formatted in UTC to ensure consistency across systems. It helps manage offer availability and informs users about the time left to redeem the offer. This field is important for scheduling and filtering active promotions.
+          format: YYYY-MM-DD
+          example: 2026-04-01
+        requiresActivation:
+          type: boolean
+          description: This field indicates whether an offer needs to be activated by the user before it can be used. It helps filter offers based on activation requirements and user readiness. The value is important for managing user engagement and offer eligibility.
+          example: false
+          default: false
+        offerValue:
+          type: string
+          description: "This field represents the numeric value associated with an offer, such as a discount amount, cashback percentage, or reward points. It helps quantify the benefit a user receives when redeeming the offer. The value is important for displaying offer details and comparing promotions. It may vary based on offer type and merchant configuration."
+          example: "10"
+        activated:
+          type: boolean
+          description: This field shows whether the user has already activated a specific offer. It applies only to offers that require activation. The value helps personalize the user experience by showing active or inactive offers. It is useful for tracking user interactions and offer status.
+          example: false
+          default: false
+        shopType:
+          type: array
+          items:
+            type: string
+            description: "This field indicates the type of shopping experience associated with an offer, such as online or in-store. It helps categorize offers and tailor them to user preferences or merchant capabilities. The value supports filtering and segmentation of offers. It is important for ensuring relevant offer presentation."
+            example: ONLINE
+            default: IN_STORE
+            enum:
+            - ONLINE
+            - IN_STORE
+        offerDescription:
+          type: string
+          description: "This field provides a short summary of what the offer includes, such as the type of benefit or promotion. It helps users quickly understand the value of the offer without reading detailed terms. The value supports display in offer listings and improves clarity in user-facing views."
+          example: Offer is valid on your next online purchase of $60 or more during the offer validity period. Additional terms may apply. Limited to one-time use. Offer expires 03-31-2026.
+        shortMerchantOffer:
+          type: string
+          description: "This field contains a brief version of the offer text, designed to appear alongside the merchant logo in list views. It helps present the offer in a compact and readable format. The value supports quick scanning and improves visual consistency in offer displays."
+          example: 10 Points per $1
+        merchantOfferDescription:
+          type: string
+          description: This field provides a user-friendly version of the offer description that includes the merchant’s name. It helps personalize the offer and make it more recognizable to users. The value supports display in promotional content and improves engagement.
+          example: Offer is valid on your next online purchase of $60 or more during the offer validity period. Additional terms may apply. Limited to one-time use. Offer expires 03-31-2026.
+        threshold:
+          maxLength: 11
+          type: string
+          description: This field provides minimum spend required to qualify for offer
+          format: decimal
+          example: "60.00"
+        ratecap:
+          maxLength: 11
+          type: string
+          description: Maximum reward cap if applicable.
+          format: decimal
+          example: "0.00"
+        resoneTime:
+          type: boolean
+          description: "Indicates single-use offer (t = true, single use)"
+          example: true
+        expirationDaysLeft:
+          maxLength: 10
+          type: integer
+          description: Number of days until the offer expires
+          example: 6
+        impression:
+          maxLength: 350
+          type: string
+          description: URL for tracking impressions and user interactions.
+          example: Offer is valid on your next online purchase of $60 or more during the offer validity period. Additional terms may apply. Limited to one-time use. Offer expires 03-31-2026.
+        locationCount:
+          type: string
+          description: This field indicates the number of physical store locations where the offer is available. It helps users understand the reach and availability of in-store promotions. The value supports location-based filtering and improves relevance in offer presentation.
+          example: "999"
+        partnerId:
+          type: string
+          description: "This field contains a unique identifier for the merchant partner associated with an offer. It helps link offers to the correct partner for tracking, display, and reporting purposes. The value remains consistent across systems and is important for managing partner-specific promotions. It supports accurate retrieval and organization of offers by merchant."
+          example: "111039"
+        alphaIndex:
+          type: string
+          description: This field captures the first character of the merchant’s name. It is used to organize and filter merchants alphabetically in offer listings. The value supports quick navigation and improves user experience in sorted views.
+          example: z
+        spend:
+          type: string
+          description: This field shows the average dollar amount spent on a merchant’s offer over the past month. Higher values may indicate popular or trending offers. The value helps prioritize offers based on user engagement and spending behavior.
+          example: "67737"
+        clickTrend:
+          type: string
+          description: This field reflects the average click rate for a merchant’s offer over the last three months. Offers with higher click trends may be considered more popular or engaging. The value helps highlight offers that attract more user interest.
+          example: "0"
+        fundingCategory:
+          type: string
+          description: "This field indicates the campaign or funding source associated with an offer. It helps classify offers based on how they are sponsored or supported. The value is useful for reporting, filtering, and managing offer groups. It supports internal tracking and campaign segmentation."
+          example: FEATURED
+          default: NONE
+          enum:
+          - NONE
+          - FEATURED
+          - SELECT
+          - SPOTLIGHT
+        bonusEarned:
+          type: boolean
+          description: This field indicates whether the loyalty member has earned a bonus associated with the offer. It helps track user eligibility and reward status. The value supports personalized experiences and is useful for displaying earned benefits in user-facing views.
+          example: false
+        stores:
+          type: array
+          items:
+            $ref: '#/components/schemas/Stores'
+    Stores:
+      type: object
+      properties:
+        storesId:
+          type: string
+          description: "This field contains a unique identifier for a store location. It helps link offers and merchant data to specific physical stores. The value supports accurate tracking, retrieval, and display of store-level information."
+          example: "301219"
+        name:
+          type: string
+          description: This field holds the name of the store where an offer is available. It helps users identify the merchant location in listings or maps. The value supports display and improves clarity in offer presentation.
+          example: Yvette Jewelers
+        locationName:
+          type: string
+          description: "This field provides the name of the store’s location, such as a mall or shopping center. It helps users understand where the store is situated. The value supports display and enhances the relevance of in-store offers."
+          example: Mira Loma
+        address:
+          type: string
+          description: "This field contains the full address of the store offering the promotion. It helps users locate the store for in-person visits. The value supports mapping, filtering, and display of location-based offers."
+          example: 2882 3rd Ave
+        city:
+          type: string
+          description: This field holds the name of the city where in-store offers are available. It helps filter and display offers based on user location or merchant presence. The value supports geographic relevance and improves targeting. It is commonly used in location-based offer queries.
+          example: Bronx
+        state:
+          type: string
+          description: This field contains the name or abbreviation of the state where in-store offers are available. It helps narrow down offers based on regional availability. The value supports location filtering and improves relevance for users in specific areas. It is used in conjunction with other location fields.
+          example: NY
+        zip:
+          type: string
+          description: This field contains the postal code of the store location. It helps identify and filter in-store offers based on geographic area. The value supports location-based searches and improves relevance for users looking for nearby deals.
+          example: "10455"
+        longitude:
+          type: string
+          description: This field contains the longitude coordinate used to locate nearby in-store offers. It works with latitude to define a specific location for filtering. The value supports geographic targeting and helps return relevant offers based on proximity. It is essential for map-based or location-aware queries.
+          example: "-73.916611000000003"
+        latitude:
+          type: string
+          description: This field holds the latitude coordinate used to find nearby in-store offers. It helps define a central point for location-based filtering. The value supports geo-targeting and improves the accuracy of offer results. It is typically used with longitude and radius.
+          example: "40.816701999999999"
+        phone:
+          type: string
+          description: This field holds the contact number of the store. It helps users reach out to the store for inquiries or assistance related to offers. The value supports display in store details and enhances user convenience.
+          example: "7568142562"
+        venueId:
+          type: string
+          description: This field contains a unique identifier for the venue where the store is located. It helps link store data to specific physical locations for tracking and retrieval. The value supports accurate mapping and organization of in-store offers.
+          example: "0"
+        notes:
+          type: string
+          description: This field provides additional context or remarks related to the store location. It may include nearby landmarks or helpful directions. The value supports user navigation and enhances clarity in store listings.
+          example: Next to shoprite.
+        distance:
+          type: string
+          example: "5.0"
+    OfferList:
+      type: object
+      properties:
+        offerId:
+          maxLength: 10
+          minLength: 1
+          type: string
+          description: "This field holds a unique identifier for a specific offer. It helps track, retrieve, and manage offers across different systems and user interactions. The value is important for linking user actions, such as activation or redemption, to the correct offer. It remains consistent throughout the offer’s lifecycle."
+          format: numeric
+          example: "103557"
+        offerName:
+          maxLength: 50
+          type: string
+          description: "Human-readable name of the offer, usually the merchant or brand name, used for display in UI components."
+          format: text
+          example: 5 Points per $1
+        shortMerchantOffer:
+          maxLength: 300
+          type: string
+          description: "This field contains a brief version of the offer text, designed to appear alongside the merchant logo in list views. It helps present the offer in a compact and readable format. The value supports quick scanning and improves visual consistency in offer displays."
+          format: text
+          example: "Offer valid on your next online purchase of $35 or more during the validity period, up to a maximum reward of 5000 Points. One-time use only. Offer expires 10-31-2025"
+        merchantPartnerName:
+          maxLength: 50
+          type: string
+          description: "This field contains the name or keyword used to identify a merchant partner. It helps match offers to merchants based on partial or full name inputs. The value is used for display, filtering, and offer targeting purposes."
+          example: LEGO
+        offerTermsAndConditions:
+          maxLength: 8000
+          type: string
+          description: "This field contains the terms and conditions that apply to an offer. It helps users understand the rules, limitations, and eligibility criteria before using the offer. The value supports transparency and ensures proper usage of promotions."
+          example: "Offer valid through 10-31-2025.</p><p>Points will be earned on qualifying purchases completed using the designated shop link provided above and when using your bank card at participating online retailers. Offers are subject to change. Points are added to your account within 90 days of the date of purchase. Offer cannot be combined with any other offer, coupon code(s), or promotion, unless available through this site. Points will not be earned when purchasing gift cards, gift certificates, or other similar cash equivalents. Other restrictions may apply. All orders are fulfilled by the participating retailers in their respective packaging. Please refer to individual retailers for shipping information, return policies, and customer service. Points will not be available on in-store purchases or purchases made for in-store pick up. Any return, exchange, or other adjustment of your qualifying purchase may result in your purchase being ineligible for Points, and any Points already earned may be deducted from your account.</p><p>To protect your security, your session will automatically end after 15 minutes of inactivity. Please ensure you complete your selected transaction within 15 minutes"
+        merchantLogoFileNameUrl1:
+          maxLength: 50
+          type: string
+          description: This field contains the URL or filename of the merchant’s logo used for display purposes. It helps visually identify the merchant associated with an offer. The value supports branding and improves user recognition in offer listings.
+          example: https://uchooserewards.com/data/images/lego_90x50_4.2.08.gif
+        merchantLogoFileNameUrl2:
+          maxLength: 50
+          type: string
+          description: This field contains the URL or filename of the merchant’s logo used for display purposes. It helps visually identify the merchant associated with an offer. The value supports branding and improves user recognition in offer listings. Image file path to larger image of retailer. If not provided by retailer it will be same merchantLogoFileNameUrl1
+          example: https://uchooserewards.com/data/images/lego_90x50_4.2.08.gif
+        merchantOfferExternalUrl:
+          maxLength: 255
+          type: string
+          description: This field provides a link to the offer on the merchant’s website. It helps users view more details or complete a transaction directly with the merchant. The value supports seamless navigation and enhances the user experience.
+          example: http://click.linksynergy.com/fs-bin/click?id=E7Il34ja9WM&offerid=115554.10000195&type=3&subid=0&u1=26XXdKrlo26
+        offerValue:
+          maxLength: 10
+          minLength: 1
+          type: string
+          description: "This field represents the numeric value associated with an offer, such as a discount amount, cashback percentage, or reward points. It helps quantify the benefit a user receives when redeeming the offer. The value is important for displaying offer details and comparing promotions. It may vary based on offer type and merchant configuration."
+          format: numeric
+          example: "2"
+        threshold:
+          maxLength: 11
+          minLength: 1
+          type: string
+          description: Minimum spend required to qualify for offer.
+          format: decimal
+          example: "35.00"
+        ratecap:
+          maxLength: 11
+          minLength: 1
+          type: string
+          description: Maximum reward cap if applicable
+          format: decimal
+          example: "50.00"
+        resonetime:
+          type: boolean
+          description: Indicates single-use offer
+          example: true
+        bonusEarned:
+          type: boolean
+          description: This field indicates whether the loyalty member has earned a bonus associated with the offer. It helps track user eligibility and reward status. The value supports personalized experiences and is useful for displaying earned benefits in user-facing views.
+          example: false
+        requiresActivation:
+          type: boolean
+          description: This field indicates whether an offer needs to be activated by the user before it can be used. It helps filter offers based on activation requirements and user readiness. The value is important for managing user engagement and offer eligibility.
+          example: false
+        activated:
+          type: boolean
+          description: This field shows whether the user has already activated a specific offer. It applies only to offers that require activation. The value helps personalize the user experience by showing active or inactive offers. It is useful for tracking user interactions and offer status.
+          example: true
+        expirationDaysLeft:
+          maxLength: 10
+          minLength: 1
+          type: string
+          description: Number of days until the offer expires
+          format: numeric
+          example: "157"
+        offerExpirationDate:
+          type: string
+          description: This field indicates the date and time when an offer will no longer be valid. The value is formatted in UTC to ensure consistency across systems. It helps manage offer availability and informs users about the time left to redeem the offer. This field is important for scheduling and filtering active promotions.
+          format: YYYY-MM-DD
+          example: 2022-09-23
+        impression:
+          maxLength: 350
+          minLength: 1
+          type: string
+          description: URL for tracking impressions and user interactions
+          example: https://hits.afssn.com/impressions?...
+        shopType:
+          type: array
+          items:
+            type: string
+            description: "This field indicates the type of shopping experience associated with an offer, such as online or in-store. It helps categorize offers and tailor them to user preferences or merchant capabilities. The value supports filtering and segmentation of offers. It is important for ensuring relevant offer presentation."
+            example: IN_STORE
+            default: IN_STORE
+            enum:
+            - ONLINE
+            - IN_STORE
+    OfferSearchResponse_offerSearchParameters:
+      type: object
+      properties:
+        totalPages:
+          type: string
+          description: This field indicates the total number of pages available in the response for a given request. It helps users understand how many pages of data they can navigate through. The value supports pagination and improves the browsing experience by setting expectations for result volume.
+          example: "33"
+        totalMatches:
+          type: string
+          description: This field indicates the total number of matches available in the response for a given request. It helps users understand how many matches are available for offers. It will be available for featured offers only.
+          example: "801"
+        offers:
+          type: array
+          items:
+            $ref: "#/components/schemas/Offers"
+  parameters:
+    userIdParam:
+      name: userId
+      in: header
+      description: User who is making this request. This is optional, if passed will be used for granular level auditing.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+      example: FDSCARD
+    authorizationParam:
+      name: Authorization
+      in: header
+      description: "Retrieve an access token through the Access Token API. Access token is required in every request. To view documentation on access token <a className='text-app-action-blue' href='/product/CardDeveloper/docs/?path=docs/gettingstarted/access-tokens.md' title='Click to open'>click here.</a> Tokens expire after 15 minutes. Provide the value as follows in the header. Authorization: Bearer <Access Token Value>"
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+      example: Bearer USlfM8dilzKZPcuGGP3BfVLd7Snk
+    clientIdParam:
+      name: x-fapi-financial-id
+      in: header
+      description: Required. Provide 8 digit integer client id
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+      example: "12345678"
+  headers:
+    interactionId:
+      description: unique transaction ID created for each request for tracking purposes
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: 95ad42fb-afd1-2121-b794-3ed29342ks42
+  securitySchemes:
+    BearerAuth:
+      type: http
+      description: Enter 'Bearer ' followed by the access token.
+      scheme: bearer

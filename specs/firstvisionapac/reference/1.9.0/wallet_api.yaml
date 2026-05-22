@@ -1,0 +1,1575 @@
+openapi: 3.0.1
+info:
+  title: Vision10 API Documentation
+  description: V10 open API document.
+  version: 1.0.0
+servers:
+- url: https://stg34.visionplus.io/sandbox/
+tags:
+- name: Wallet
+paths:
+  /v1/wallet/crossWalletTransfer:
+    post:
+      description: This API used for cross Wallet Transfer.
+      operationId: CrossWalletTransfer
+      parameters:
+      - description: Token is used in token-based authentication to allow an application
+          to access an API.
+        in: header
+        name: Authorization
+        required: true
+        schema:
+          maxLength: 1200
+          type: string
+          example: Bearer eyJhbGciOiJSUzI1NiJ9.eyJzY29wZSI6ImFsbCIsImNsaWVudF9pZCI6InZpc2lvbi1hcGktdXNlciIsImZpcnN0VmlzaW9uSWQiOiIwMDAwMEFVTkFCIiwiZXhwIjoxNzUwMzkyMDAwfQ.O6ZW0FnlWN09GqPeTEgWTQ9Gq6LPyt7BWTx65z7a0DKJQWBZ-pz29NX9xcuk-1ZdoLbKd_jPpwLNYGfS4KsuOLz1tQj1-teV2JO10DHxxthlG1-IGUIMyI5MivzNFlvLEG6TipqdQd3WdNl2juqlHKpDY86N0Z_Fg3n9igw4pFDzdGpHle5_4vGnl9PkYBA_WoWtgic05_63s5j6kmWbPkrV22NsHtOjJIh0sN1Q7sArecVnJCI7mwGVC5xasLGTO-Nn3hx6r8Y2mBv1Fv39LO_rUYcaK1RXS_xkoJV_3NdopGgfq4hp9F0naCKWxUxW1oaCaGCqk3p6xhkyDsJgaQ
+      - description: Client specified identifier to recognize subsequent retries of
+          the same request.
+        in: header
+        name: Idempotency-Key
+        required: false
+        schema:
+          maxLength: 50
+          type: string
+          example: 1234567895e72403cb9c18deb25e06f8a
+      - description: Client specified identifier to correlate the request with the
+          response of the API within their application. Any value passed in the request
+          message will be return back as-is in the API response message.
+        in: header
+        name: x-client-correlation-id
+        required: false
+        schema:
+          maxLength: 40
+          type: string
+          example: ABC123
+      - description: Client specified trace-id to track the request within their application.
+          Any value passed in the request message will be return back as-is in the
+          API response message.
+        in: header
+        name: x-client-trace-id
+        required: false
+        schema:
+          maxLength: 256
+          type: string
+          example: ABC123
+      - description: Client specified identifier of the channel that initiated the
+          API request. Any value passed in the request message will be return back
+          as-is in the API response message.
+        in: header
+        name: x-client-source-channel
+        required: false
+        schema:
+          maxLength: 40
+          type: string
+          example: ABC123
+      - description: Client specified identifier of their user** that initiated the
+          API request.  Any value passed in the request message will be return back
+          as-is in the API response message.<BR><BR><i>**The value passed in this
+          field will not be used for any Identity and access management</i>
+        in: header
+        name: x-client-user-id
+        required: false
+        schema:
+          maxLength: 40
+          type: string
+          example: ABC123
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrossWalletTransferV1ReqModel'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrossWalletTransferV1ResponseModel'
+          description: " \nSuccess"
+        '400':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request cannot be validated"
+        '401':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request was unauthorized"
+        '403':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request resource is forbidden for user"
+        '404':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request resource does not exist"
+        '409':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request conflicts with another request "
+        '422':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request could not be processed"
+        '500':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nAn unexpected internal server error occurred"
+        '503':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe service was unavailable"
+        '504':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request timed out while waiting for a response"
+      security:
+      - Authorization: [
+          ]
+      summary: Cross Wallet Transfer
+      tags:
+      - Wallet
+      x-group-name: Wallet
+      x-proxy-name: Cross Wallet Transfer
+  /v1/wallet/walletRedemption:
+    post:
+      description: This API used for cross Wallet Transfer.
+      operationId: WalletRedemption
+      parameters:
+      - description: Token is used in token-based authentication to allow an application
+          to access an API.
+        in: header
+        name: Authorization
+        required: true
+        schema:
+          maxLength: 1200
+          type: string
+          example: Bearer eyJhbGciOiJSUzI1NiJ9.eyJzY29wZSI6ImFsbCIsImNsaWVudF9pZCI6InZpc2lvbi1hcGktdXNlciIsImZpcnN0VmlzaW9uSWQiOiIwMDAwMEFVTkFCIiwiZXhwIjoxNzUwMzkyMDAwfQ.O6ZW0FnlWN09GqPeTEgWTQ9Gq6LPyt7BWTx65z7a0DKJQWBZ-pz29NX9xcuk-1ZdoLbKd_jPpwLNYGfS4KsuOLz1tQj1-teV2JO10DHxxthlG1-IGUIMyI5MivzNFlvLEG6TipqdQd3WdNl2juqlHKpDY86N0Z_Fg3n9igw4pFDzdGpHle5_4vGnl9PkYBA_WoWtgic05_63s5j6kmWbPkrV22NsHtOjJIh0sN1Q7sArecVnJCI7mwGVC5xasLGTO-Nn3hx6r8Y2mBv1Fv39LO_rUYcaK1RXS_xkoJV_3NdopGgfq4hp9F0naCKWxUxW1oaCaGCqk3p6xhkyDsJgaQ
+      - description: Client specified identifier to recognize subsequent retries of
+          the same request.
+        in: header
+        name: Idempotency-Key
+        required: false
+        schema:
+          maxLength: 50
+          type: string
+          example: 1234567895e72403cb9c18deb25e06f8a
+      - description: Client specified identifier to correlate the request with the
+          response of the API within their application. Any value passed in the request
+          message will be return back as-is in the API response message.
+        in: header
+        name: x-client-correlation-id
+        required: false
+        schema:
+          maxLength: 40
+          type: string
+          example: ABC123
+      - description: Client specified trace-id to track the request within their application.
+          Any value passed in the request message will be return back as-is in the
+          API response message.
+        in: header
+        name: x-client-trace-id
+        required: false
+        schema:
+          maxLength: 256
+          type: string
+          example: ABC123
+      - description: Client specified identifier of the channel that initiated the
+          API request. Any value passed in the request message will be return back
+          as-is in the API response message.
+        in: header
+        name: x-client-source-channel
+        required: false
+        schema:
+          maxLength: 40
+          type: string
+          example: ABC123
+      - description: Client specified identifier of their user** that initiated the
+          API request.  Any value passed in the request message will be return back
+          as-is in the API response message.<BR><BR><i>**The value passed in this
+          field will not be used for any Identity and access management</i>
+        in: header
+        name: x-client-user-id
+        required: false
+        schema:
+          maxLength: 40
+          type: string
+          example: ABC123
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WalletRedemptionV1ReqModel'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WalletRedemptionV1ResponseModel'
+          description: " \nSuccess"
+        '400':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request cannot be validated"
+        '401':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request was unauthorized"
+        '403':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request resource is forbidden for user"
+        '404':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request resource does not exist"
+        '409':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request conflicts with another request "
+        '422':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request could not be processed"
+        '500':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nAn unexpected internal server error occurred"
+        '503':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe service was unavailable"
+        '504':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request timed out while waiting for a response"
+      security:
+      - Authorization: [
+          ]
+      summary: Wallet Redemption
+      tags:
+      - Wallet
+      x-group-name: Wallet
+      x-proxy-name: Wallet Redemption
+  /v1/wallet/{accountId}/updatePriorityOrder:
+    put:
+      description: This API is used to MWP Update Priority Order.
+      operationId: UpdatePriorityOrder
+      parameters:
+      - description: Token is used in token-based authentication to allow an application
+          to access an API.
+        in: header
+        name: Authorization
+        required: true
+        schema:
+          maxLength: 1200
+          type: string
+          example: Bearer eyJhbGciOiJSUzI1NiJ9.eyJzY29wZSI6ImFsbCIsImNsaWVudF9pZCI6InZpc2lvbi1hcGktdXNlciIsImZpcnN0VmlzaW9uSWQiOiIwMDAwMEFVTkFCIiwiZXhwIjoxNzUwMzkyMDAwfQ.O6ZW0FnlWN09GqPeTEgWTQ9Gq6LPyt7BWTx65z7a0DKJQWBZ-pz29NX9xcuk-1ZdoLbKd_jPpwLNYGfS4KsuOLz1tQj1-teV2JO10DHxxthlG1-IGUIMyI5MivzNFlvLEG6TipqdQd3WdNl2juqlHKpDY86N0Z_Fg3n9igw4pFDzdGpHle5_4vGnl9PkYBA_WoWtgic05_63s5j6kmWbPkrV22NsHtOjJIh0sN1Q7sArecVnJCI7mwGVC5xasLGTO-Nn3hx6r8Y2mBv1Fv39LO_rUYcaK1RXS_xkoJV_3NdopGgfq4hp9F0naCKWxUxW1oaCaGCqk3p6xhkyDsJgaQ
+      - description: Client specified identifier to correlate the request with the
+          response of the API within their application. Any value passed in the request
+          message will be return back as-is in the API response message.
+        in: header
+        name: x-client-correlation-id
+        required: false
+        schema:
+          maxLength: 40
+          type: string
+          example: ABC123
+      - description: Client specified trace-id to track the request within their application.
+          Any value passed in the request message will be return back as-is in the
+          API response message.
+        in: header
+        name: x-client-trace-id
+        required: false
+        schema:
+          maxLength: 256
+          type: string
+          example: ABC123
+      - description: Client specified identifier of the channel that initiated the
+          API request. Any value passed in the request message will be return back
+          as-is in the API response message.
+        in: header
+        name: x-client-source-channel
+        required: false
+        schema:
+          maxLength: 40
+          type: string
+          example: ABC123
+      - description: Client specified identifier of their user** that initiated the
+          API request.  Any value passed in the request message will be return back
+          as-is in the API response message.<BR><BR><i>**The value passed in this
+          field will not be used for any Identity and access management</i>
+        in: header
+        name: x-client-user-id
+        required: false
+        schema:
+          maxLength: 40
+          type: string
+          example: ABC123
+      - description: Unique identification number associated with the organization.
+          Valid values from 1-998.
+        in: query
+        name: businessUnit
+        required: true
+        schema:
+          maximum: 999
+          maxLength: 3
+          type: integer
+          example: '200'
+      - description: Unique identification number for cardholder billing account.
+        in: path
+        name: accountId
+        required: true
+        schema:
+          maxLength: 19
+          type: string
+          example: '0002000010000066752'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePriorityOrderV1ReqModel'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdatePriorityOrderV1ResponseModel'
+          description: " \nSuccess"
+        '400':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request cannot be validated"
+        '401':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request was unauthorized"
+        '403':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request resource is forbidden for user"
+        '404':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request resource does not exist"
+        '422':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request could not be processed"
+        '500':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nAn unexpected internal server error occurred"
+        '503':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe service was unavailable"
+        '504':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request timed out while waiting for a response"
+      security:
+      - Authorization: [
+          ]
+      summary: Update Priority Order
+      tags:
+      - Wallet
+      x-group-name: Wallet
+      x-proxy-name: Update Priority Order
+  /v1/wallet/{accountId}/walletPrepaidTransaction:
+    get:
+      description: This API is used to fetch unbilled transaction details for a given
+        account Id.
+      operationId: ListMultiWalletTransactions
+      parameters:
+      - description: Token is used in token-based authentication to allow an application
+          to access an API.
+        in: header
+        name: Authorization
+        required: true
+        schema:
+          maxLength: 1200
+          type: string
+          example: Bearer eyJhbGciOiJSUzI1NiJ9.eyJzY29wZSI6ImFsbCIsImNsaWVudF9pZCI6InZpc2lvbi1hcGktdXNlciIsImZpcnN0VmlzaW9uSWQiOiIwMDAwMEFVTkFCIiwiZXhwIjoxNzUwMzkyMDAwfQ.O6ZW0FnlWN09GqPeTEgWTQ9Gq6LPyt7BWTx65z7a0DKJQWBZ-pz29NX9xcuk-1ZdoLbKd_jPpwLNYGfS4KsuOLz1tQj1-teV2JO10DHxxthlG1-IGUIMyI5MivzNFlvLEG6TipqdQd3WdNl2juqlHKpDY86N0Z_Fg3n9igw4pFDzdGpHle5_4vGnl9PkYBA_WoWtgic05_63s5j6kmWbPkrV22NsHtOjJIh0sN1Q7sArecVnJCI7mwGVC5xasLGTO-Nn3hx6r8Y2mBv1Fv39LO_rUYcaK1RXS_xkoJV_3NdopGgfq4hp9F0naCKWxUxW1oaCaGCqk3p6xhkyDsJgaQ
+      - description: Client specified identifier to correlate the request with the
+          response of the API within their application. Any value passed in the request
+          message will be return back as-is in the API response message.
+        in: header
+        name: x-client-correlation-id
+        required: false
+        schema:
+          maxLength: 40
+          type: string
+          example: ABC123
+      - description: Client specified trace-id to track the request within their application.
+          Any value passed in the request message will be return back as-is in the
+          API response message.
+        in: header
+        name: x-client-trace-id
+        required: false
+        schema:
+          maxLength: 256
+          type: string
+          example: ABC123
+      - description: Client specified identifier of the channel that initiated the
+          API request. Any value passed in the request message will be return back
+          as-is in the API response message.
+        in: header
+        name: x-client-source-channel
+        required: false
+        schema:
+          maxLength: 40
+          type: string
+          example: ABC123
+      - description: Client specified identifier of their user** that initiated the
+          API request.  Any value passed in the request message will be return back
+          as-is in the API response message.<BR><BR><i>**The value passed in this
+          field will not be used for any Identity and access management</i>
+        in: header
+        name: x-client-user-id
+        required: false
+        schema:
+          maxLength: 40
+          type: string
+          example: ABC123
+      - description: Unique identification number associated with the organization.
+          Valid values from 1-998.
+        in: query
+        name: businessUnit
+        required: true
+        schema:
+          maximum: 999
+          maxLength: 3
+          type: integer
+          example: '100'
+      - description: Unique identification number for cardholder billing account.
+        in: path
+        name: accountId
+        required: true
+        schema:
+          maxLength: 19
+          type: string
+          example: '0001000010000510001'
+      - description: Wallet Id.
+        in: query
+        name: walletId
+        required: false
+        schema:
+          maxLength: 3
+          type: string
+          example: '0001000010000510001'
+      - description: TRAN Type. CYCLE-TO-DATE = C, TXN-MEMO-POSTED = M, TXN-WAREHOUSE
+          = W, TXN-DISPUTED= D, TXN-STATEMENT = S, TXN-LIFE-TO-DATE = = L
+        in: query
+        name: transactionType
+        required: false
+        schema:
+          maxLength: 1
+          type: string
+          example: '0001000010000510001'
+          enum:
+          - C
+          - M
+          - W
+          - D
+          - S
+          - L
+      - description: REC NUMBER.
+        in: query
+        name: recordNumber
+        required: false
+        schema:
+          maxLength: 4
+          type: string
+          example: '4'
+      - description: DATE FROM
+        in: query
+        name: dateFrom
+        required: false
+        schema:
+          maxLength: 10
+          type: string
+          example: 12/12/2023
+      - description: POST DATE
+        in: query
+        name: startPostingDate
+        required: false
+        schema:
+          maxLength: 10
+          type: string
+          example: 12/12/2023
+      - description: START TIME
+        in: query
+        name: startTime
+        required: false
+        schema:
+          maximum: 9999999
+          maxLength: 7
+          type: integer
+          example: '0'
+      - description: Field which is used to get next set of transactions. This field
+          will be passed as spaces for the first set of transactions. For next set
+          of transactions, continuationToken received in previous response must be
+          provided.
+        in: query
+        name: continuationToken
+        required: false
+        schema:
+          maxLength: 160
+          type: string
+          example: ' '
+      - description: START FILE
+        in: query
+        name: startFile
+        required: false
+        schema:
+          maxLength: 1
+          type: string
+          example: O
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListMultiWalletTransactionV1ResponseModel'
+          description: " \nSuccess"
+        '400':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request cannot be validated"
+        '401':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request was unauthorized"
+        '403':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request resource is forbidden for user"
+        '404':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request resource does not exist"
+        '422':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request could not be processed"
+        '500':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nAn unexpected internal server error occurred"
+        '503':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe service was unavailable"
+        '504':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request timed out while waiting for a response"
+      security:
+      - Authorization: [
+          ]
+      summary: List Multi Wallet Prepaid Transactions
+      tags:
+      - Wallet
+      x-group-name: Wallet
+      x-proxy-name: List Multi Wallet Prepaid Transactions
+  /v1/wallet/{accountId}/walletTransactions:
+    get:
+      description: This API is used to inquire multi wallet Balance for Account.
+      operationId: InquireMultiWalletBalance
+      parameters:
+      - description: Token is used in token-based authentication to allow an application
+          to access an API.
+        in: header
+        name: Authorization
+        required: true
+        schema:
+          maxLength: 1200
+          type: string
+          example: Bearer eyJhbGciOiJSUzI1NiJ9.eyJzY29wZSI6ImFsbCIsImNsaWVudF9pZCI6InZpc2lvbi1hcGktdXNlciIsImZpcnN0VmlzaW9uSWQiOiIwMDAwMEFVTkFCIiwiZXhwIjoxNzUwMzkyMDAwfQ.O6ZW0FnlWN09GqPeTEgWTQ9Gq6LPyt7BWTx65z7a0DKJQWBZ-pz29NX9xcuk-1ZdoLbKd_jPpwLNYGfS4KsuOLz1tQj1-teV2JO10DHxxthlG1-IGUIMyI5MivzNFlvLEG6TipqdQd3WdNl2juqlHKpDY86N0Z_Fg3n9igw4pFDzdGpHle5_4vGnl9PkYBA_WoWtgic05_63s5j6kmWbPkrV22NsHtOjJIh0sN1Q7sArecVnJCI7mwGVC5xasLGTO-Nn3hx6r8Y2mBv1Fv39LO_rUYcaK1RXS_xkoJV_3NdopGgfq4hp9F0naCKWxUxW1oaCaGCqk3p6xhkyDsJgaQ
+      - description: Client specified identifier to correlate the request with the
+          response of the API within their application. Any value passed in the request
+          message will be return back as-is in the API response message.
+        in: header
+        name: x-client-correlation-id
+        required: false
+        schema:
+          maxLength: 40
+          type: string
+          example: ABC123
+      - description: Client specified trace-id to track the request within their application.
+          Any value passed in the request message will be return back as-is in the
+          API response message.
+        in: header
+        name: x-client-trace-id
+        required: false
+        schema:
+          maxLength: 256
+          type: string
+          example: ABC123
+      - description: Client specified identifier of the channel that initiated the
+          API request. Any value passed in the request message will be return back
+          as-is in the API response message.
+        in: header
+        name: x-client-source-channel
+        required: false
+        schema:
+          maxLength: 40
+          type: string
+          example: ABC123
+      - description: Client specified identifier of their user** that initiated the
+          API request.  Any value passed in the request message will be return back
+          as-is in the API response message.<BR><BR><i>**The value passed in this
+          field will not be used for any Identity and access management</i>
+        in: header
+        name: x-client-user-id
+        required: false
+        schema:
+          maxLength: 40
+          type: string
+          example: ABC123
+      - description: Unique identification number associated with the organization.
+          Valid values from 1-998.
+        in: query
+        name: businessUnit
+        required: true
+        schema:
+          maximum: 999
+          maxLength: 3
+          type: integer
+          example: '200'
+      - description: Unique identification number for cardholder billing account.
+        in: path
+        name: accountId
+        required: true
+        schema:
+          maxLength: 19
+          type: string
+          example: '0002000010000066752'
+      - description: Inquire Flag. WALLET LEVEL INQUIRY VALUE 'W', ACCOUNT LEVEL INQUIRY
+          = 'A'.
+        in: query
+        name: InquireFlag
+        required: false
+        schema:
+          maxLength: 1
+          type: string
+          example: W
+          enum:
+          - W
+          - A
+          - C
+      - description: Currency Code.
+        in: query
+        name: currencyCode
+        required: false
+        schema:
+          maxLength: 3
+          type: string
+          example: AUD
+      - description: Conversion Fee flag.<br/>The values are:<br/>&nbsp; '0' - False
+          <br/>&nbsp; '1' - True
+        in: query
+        name: conversionFeeFlag
+        required: false
+        schema:
+          maxLength: 1
+          type: string
+          example: '0'
+          enum:
+          - '0'
+          - '1'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InquireMultiWalletBalanceV1ResponseModel'
+          description: " \nSuccess"
+        '400':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request cannot be validated"
+        '401':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request was unauthorized"
+        '403':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request resource is forbidden for user"
+        '404':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request resource does not exist"
+        '422':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request could not be processed"
+        '500':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nAn unexpected internal server error occurred"
+        '503':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe service was unavailable"
+        '504':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseErrorMessageInfo'
+          description: " \nThe request timed out while waiting for a response"
+      security:
+      - Authorization: [
+          ]
+      summary: Inquire Multi Wallet Balance
+      tags:
+      - Wallet
+      x-group-name: Wallet
+      x-proxy-name: Inquire Multi Wallet Balance
+components:
+  schemas:
+    CrossWalletTransferV1ReqModel:
+      type: object
+      properties:
+        accountId:
+          maxLength: 19
+          type: string
+          description: Unique identification number for cardholder billing account.
+          example: '0006000011000000152'
+        actionCode:
+          maxLength: 4
+          type: string
+          description: Action code placed on the account.
+          example: AINQ
+        businessUnit:
+          maximum: 999
+          maxLength: 3
+          type: integer
+          description: Unique identification number associated with the organization.
+            Valid values from 1-998.
+          example: '600'
+        confirmIndicator:
+          maxLength: 1
+          type: string
+          description: Confirm Indicator.
+          example: A
+        note1:
+          maxLength: 60
+          type: string
+          description: Notes for the action to be taken.
+          example: ' '
+        note2:
+          maxLength: 60
+          type: string
+          description: Notes for the action to be taken.
+          example: ' '
+        note3:
+          maxLength: 60
+          type: string
+          description: Notes for the action to be taken.
+          example: ' '
+        note4:
+          maxLength: 60
+          type: string
+          description: Notes for the action to be taken.
+          example: ' '
+        note5:
+          maxLength: 60
+          type: string
+          description: Notes for the action to be taken.
+          example: ' '
+        representativeIdentification:
+          maxLength: 3
+          type: string
+          description: Rep ID
+          example: '600'
+        transferAmount:
+          maxLength: 24
+          type: string
+          description: Transfer Amount.
+          example: '10.00'
+        transferFromWallet:
+          maximum: 999
+          maxLength: 3
+          type: integer
+          description: Transfer from wallet.
+          example: '123'
+        transferIndicator:
+          maxLength: 1
+          type: string
+          description: Transfer Indicator.
+          example: P
+          enum:
+          - P
+          - F
+        transferToWallet:
+          maximum: 999
+          maxLength: 3
+          type: integer
+          description: Transfer to wallet.
+          example: '456'
+    CrossWalletTransferV1ResponseModel:
+      type: object
+      properties:
+        accountId:
+          maxLength: 19
+          type: string
+          description: Unique identification number for cardholder billing account.
+          example: '0006000011000000152'
+        baseFeeAmount:
+          maxLength: 27
+          type: string
+          description: Fee Amount Base.
+          example: $10.00
+        businessUnit:
+          maximum: 999
+          maxLength: 3
+          type: integer
+          description: Unique identification number associated with the organization.
+            Valid values from 1-998.
+          example: '600'
+        conversionAmount:
+          maxLength: 27
+          type: string
+          description: Conversion Amount.
+          example: $10.00
+        conversionBaseAmount:
+          maxLength: 27
+          type: string
+          description: Conversion Amount Base.
+          example: $10.00
+        netConversionAmount:
+          maxLength: 27
+          type: string
+          description: Net Conversion Amount.
+          example: $10.00
+        netConversionBaseAmount:
+          maxLength: 27
+          type: string
+          description: Net Conversion Amount Base.
+          example: $10.00
+        rate:
+          maxLength: 18
+          type: string
+          description: Rate.
+          example: 0.000000%
+        rateNod:
+          maximum: 9
+          maxLength: 1
+          type: integer
+          description: Rate NOD.
+          example: '2'
+        transferAmount:
+          maxLength: 27
+          type: string
+          description: Transfer Amount
+          example: $100.00
+        transferFromWallet:
+          maximum: 999
+          maxLength: 3
+          type: integer
+          description: Transfer From wallet.
+          example: '123'
+        transferFromWalletCurrency:
+          maximum: 999
+          maxLength: 3
+          type: integer
+          description: Transfer from wallet Currency.
+          example: '0'
+        transferIndicator:
+          maxLength: 1
+          type: string
+          description: Transfer indicator.
+          example: ''
+        transferToWallet:
+          maximum: 999
+          maxLength: 3
+          type: integer
+          description: Transfer TO wallet.
+          example: '456'
+        transferToWalletCurrency:
+          maximum: 999
+          maxLength: 3
+          type: integer
+          description: Transfer to wallet Currency.
+          example: '0'
+        walletFeeAmount:
+          maxLength: 27
+          type: string
+          description: Fee Amount Wallet.
+          example: $10.00
+    InquireMultiWalletBalanceV1ResponseModel:
+      type: object
+      properties:
+        accountConversionFeeAmount:
+          maxLength: 24
+          type: string
+          example: $1.00
+        accountCurrencyBalance:
+          maxLength: 17
+          type: string
+          example: $1.00
+        accountCurrencyCode:
+          maxLength: 3
+          type: string
+          example: AUS
+        accountCurrencyNod:
+          maximum: 9
+          maxLength: 1
+          type: integer
+          example: '2'
+        accountId:
+          maxLength: 19
+          type: string
+          description: Unique identification number for cardholder billing account.
+          example: '0002000010000066752'
+        accountMemoCreitAmount:
+          maxLength: 24
+          type: string
+          example: $1.00
+        accountMemoDebitAmount:
+          maxLength: 24
+          type: string
+          example: $1.00
+        accountMemoDispositionAmount:
+          maxLength: 24
+          type: string
+          example: $1.00
+        accountNetCurencyBalance:
+          maxLength: 17
+          type: string
+          example: $1.00
+        businessUnit:
+          maximum: 999
+          maxLength: 3
+          type: integer
+          description: Unique identification number associated with the organization.
+            Valid values from 1-998.
+          example: '700'
+        businessUnitCurrencyCode:
+          maximum: 999
+          maxLength: 3
+          type: integer
+          example: '0'
+        businessUnitCurrencyNod:
+          maximum: 9
+          maxLength: 1
+          type: integer
+          example: '1'
+        product:
+          maximum: 999
+          maxLength: 3
+          type: integer
+          example: '700'
+        walletBalanceDetails:
+          type: object
+          properties:
+            transactionDetails:
+              type: array
+              items:
+                $ref: '#/components/schemas/TransactionDetails_InquireMultiWalletBalanceV1ResponseModel'
+    ListMultiWalletTransactionV1ResponseModel:
+      type: object
+      properties:
+        accountId:
+          maxLength: 19
+          type: string
+          description: Unique identification number for cardholder billing account.
+          example: ''
+        businessUnit:
+          maxLength: 3
+          type: string
+          description: Unique identification number associated with the organization.
+            Valid values from 1-998.
+          example: ''
+        product:
+          maxLength: 3
+          type: string
+          description: Unique identification number of the product associated with
+            the organization. Valid values are 1-998.
+          example: ''
+        transactionDetail:
+          type: object
+          properties:
+            transactionList:
+              type: array
+              items:
+                $ref: '#/components/schemas/TransactionList_ListMultiWalletTransactionV1ResponseModel'
+    ResponseErrorMessageInfo:
+      type: object
+      properties:
+        detail:
+          type: string
+          example: ''
+        errorCode:
+          type: string
+          example: ''
+        instance:
+          type: string
+          example: ''
+        invalid-params:
+          type: array
+          items:
+            type: string
+        source:
+          type: string
+          example: ''
+        status:
+          type: integer
+          example: '0'
+        title:
+          type: string
+          example: ''
+    TransactionDetails_InquireMultiWalletBalanceV1ResponseModel:
+      type: object
+      properties:
+        walletConversionFeeAmount:
+          maxLength: 24
+          type: string
+          example: $1.00
+        walletCurrencyBalance:
+          maxLength: 17
+          type: string
+          example: $1.00
+        walletCurrencyCode:
+          maxLength: 3
+          type: string
+          example: AUD
+        walletCurrencyNod:
+          maximum: 9
+          maxLength: 1
+          type: integer
+          example: '1'
+        walletMemoCreitAmount:
+          maxLength: 24
+          type: string
+          example: $1.00
+        walletMemoDebitAmount:
+          maxLength: 24
+          type: string
+          example: $1.00
+        walletMemoDispositionAmount:
+          maxLength: 24
+          type: string
+          example: $1.00
+        walletNetCurencyBalance:
+          maxLength: 17
+          type: string
+          example: $1.00
+    TransactionList_ListMultiWalletTransactionV1ResponseModel:
+      type: object
+      properties:
+        authTransactionWalletFeeAmount:
+          maxLength: 24
+          type: string
+          description: Auth TXN Wallet fee Amt
+          example: $10.00
+        authorizationCode:
+          maxLength: 6
+          type: string
+          description: Authorization code assigned to the transaction.
+          example: '052205'
+        currencyConversionFlag:
+          maxLength: 1
+          type: string
+          description: Currency conversion flag
+          example: '0'
+        effectiveDate:
+          maxLength: 10
+          type: string
+          description: Effective date of the transaction. The format is MM/DD/YYYY
+            or DD/MM/YYYY depending on the DATE FORMAT on the System Control.
+          example: 17/08/2021
+        feeAmount:
+          maxLength: 24
+          type: string
+          description: Fee Amount.
+          example: $10.00
+        foreignWalletFlag:
+          maxLength: 1
+          type: string
+          description: Foreign Wallet Amount.
+          example: ''
+        postWalletAmount:
+          maxLength: 24
+          type: string
+          description: Post Wallet Amount
+          example: $10.00
+        postWalletId:
+          maxLength: 3
+          type: string
+          description: Post Wallet Id.
+          example: ''
+        postingDate:
+          maxLength: 10
+          type: string
+          description: Posting date (month/day) of the memo-posted transaction. The
+            format is MM/DD/YYYY or DD/MM/YYYY depending on the DATE FORMAT on the
+            System Control.
+          example: 17/08/2021
+        referenceNumber:
+          maxLength: 23
+          type: string
+          description: TXN Reference Number
+          example: FV090921017335430013773
+        transactionAmount:
+          maxLength: 24
+          type: string
+          description: TXN AMOUNT.
+          example: $10.00
+        transactionCode:
+          maxLength: 4
+          type: string
+          description: Transaction code.
+          example: ''
+        transactionDescription:
+          maxLength: 40
+          type: string
+          description: Transaction Description.
+          example: Monetary transaction
+        transactionType:
+          maxLength: 1
+          type: string
+          description: Transaction Type.
+          example: ''
+        walletAmount:
+          maxLength: 24
+          type: string
+          description: Wallet Amount.
+          example: $10.00
+        walletFeeAmount:
+          maxLength: 24
+          type: string
+          description: Wallet fee Amount.
+          example: $10.00
+        walletId:
+          maxLength: 3
+          type: string
+          description: Wallet Id.
+          example: abc
+    UpdatePriorityOrderV1ReqModel:
+      type: object
+      properties:
+        walletDetail:
+          type: object
+          properties:
+            walletPriorityDetail:
+              type: array
+              items:
+                $ref: '#/components/schemas/WalletPriorityDetail_UpdatePriorityOrderV1ReqModel'
+    UpdatePriorityOrderV1ResponseModel:
+      type: object
+      properties:
+        accountId:
+          maxLength: 19
+          type: string
+          description: Unique identification number for cardholder billing account.
+          example: '0002000010000066752'
+        businessUnit:
+          maximum: 999
+          maxLength: 3
+          type: integer
+          description: Unique identification number associated with the organization.
+            Valid values from 1-998.
+          example: '200'
+        walletDetail:
+          type: object
+          properties:
+            walletPriorityDetail:
+              type: array
+              items:
+                $ref: '#/components/schemas/WalletPriorityDetail_UpdatePriorityOrderV1ResponseModel'
+    WalletPriorityDetail_UpdatePriorityOrderV1ReqModel:
+      type: object
+      properties:
+        walletPriority:
+          maxLength: 3
+          type: string
+          description: Wallet Priority Current.
+          example: '111'
+    WalletPriorityDetail_UpdatePriorityOrderV1ResponseModel:
+      type: object
+      properties:
+        walletPriority:
+          maxLength: 3
+          type: string
+          description: Wallet Priority Current.
+          example: '111'
+    WalletRedemptionV1ReqModel:
+      required:
+      - accountId
+      - actionCode
+      - businessUnit
+      - redemptionAmount
+      - redemptionIndicator
+      - redemptionLevelFlag
+      - redemptionWalletCurrency
+      - storeNumber
+      type: object
+      properties:
+        accountId:
+          maxLength: 19
+          type: string
+          description: Unique identification number for cardholder billing account.
+          example: '0006000011000000152'
+        actionCode:
+          maxLength: 4
+          type: string
+          description: Action code placed on the account.
+          example: AINQ
+        businessUnit:
+          maximum: 999
+          maxLength: 3
+          type: integer
+          description: Unique identification number associated with the organization.
+            Valid values from 1-998.
+          example: '600'
+        caseNumber:
+          maxLength: 11
+          type: string
+          description: CASE NUMBER.
+          example: '00060000110'
+        channelId:
+          maxLength: 3
+          type: string
+          description: Channel Id
+          example: ''
+        directCredit:
+          maxLength: 1
+          type: string
+          description: Direct credit
+          example: ''
+        note1:
+          maxLength: 60
+          type: string
+          description: Notes for the action to be taken.
+          example: ' '
+        note2:
+          maxLength: 60
+          type: string
+          description: Notes for the action to be taken.
+          example: ' '
+        note3:
+          maxLength: 60
+          type: string
+          description: Notes for the action to be taken.
+          example: ' '
+        note4:
+          maxLength: 60
+          type: string
+          description: Notes for the action to be taken.
+          example: ' '
+        note5:
+          maxLength: 60
+          type: string
+          description: Notes for the action to be taken.
+          example: ' '
+        otherAccountId:
+          maxLength: 19
+          type: string
+          description: Other ACCOUNT
+          example: ''
+        patnerId:
+          maxLength: 3
+          type: string
+          description: Patner ID
+          example: ''
+        randomCardType:
+          maxLength: 1
+          type: string
+          description: Random Card Type
+          example: W
+          enum:
+          - W
+          - H
+        randomMode:
+          maxLength: 1
+          type: string
+          description: Random Mode
+          example: C
+          enum:
+          - C
+          - D
+          - Q
+          - O
+          - F
+        redemptionAmount:
+          maxLength: 24
+          type: string
+          description: REDEMPTION AMOUNT.
+          example: '10.00'
+        redemptionConfirmationFlag:
+          maxLength: 1
+          type: string
+          description: REDEMPTION CONFIRMATION FLAG.
+          example: Y
+          enum:
+          - Y
+          - N
+          - ' '
+        redemptionIndicator:
+          maxLength: 1
+          type: string
+          description: REDEMPTION INDICATOR.
+          example: F
+          enum:
+          - F
+          - P
+          - ' '
+        redemptionLevelFlag:
+          maxLength: 1
+          type: string
+          description: REDEMPTION LEVEL FLAG.
+          example: W
+          enum:
+          - W
+          - A
+        redemptionWalletCurrency:
+          maxLength: 3
+          type: string
+          description: REDEMPTION WALLET CURRENCY.
+          example: AUD
+        representativeIdentification:
+          maxLength: 3
+          type: string
+          description: Rep ID
+          example: '600'
+        storeNumber:
+          maximum: 999999999
+          maxLength: 9
+          type: integer
+          description: STORE NBR
+          example: '0'
+    WalletRedemptionV1ResponseModel:
+      type: object
+      properties:
+        baseFeeAmount:
+          maxLength: 27
+          type: string
+          description: Fee Base Amount.
+          example: $10.00
+        businessUnit:
+          maxLength: 3
+          type: string
+          description: Unique identification number associated with the organization.
+            Valid values from 1-998.
+          example: '600'
+        confirmationIndicator:
+          maxLength: 1
+          type: string
+          description: Confirmation Ind.
+          example: A
+        netRedemptionAmount:
+          maxLength: 27
+          type: string
+          description: Net Redemption Amount.
+          example: $10.00
+        redemptionAmount:
+          maxLength: 27
+          type: string
+          description: Redemption Amount
+          example: $100.00
+        redemptionCurrencyCode:
+          maxLength: 3
+          type: string
+          description: Redemption Currency.
+          example: AUD
+        redemptionIndicator:
+          maxLength: 1
+          type: string
+          description: Redemption Indicator.
+          example: F
+        redemptionLevelFlag:
+          maxLength: 1
+          type: string
+          description: Redemption Level.
+          example: W
+        redemptionWallet:
+          maximum: 999
+          maxLength: 3
+          type: integer
+          description: Redemption WALLET
+          example: '0'
+        storeNumber:
+          maximum: 999999999
+          maxLength: 9
+          type: integer
+          description: Store.
+          example: '0'
+        walletAmount:
+          maxLength: 27
+          type: string
+          description: Wallet Amount.
+          example: $10.00
+  securitySchemes:
+    Authorization:
+      scheme: bearer
+      type: http

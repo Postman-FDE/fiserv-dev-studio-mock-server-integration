@@ -1,0 +1,195 @@
+openapi: 3.0.0
+info:
+  title: Token API
+  description: API to generate an Access Token
+  version: 2.0.0
+servers:
+- url: https://swaggerhub.onefiserv.net/virts/DEV_STUDIO_LATEST/Authentication_Token/1.0.0
+security:
+- basicAuth: []
+paths:
+  /v1/token:
+    post:
+      tags:
+      - Token
+      description: |-
+        API to generate an access token.
+                <br><br>
+                For more information go to <a className='text-app-action-blue' href="/product/CardDeveloper/docs/?path=docs/resources.md/#token" title="Click to open">Resources.</a>
+      parameters:
+      - name: x-fapi-financial-id
+        in: header
+        description: Enter the client id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 8
+          minLength: 8
+          pattern: "^[0-9]*$"
+          type: string
+          example: "12345678"
+      - name: x-fapi-interaction-id
+        in: header
+        description: Enter the transaction/correlation id
+        required: false
+        style: simple
+        explode: false
+        schema:
+          maxLength: 40
+          minLength: 15
+          pattern: "^[^-][a-zA-Z0-9-][^-]$"
+          type: string
+          example: "1234567890"
+      - name: scope
+        in: query
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: /cs/api
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/v1_token_body'
+        required: true
+      responses:
+        "200":
+          description: OK
+          headers:
+            x-fapi-interaction-id:
+              description: Represents a transaction ID created with each request.
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tokenResponse'
+        "400":
+          description: Bad Request
+          headers:
+            x-fapi-interaction-id:
+              description: Represents a transaction ID created with each request.
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "415":
+          description: Unsupported Media Type
+          headers:
+            x-fapi-interaction-id:
+              description: Represents a transaction ID created with each request.
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "429":
+          description: Too Many Requests
+          headers:
+            x-fapi-interaction-id:
+              description: Represents a transaction ID created with each request.
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Internal Server Error
+          headers:
+            x-fapi-interaction-id:
+              description: Represents a transaction ID created with each request.
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: Unexpected Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-child-product-name: Authentication Token
+      x-proxy-name: Get access token v1
+      x-group-name: Token
+components:
+  schemas:
+    tokenRequest:
+      type: object
+      properties:
+        grant_type:
+          type: string
+          example: client_credentials
+    tokenResponse:
+      type: object
+      properties:
+        token_type:
+          type: string
+          example: BearerToken
+        issued_at:
+          type: string
+          format: utc-millisec
+          example: "1731946100938"
+        api_key:
+          type: string
+          example: BJ0wPIFs2GHfNIxG5SKkN5RocznzGqGh
+        access_token:
+          type: string
+          example: DGs6XUbASgfKTD7b7SAXFYHYReDL
+        expires_in:
+          type: string
+          format: utc-millisec
+          example: "86399"
+    ErrorResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          example: "code: decription:"
+          items:
+            $ref: '#/components/schemas/Error'
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+          example: numeric error code
+        description:
+          type: string
+          example: error description
+    v1_token_body:
+      required:
+      - grant_type
+      type: object
+      properties:
+        grant_type:
+          type: string
+          example: client_credentials
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic

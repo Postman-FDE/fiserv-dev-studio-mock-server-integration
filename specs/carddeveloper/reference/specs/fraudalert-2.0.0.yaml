@@ -1,0 +1,792 @@
+---
+openapi: 3.0.0
+info:
+  title: 'Card Risk Mitigation: Fraud Alert API'
+  description: The Fraud Alert RESTful API provides integration partners the ability to retrieve case data for fraudulent cases, and notify Fiserv of the results from the notifications to close a fraud case.
+  version: 2.1.1
+servers:
+- url: https://swaggerhub.onefiserv.net/virts/DEV_STUDIO_LATEST/fraudAlerts
+security:
+- BearerToken: []
+tags:
+- name: Fraud Alerts
+paths:
+  /v1/case/search:
+    post:
+      tags:
+      - Fraud Alerts
+      description: |-
+        Retrieve current fraud case information from Fiserv.
+                <br><br>
+                For more information go to <a href="/product/CardDeveloper/docs/resources.md/#fraud-alerts" title="Click to open">Resources.</a>
+      operationId: getCaseInfo
+      parameters:
+      - name: x-fapi-financial-id
+        in: header
+        description: Required. Enter the client id.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 8
+          minLength: 1
+          pattern: ^[0-9]*$
+          type: string
+      - name: x-fapi-interaction-id
+        in: header
+        description: Enter the transaction/correlation id
+        required: false
+        style: simple
+        explode: false
+        schema:
+          maxLength: 40
+          minLength: 15
+          pattern: ^[^-][a-zA-Z0-9-][^-]$
+          type: string
+      - name: Authorization
+        in: header
+        description: "Retrieve an access token through the Access Token API. Access token is required in every request. To view documentation on access token <a className='text-app-action-blue' href='/product/CardDeveloper/docs/?path=docs/gettingstarted/access-tokens.md' title='Click to open'>click here.</a> Tokens expire after 15 minutes. Provide the value as follows in the header. Authorization: Bearer <Access Token Value>"
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 128
+          minLength: 43
+          pattern: ^[a-zA-Z0-9-._~]$
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetFraudCaseInfoRequest'
+        required: true
+      responses:
+        "200":
+          description: Success
+          headers:
+            x-fapi-interaction-id:
+              description: Represents a transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetFraudCaseInfoResponse'
+        "400":
+          description: Bad Request
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: WS100
+                    description: Information entered is invalid-please revise and try again
+        "401":
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 401
+                    description: Invalid access token
+        "404":
+          description: Resource Not Found
+          content: {}
+        "415":
+          description: Unsupported Media Type
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 415
+                    description: unsupported Media Type
+        "429":
+          description: Too Many Requests
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 429
+                    description: Rate limit quota violation. Quota limit  exceeded.
+        "500":
+          description: Server Error
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errorResponse:
+                    code: 500-01
+                    message: internal server error
+                    developerInfo:
+                      developerMessage: internal server error
+                      moreInfo: There was a problem handling your request.  Please try again.  If the problem persists please contact Fiserv ETSD at 888-243-2543 (you unique messageID included below)
+                      messageid: 25557-84290371-1
+      x-child-product-name: Fraud Alerts
+      x-group-name: Case
+      x-proxy-name: Get case info v1
+      x-codegen-request-body-name: request
+  /v1/alertOutcome:
+    put:
+      tags:
+      - Fraud Alerts
+      description: |-
+        Enable business partners to notify Fiserv of updates to a case under review. Fiserv returns a response that identifies if a case outcome request is accepted or rejected and, if rejected, the reason why.
+                <br><br>
+                For more information go to <a href="/product/CardDeveloper/docs/resources.md/#fraud-alerts" title="Click to open">Resources.</a>
+      operationId: alertOutcome
+      parameters:
+      - name: x-fapi-financial-id
+        in: header
+        description: Required. Enter the client id.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 8
+          minLength: 1
+          pattern: ^[0-9]*$
+          type: string
+      - name: x-fapi-interaction-id
+        in: header
+        description: Enter the transaction/correlation id
+        required: false
+        style: simple
+        explode: false
+        schema:
+          maxLength: 40
+          minLength: 15
+          pattern: ^[^-][a-zA-Z0-9-][^-]$
+          type: string
+      - name: Authorization
+        in: header
+        description: "Retrieve an access token through the Access Token API. Access token is required in every request. To view documentation on access token <a className='text-app-action-blue' href='/product/CardDeveloper/docs/?path=docs/gettingstarted/access-tokens.md' title='Click to open'>click here.</a> Tokens expire after 15 minutes. Provide the value as follows in the header. Authorization: Bearer <Access Token Value>"
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 128
+          minLength: 43
+          pattern: ^[a-zA-Z0-9-._~]$
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FraudAlertOutcomeRequest'
+        required: true
+      responses:
+        "200":
+          description: Success
+          headers:
+            x-fapi-interaction-id:
+              description: Represents a transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content: {}
+        "400":
+          description: Bad Request
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: WS100
+                    description: Information entered is invalid-please revise and try again
+        "401":
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 401
+                    description: Invalid access token
+        "404":
+          description: Resource Not Found
+          content: {}
+        "415":
+          description: Unsupported Media Type
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 415
+                    description: unsupported Media Type
+        "429":
+          description: Too Many Requests
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 429
+                    description: Rate limit quota violation. Quota limit  exceeded.
+        "500":
+          description: Server Error
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errorResponse:
+                    code: 500-01
+                    message: internal server error
+                    developerInfo:
+                      developerMessage: internal server error
+                      moreInfo: There was a problem handling your request.  Please try again.  If the problem persists please contact Fiserv ETSD at 888-243-2543 (you unique messageID included below)
+                      messageid: 25557-84290371-1
+      x-child-product-name: Fraud Alerts
+      x-group-name: Alert
+      x-proxy-name: Alert outcome v1
+      x-codegen-request-body-name: request
+  /v1/caseClose:
+    put:
+      tags:
+      - Fraud Alerts
+      description: |-
+        Notify Fiserv if a case for Fraud Alert is closed on the vendor platform.
+                <br><br>
+                For more information go to <a href="/product/CardDeveloper/docs/resources.md/#fraud-alerts" title="Click to open">Resources.</a>
+      operationId: closeCase
+      parameters:
+      - name: x-fapi-financial-id
+        in: header
+        description: Required. Enter the client id.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 8
+          minLength: 1
+          pattern: ^[0-9]*$
+          type: string
+      - name: x-fapi-interaction-id
+        in: header
+        description: Enter the transaction/correlation id
+        required: false
+        style: simple
+        explode: false
+        schema:
+          maxLength: 40
+          minLength: 15
+          pattern: ^[^-][a-zA-Z0-9-][^-]$
+          type: string
+      - name: Authorization
+        in: header
+        description: "Retrieve an access token through the Access Token API. Access token is required in every request. To view documentation on access token <a className='text-app-action-blue' href='/product/CardDeveloper/docs/?path=docs/gettingstarted/access-tokens.md' title='Click to open'>click here.</a> Tokens expire after 15 minutes. Provide the value as follows in the header. Authorization: Bearer <Access Token Value>"
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 128
+          minLength: 43
+          pattern: ^[a-zA-Z0-9-._~]$
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FraudCloseCaseRequest'
+        required: true
+      responses:
+        "200":
+          description: Success
+          headers:
+            x-fapi-interaction-id:
+              description: Represents a transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content: {}
+        "400":
+          description: Bad Request
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: WS100
+                    description: Information entered is invalid-please revise and try again
+        "401":
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 401
+                    description: Invalid access token
+        "404":
+          description: Resource Not Found
+          content: {}
+        "415":
+          description: Unsupported Media Type
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 415
+                    description: unsupported Media Type
+        "429":
+          description: Too Many Requests
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                  - code: 429
+                    description: Rate limit quota violation. Quota limit  exceeded.
+        "500":
+          description: Server Error
+          headers:
+            x-fapi-interaction-id:
+              description: transaction ID created with each request
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errorResponse:
+                    code: 500-01
+                    message: internal server error
+                    developerInfo:
+                      developerMessage: internal server error
+                      moreInfo: There was a problem handling your request.  Please try again.  If the problem persists please contact Fiserv ETSD at 888-243-2543 (you unique messageID included below)
+                      messageid: 25557-84290371-1
+      x-child-product-name: Fraud Alerts
+      x-group-name: Case
+      x-proxy-name: Close case v1
+      x-codegen-request-body-name: request
+components:
+  schemas:
+    GetFraudCaseInfoRequest:
+      required:
+      - caseID
+      - clientApplicationName
+      - clientAuditId
+      - clientId
+      - clientVendorName
+      type: object
+      properties:
+        clientId:
+          maxLength: 8
+          type: string
+          description: The Card Services identifier for a given financial institution
+          example: "07100015"
+        clientApplicationName:
+          maxLength: 50
+          type: string
+          description: Client application identifier
+          example: FRAUDALERTRWS
+        clientVendorName:
+          maxLength: 30
+          type: string
+          description: Client vendor identifier
+          example: ABC VENDOR
+        clientAuditId:
+          maxLength: 13
+          type: string
+          description: Identifies the entity on whose behalf the request is made.  This value often identifies a User
+          example: Maria
+        systemRecordIdentifier:
+          maxLength: 41
+          type: string
+          description: Key value that is returned by the client in the subsequent update request and must not be edited
+          example: /XpwDirKMMx5Svoi48Y/n7VB8mzZRcJndyFgFuL/LPCT/dnqH2Gi2OwOIriS8Vtt
+        caseID:
+          maxLength: 14
+          type: string
+          description: Unique identifier for this case. The caseID is the combination of a 2–character schema id associated with the Falcon 6 tenant identifier and the caseNumber.
+          example: "60384538"
+    GetFraudCaseInfoResponse:
+      required:
+      - caseData
+      - tranData
+      type: object
+      properties:
+        caseData:
+          $ref: '#/components/schemas/GetCaseInfoCaseItem'
+        tranData:
+          $ref: '#/components/schemas/Transaction'
+    FraudAlertOutcomeRequest:
+      required:
+      - caseData
+      - clientApplicationName
+      - clientAuditId
+      - clientId
+      - clientVendorName
+      - notificationTimestamp
+      - response
+      - tranResult
+      type: object
+      properties:
+        clientId:
+          maxLength: 8
+          type: string
+          description: The Card Services identifier for a given financial institution
+          example: "07100015"
+        clientApplicationName:
+          maxLength: 50
+          type: string
+          description: Client application identifier
+          example: FRAUDALERTRWS
+        clientVendorName:
+          maxLength: 30
+          type: string
+          description: Client vendor identifier
+          example: ABC VENDOR
+        clientAuditId:
+          maxLength: 13
+          type: string
+          description: Identifies the entity on whose behalf the request is made.  This value often identifies a User
+          example: Maria
+        systemRecordIdentifier:
+          maxLength: 41
+          type: string
+          description: Key value that is returned by the client in the subsequent update request and must not be edited
+          example: /XpwDirKMMx5Svoi48Y/n7VB8mzZRcJndyFgFuL/LPCT/dnqH2Gi2OwOIriS8Vtt
+        caseData:
+          $ref: '#/components/schemas/AlertOutComeCaseItem'
+        tranResult:
+          $ref: '#/components/schemas/TransactionResult'
+        cardStatusAction:
+          type: string
+          description: Distinguishes that the caller has made the appropriate decisions on the transactions they just heard in the IVR and thus an attempt should be made to change the card status
+          example: BLOCK
+          enum:
+          - UNBLOCK
+          - BLOCK
+        response:
+          $ref: '#/components/schemas/Result'
+        subResponse:
+          $ref: '#/components/schemas/SubResult'
+        notificationTimestamp:
+          type: string
+          description: Date/time associated with the customer response; not the system insert time
+          format: yyyy-mm-ddThh:mm:ss
+          example: 2018-04-13T14:06:02.197+0000
+    FraudCloseCaseRequest:
+      required:
+      - caseData
+      - caseFinish
+      - caseResultData
+      - clientApplicationName
+      - clientAuditId
+      - clientId
+      - clientVendorName
+      type: object
+      properties:
+        clientId:
+          maxLength: 8
+          type: string
+          description: The Card Services identifier for a given financial institution
+          example: "07100015"
+        clientApplicationName:
+          maxLength: 50
+          type: string
+          description: Client application identifier
+          example: FRAUDALERTRWS
+        clientVendorName:
+          maxLength: 30
+          type: string
+          description: Client vendor identifier
+          example: ABC VENDOR
+        clientAuditId:
+          maxLength: 13
+          type: string
+          description: Identifies the entity on whose behalf the request is made.  This value often identifies a User
+          example: Maria
+        systemRecordIdentifier:
+          maxLength: 41
+          type: string
+          description: Key value that is returned by the client in the subsequent update request and must not be edited
+          example: /XpwDirKMMx5Svoi48Y/n7VB8mzZRcJndyFgFuL/LPCT/dnqH2Gi2OwOIriS8Vtt
+        caseData:
+          $ref: '#/components/schemas/CaseCloseCaseItem'
+        caseResultData:
+          $ref: '#/components/schemas/Result'
+        caseFinish:
+          type: string
+          description: Date/time associated with the case close response; not the system insert time
+          format: yyyy-mm-ddThh:mm:ss
+          example: 2019-06-18T20:18:02.197+0000
+    AlertOutComeCaseItem:
+      required:
+      - caseID
+      - lastUpdated
+      type: object
+      properties:
+        caseID:
+          maxLength: 14
+          type: string
+          description: Unique identifier for this case. The caseID is the combination of a 2–character schema id associated with the Falcon 6 tenant identifier and the caseNumber.
+          example: "60384538"
+        lastUpdated:
+          type: string
+          description: The last date and time the case was updated
+          format: yyyy-mm-ddThh:mm:ss
+          example: 2019-07-26T15:43:34.291+0000
+      description: This data structure holds the basic information about the case
+    CaseCloseCaseItem:
+      required:
+      - caseID
+      - lastUpdated
+      type: object
+      properties:
+        caseID:
+          maxLength: 14
+          type: string
+          description: Unique identifier for this case. The caseID is the combination of a 2 character schema id associated with the Falcon 6 tenant identifier and the caseNumber.
+          example: "60384538"
+        lastUpdated:
+          type: string
+          description: The last date and time the case was updated
+          format: yyyy-mm-ddThh:mm:ss
+          example: 2019-07-26T15:43:34.291+0000
+      description: This data structure holds the basic information about the case
+    GetCaseInfoCaseItem:
+      type: array
+      items:
+        $ref: '#/components/schemas/GetCaseInfoCaseItemObj'
+    GetCaseInfoCaseItemObj:
+      required:
+      - caseID
+      - lastUpdated
+      - workflowCode
+      type: object
+      properties:
+        caseID:
+          maxLength: 14
+          type: string
+          description: Unique identifier for this case. The caseID is the combination of a 2character schema id associated with the Falcon 6 tenant identifier and the caseNumber
+          example: "60384538"
+        workflowCode:
+          maxLength: 2
+          type: string
+          description: Workflow used for processing this notification
+          example: "14"
+        lastUpdated:
+          type: string
+          description: The last date and time the case was updated
+          format: yyyy-mm-ddThh:mm:ss
+          example: 2019-07-26T15:43:34.291+0000
+      description: This data structure holds the basic information about the case
+    Transaction:
+      type: array
+      description: 'Contains information about suspect transactions. Repeats up to 3 times. Note: The selection criteria for the 3 transactions should be identical to the Nuance selection criteria'
+      items:
+        $ref: '#/components/schemas/TransactionObj'
+    TransactionObj:
+      required:
+      - tranAmount
+      - tranDate
+      - tranId
+      type: object
+      properties:
+        tranId:
+          maxLength: 18
+          type: string
+          description: The transaction’s identification number – unique across all clients / cardholders
+          example: 016001da2e000044
+        tranDate:
+          type: string
+          description: The date the transaction was processed by authorization system
+          format: yyyy-mm-ddThh:mm:ss
+          example: 2019-07-26T11:22:04.000+0000
+        tranAmount:
+          type: number
+          description: The total amount of the transaction
+          format: double
+          example: 600
+        merchantName:
+          maxLength: 40
+          type: string
+          description: The merchant that processed the transaction
+          example: NETFLIX COM
+        merchantCity:
+          maxLength: 30
+          type: string
+          description: The city of the merchant
+          example: LOS GATOS
+        merchantState:
+          maxLength: 3
+          type: string
+          description: The state of the merchant
+          example: CA
+        merchantCntry:
+          type: string
+          description: A code representing the country of the merchant – will send alphanumeric
+          example: "840"
+        tranMcc:
+          maxLength: 4
+          type: string
+          description: MCC – Merchant Category Code
+          example: "4899"
+        decisionCode:
+          maxLength: 1
+          type: string
+          description: A code to indicate whether or not the transaction was A(approved) or D(denied)
+          example: D
+          enum:
+          - A
+          - D
+    TransactionResult:
+      type: array
+      description: This data structure holds the response from the cardholder for the suspect transactions. Repeats up to 3 times
+      items:
+        $ref: '#/components/schemas/TranResultItem'
+    TranResultItem:
+      required:
+      - number
+      - result
+      type: object
+      properties:
+        number:
+          maxLength: 18
+          type: string
+          description: The transaction’s identification number – unique across all clients / cardholders
+          example: "177185"
+        result:
+          type: string
+          description: The outcome of what choice the caller made to the Alert Notification Vendor when presented with a transaction – this value is used to “tag” the transaction within EnFact
+          example: NO_FRAUD
+          enum:
+          - FRAUD
+          - NO_FRAUD
+    Result:
+      required:
+      - code
+      type: object
+      properties:
+        code:
+          type: string
+          description: Value of the Vendor Result code or the Result Sub code
+          example: "61"
+        description:
+          type: string
+          description: Reason for sending the Code
+          example: Fraud
+      description: May get multiple responses per contact, but will only get one per message
+    SubResult:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Value of the Vendor Result code or the Result Sub code
+          example: ""
+        description:
+          type: string
+          description: Reason for sending the Code
+          example: ""
+      description: May get multiple responses per contact, but will only get one per message
+  securitySchemes:
+    BearerToken:
+      type: apiKey
+      description: Enter 'Bearer ' followed by the access token.
+      name: Authorization
+      in: header
+x-original-swagger-version: "2.0"
