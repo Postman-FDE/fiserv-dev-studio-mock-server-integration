@@ -1,0 +1,44 @@
+$kind: http-example
+request:
+  url: '{{base_url}}/api-run'
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "filePath": "finxact/reference/1.27.0/openapi.yaml",
+        "branchName": "develop",
+        "productName": "Finxact",
+        "requestType": "GET",
+        "requestPath": "/core/v1/1099?taxYear=2025",
+        "requestBody": null,
+        "requestHeaders": {
+          "Accept": "application/json"
+        }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "forms": [
+          {
+            "formId": "1099-001",
+            "taxYear": 2025,
+            "recipientTin": "***-**-1234",
+            "amount": "5000.00"
+          },
+          {
+            "formId": "1099-002",
+            "taxYear": 2025,
+            "recipientTin": "***-**-5678",
+            "amount": "12500.00"
+          }
+        ]
+      }

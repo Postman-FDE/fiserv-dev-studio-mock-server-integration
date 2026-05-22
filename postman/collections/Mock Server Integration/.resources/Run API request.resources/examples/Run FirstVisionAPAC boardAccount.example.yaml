@@ -1,0 +1,42 @@
+$kind: http-example
+request:
+  url: '{{base_url}}/api-run'
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "filePath": "firstvisionapac/reference/1.9.0/accounts_api.yaml",
+        "branchName": "develop",
+        "productName": "FirstVisionAPAC",
+        "requestType": "POST",
+        "requestPath": "/v1/accounts/boardAccount",
+        "requestBody": {
+          "customerId": "CUST-FV-789",
+          "productCode": "SAV-001",
+          "initialDeposit": {
+            "amount": "1000.00",
+            "currency": "INR"
+          }
+        },
+        "requestHeaders": {
+          "Accept": "application/json"
+        }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "accountNumber": "ACC-FV-2026-00123",
+        "customerId": "CUST-FV-789",
+        "productCode": "SAV-001",
+        "status": "BOARDED",
+        "openedAt": "2026-05-22T14:40:00Z"
+      }

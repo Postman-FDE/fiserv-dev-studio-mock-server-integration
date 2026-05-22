@@ -1,0 +1,43 @@
+$kind: http-example
+request:
+  url: '{{base_url}}/api-run'
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "filePath": "bankinghub/reference/DNA/Accounts/AcctService-11.0.0_DNA-Add_DDA_SDA_CDA.yaml",
+        "branchName": "develop",
+        "productName": "BankingHub",
+        "requestType": "POST",
+        "requestPath": "/acctservice/acctmgmt/accounts",
+        "requestBody": {
+          "account": {
+            "productCode": "DDA",
+            "ownerPartyId": "1234567",
+            "openDate": "2026-05-22"
+          }
+        },
+        "requestHeaders": {
+          "Accept": "application/json"
+        }
+      }
+response:
+  statusCode: 201
+  statusText: Created
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "account": {
+          "accountId": "ACC-987654321",
+          "productCode": "DDA",
+          "ownerPartyId": "1234567",
+          "status": "OPEN",
+          "openDate": "2026-05-22"
+        }
+      }

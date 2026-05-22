@@ -1,0 +1,41 @@
+$kind: http-example
+request:
+  url: '{{base_url}}/api-run'
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "filePath": "carddeveloper/reference/specs/account-3.2.0.yaml",
+        "branchName": "develop",
+        "productName": "CardDeveloper",
+        "requestType": "POST",
+        "requestPath": "/v1/accounts/create",
+        "requestBody": {
+          "applicantId": "APP-2026-12345",
+          "productId": "VISA-PLAT",
+          "creditLimit": "10000.00",
+          "currency": "USD"
+        },
+        "requestHeaders": {
+          "Accept": "application/json"
+        }
+      }
+response:
+  statusCode: 201
+  statusText: Created
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "accountId": "ACC-001-VISA-PLAT",
+        "applicantId": "APP-2026-12345",
+        "productId": "VISA-PLAT",
+        "status": "ACTIVE",
+        "creditLimit": "10000.00",
+        "currency": "USD"
+      }
