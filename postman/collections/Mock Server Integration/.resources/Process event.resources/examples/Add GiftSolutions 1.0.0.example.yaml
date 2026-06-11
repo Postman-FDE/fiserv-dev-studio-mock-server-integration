@@ -1,0 +1,36 @@
+$kind: http-example
+request:
+  url: "{{base_url}}/events"
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "tenantName": "GiftSolutions",
+        "branchName": "develop",
+        "added": [
+          "giftsolutions/reference/1.0.0/openapi.yml"
+        ],
+        "modified": [],
+        "removed": []
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "results": [
+          {
+            "filePath": "giftsolutions/reference/1.0.0/openapi.yml",
+            "operation": "ADDED",
+            "status": "OK",
+            "message": "https://abc123.mock.pstmn.io"
+          }
+        ]
+      }
