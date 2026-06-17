@@ -1,0 +1,688 @@
+################################################################################
+# Copyrights © 2021-2022 Fiserv, Inc. or its affiliates.
+# Fiserv is a trademark of Fiserv, Inc.,
+# registered or used in the United States and foreign countries,
+# and may or may not be registered in your country.
+# All trademarks, service marks,
+# and trade names referenced in this
+# material are the property of their
+# respective owners. This work, including its contents
+# and programming, is confidential and its use
+# is strictly limited. This work is furnished only
+# for use by duly authorized licensees of Fiserv, Inc.
+# or its affiliates, and their designated agents
+# or employees responsible for installation or
+# operation of the products. Any other use,
+# duplication, or dissemination without the
+# prior written consent of Fiserv, Inc.
+# or its affiliates is strictly prohibited.
+# Except as specified by the agreement under
+# which the materials are furnished, Fiserv, Inc.
+# and its affiliates do not accept any liabilities
+# with respect to the information contained herein
+# and are not responsible for any direct, indirect,
+# special, consequential or exemplary damages
+# resulting from the use of this information.
+# No warranties, either express or implied,
+# are granted or extended by this work or
+# the delivery of this work
+################################################################################
+
+openapi: 3.0.2
+info:
+  title: CardSecure API Service Endpoints
+  description: |
+    <p>The CardSecure API allows you to tokenize raw or encrypted payment account information.</p>
+    <p>A CardSecure token is a mathematically-irreversible representation of the account number, which can only be used to complete a payment on the CardPointe</p>
+    <p>See the <a href="../docs/?path=docs/APIs/CardSecureAPI.md">CardSecure API Overview</a> and the <a href="../docs/?path=docs/APIs/CardSecure.md">CardSecure Developer Guide</a>for detailed information on this API.</p>
+  version: 1.0.0
+servers:
+ - url: https://site-uat.cardconnect.com/ 
+   description: UAT Environment
+paths:
+  /cardsecure/api/v1/ccn/tokenize:
+    post:
+      tags:
+        - tokenize Endpoint Definition
+      x-group-name: CardSecure
+      x-proxy-name: tokenize
+      x-default-example: PaymentCard
+      summary: A request to the tokenize endpoint returns a CardSecure token generated from the data provided in the request.
+      description: |
+        <p>A request to the tokenize endpoint returns a CardSecure token generated from the data provided in the request.</p>
+        <p>Either the <code>account</code> or <code>devicedata</code> field must be provided.</p>
+        <p><code>account</code> can be one of the following:</p><ul>
+        <li>Credit Card number</li>
+        <li>ACH account and routing number (in for the format routing/account)</li>
+        <li>Digital wallet (Apple Pay or Google Pay)</li></ul>
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenizeRequest'
+            examples:
+              Unencrypted Manual Card Entry:
+                summary: Unencrypted Manual Card Entry
+                $ref: '#/components/examples/PaymentCardRequestExample'
+              MSR Card Read:
+                summary: MSR Track Data
+                $ref: '#/components/examples/MSRRequestExample'
+              EMV Card Read:
+                summary: EMV Data
+                $ref: '#/components/examples/EMVRequestExample'
+              ACH (Unencrypted):
+                summary: Unencrypted ACH Account/Routing
+                $ref: '#/components/examples/ACHRequestExample'
+              Google Pay Mobile Wallet:
+                summary: GooglePay
+                $ref: '#/components/examples/GooglePayRequestExample'
+              Apple Pay Mobile Wallet:
+                summary: ApplePay
+                $ref: '#/components/examples/ApplePayRequestExample'
+      parameters:
+        - {$ref: '#/components/parameters/ContentTypeHeader'}
+      responses:
+        200: 
+          description: Success
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/TokenizeSuccess'}
+        400:
+          description: Not Found
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/NotFoundError'}
+        404:
+          description: Bad Request
+          content:  
+            application/json:
+              schema: {$ref: '#/components/schemas/BadRequestError'}
+  /cardsecure/api/v1/echo:
+    x-model-version: 1.0
+    post:
+      tags:
+        - echo
+      x-group-name: 'CardSecure'
+      x-proxy-name: 'echo'
+      summary: Send a ping command to the server.
+      description: |
+        <p>A call to the <code>echo</code> endpoint sends a ping command to the CardSecure server to verify the application's connection.</p>
+      requestBody:
+        required: true
+        content:
+          application/JSON:
+            schema:
+              $ref: '#/components/schemas/EchoRequest'
+      parameters:
+        - $ref: '#/components/parameters/ContentTypeHeader'
+      responses:          
+        200:
+          description: Success
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/EchoSuccess'}
+        400:
+          description: Not Found
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/NotFoundError'}
+        404:
+          description: Bad Request
+          content:  
+            application/json:
+              schema: {$ref: '#/components/schemas/BadRequestError'}
+components:
+  parameters:
+    ContentTypeHeader:
+      x-model-version: 1.0
+      name: Content-Type
+      schema:
+        type: string
+        default: application/json
+      in: header
+      required: true
+      description: |
+        <p>The content type. must be <code>application/json</code>.</p>
+  schemas:
+    TokenizeSuccess:
+      x-model-version: 1.0
+      description: Error information
+      properties:
+        message: {
+          description: 'Information specific to a propery or attribute.',
+          type: string,
+          example: No error
+        }
+        errorcode: {
+          description: 'Error response code from the gateway',
+          type: integer
+        }
+        token: {
+          description: 'The created token',
+          type: string,
+          example: 9417119164771111
+        }
+    EchoSuccess:
+      x-model-version: 1.0
+      description: Error information
+      properties:
+        message: {
+          description: 'The message value included in the request. Returns a descriptive error message if the request failed. See Error Codes and Messages for a complete list of possible error codes and messages.',
+          type: string,
+          example: 'Hello?'
+          }
+        errorcode: {
+          description: 'An error code, if the request encountered an error. Returns "0" if the request was successful. See Error Codes and Messages for a complete list of possible error codes and messages.',
+          type: integer
+        }
+    NotFoundError:
+      x-model-version: 1.0
+      description: Error information
+      properties:
+        message: {
+          description: 'Information specific to a propery or attribute.',
+          type: string,
+          example: Data not found
+        }
+        errorcode: {
+          description: 'Error response code from the gateway',
+          type: integer,
+          example: 49
+        }
+    BadRequestError:
+      x-model-version: 1.0
+      description: Error information
+      properties:
+        message: {
+          description: 'Information specific to a propery or attribute.',
+          type: string,
+          example: Keystore invalid processor
+        }
+        errorcode: {
+          description: 'Error response code from the gateway',
+          type: integer,
+          example: 65
+        }
+    ErrorCode: 
+      description: An error code. Returns "00" if successful. All error codes contain four digits. Two zeros precede the codes.
+      properties:
+        code:
+          description: An error code that shows the importance of error codes.
+          type: integer
+    Error:
+      x-model-version: 1.0
+      description: Error information
+      properties:
+        type:
+          description: 'The type of response either from the HOST, GATEWAY, NETWORK, or APIM.'
+          type: string
+        code: {
+          description: 'Error response code from the host, gateway, or network',
+          type: string
+        }
+        message: {
+          description: 'Information specific to a propery or attribute.',
+          type: string
+        }
+    EchoRequest:
+      x-model-version: 1.0
+      type: object
+      properties:
+        message:
+          description: |
+            <pp>A message to send in the ping request and receive in the response.</p>
+            <p>The value can be blank (<code>""</code>); however, the <code>message</code> field <strong>must</strong> be included in the request.</p>
+          type: string
+          maxLength: 250
+          example: "Hello?"
+    TokenizeRequest:
+      x-model-version: 1.0
+      type: object
+      properties:
+            account:
+              type: string
+              maxLength: 27
+              description: |
+                <p>Required if <code>devicedata</code> is not present.</p>
+                <p><code>account</code> must contain one of the following valies:</p><ul>
+                <li>A clear or encrypted payment account number (PAN)</li>
+                <li>An ACH routing and account number string in the format <routing>/<account> for eCheck transactions.</li>
+                <li>An Apple Pay or Google Pay digital wallet payload</li>
+                <p><em>Note: If <code>encryptionhandler</code> is provided, the account is treated as an encrypted PAN.</em></p>
+              example: "4444333322221111"
+            devicedata:
+              type: string
+              description: |
+                <p>One of the following values:</p><ul>
+                <li>Encrypted track data retrieved using a card reader or terminal device (MSR/EMV/NFC)</li>
+                <li>Apple Pay payment token data (see the <a href="../docs/documentation/ApplePayDeveloperGuide.md">Apple Pay Developer Guide</a> for detailed information)</li>
+                <li>Google Pay wallet payload (see the <a href="../docs/documentation/GooglePayDeveloperGuide.md">Google Pay Developer Guide</a> for detailed information)</li>
+              example: "DFEE25020203DFEE26022000DFEE120ACDCDCD94030006C001044F07A00000015230105008444953434F564552DFEF5D136510CCCCCCCC0133D2312201CCCCCCCCCCCCCC5718952CE912AC462F1D5261A811DE05633C65FBE2DF0BB56F54DFEF5B086510CCCCCCCC01335A100CFCF9EF17F00098F4C64D688AC3C3BE820218008407A00000015230108A025A33950580000080009A031905089B0268009C01005F24032312315F2A0208405F300202015F3401019F02060000000010009F03060000000000009F0607A00000015230109F0702FF009F080200019F090200019F1101019F0D053040E428009F0E0500100000409F0F053068C4F8009F1208446973636F7665729F1A0208409F1E085465726D696E616C9F21032230319F33036028C89F34035E03009F3501219F360200049F3704FDD4FBCC9F3901059F4005F000F0A0019F4104000002069F5301525F201A554154205553412F5465737420436172642031352020202020205F280208405F2D02656E9F2608A1B845A6577BFF189F2701809F10080106A00003800000DFEF4C06002700000000DFEF4D28218939A59B65F7A23A5CD3A39778E6B227E8D432BA99429DFD0FC63C9B5AF66FAB46BB817586ECD8DFEF57244944205445434820417567757374612053205553422D4B422056312E30322E3032312E53"
+            singature:
+              type: string
+              description: |
+                <p>Optional signature data, if captured.</p> 
+                <p>Data must be a Base64-encoded, Gzipped bitmap (BMP).</p> 
+              example: ""
+            encryptionhandler:
+              type: string
+              description: |
+                <p>Optional, the encryption method for the encrypted <code>account</code> or <code>devicedata</code></p>
+                <p>One of the following:</p><ul>
+                <li>For an encrypted PAN or ACH, specify <code>RSA</code>.</li>
+                <li>For an Apple Pay payment token, specify <code>EC_APPLE_PAY</code>.</li>
+                <li>For a Google Pay wallet payload, specify <code>EC_GOOGLE_PAY</code></li></ul>
+              example: "RSA"
+            expiry:
+              type: string
+              description: |
+                <p>Optional, the card expiration date.</p>
+                <p>Must be a numeric string, in one of the following formats:</p><ul>
+                <li><code>MMYY</code></li>
+                <li><code>YYYYM</code> (for single-digit months)</li>
+                <li><code>YYYYMM</code></li>
+                <li><code>YYYYMMDD</code></li></ul>
+              example: "0829"
+            cvv:
+              type: string
+              description: |
+                <p>Optional, the 3 or 4 digits card verification value (CVV).</p>
+                <p>Must be a 3 or 4 character numeric string.</p>
+              example: "111"
+            unique:
+              type: boolean
+              description: |
+                <p>Optional, specifies whether or not to generate a unique token.</p>
+                <p>Specify <code>true</code> to generate a unique token.</p>
+                <p>Defaults to <code>false</code>.</p>
+              example: false
+  responses:    
+    TokenizeResponse:
+      x-model-version: 1.0
+      description: Contains the Gateway Response
+      content:
+        message: 
+          example: 'No Error'
+        errorcode:
+          example: 000
+        token:
+          example: 941711916477111
+    WrongVersion:
+      x-model-version: 1.0
+      description: Wrong version number
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InvalidAction:
+      x-model-version: 1.0
+      description: Invalid action
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    DataNotDecimal:
+      x-model-version: 1.0
+      description: Data is not decimal digits
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    KeyIDNotFound:
+      x-model-version: 1.0
+      description: Key ID is not found
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    DataTooLong:
+      x-model-version: 1.0
+      description: Data is too long
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    DataEmpty:
+      x-model-version: 1.0
+      description: Data is empty
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UnknownAlgo:
+      x-model-version: 1.0
+      description: Unknown Algorithm
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    EncryptionFailure:
+      x-model-version: 1.0
+      description: Encryption Failure
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Base64Failure:
+      x-model-version: 1.0
+      description: Base 64 decode failure
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    CryptoWrongLength:
+      x-model-version: 1.0
+      description: Crypto data is the wrong length
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    DataTooShort:
+      x-model-version: 1.0
+      description: Data is too short
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    CCNWrongLength:
+      x-model-version: 1.0
+      description: CCN wrong length on decryption
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    DecryptionFailure:
+      x-model-version: 1.0
+      description: Decryption Failure
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadPadding:
+      x-model-version: 1.0
+      description: Bad PKCS 5 padding
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadDecrypt:
+      description: Bad decryption length field
+    KeystoreNotInit:
+      description: Keystore not initialized
+    ApplicationNotInit:
+      x-model-version: 1.0
+      description: Application not initialized
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BufferTooShort:
+      x-model-version: 1.0
+      description: Buffer too short
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    IllegalCharacter:
+      x-model-version: 1.0
+      description: Illegal characters
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    WrongLength:
+      x-model-version: 1.0
+      description: Wrong message length
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ServerFailed:
+      x-model-version: 1.0
+      description: Server failed
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ConfigItemBad:
+      x-model-version: 1.0
+      description: Config item is bad
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TokenDataProb:
+      x-model-version: 1.0
+      description: Token database problem
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UnAuthHost:
+      x-model-version: 1.0
+      description: Unauthorized host
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TokenPurged:
+      x-model-version: 1.0
+      description: Token Purged
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    DataNotFound:
+      x-model-version: 1.0
+      description: Data not found
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ErrorHashing:
+      x-model-version: 1.0
+      description: Error hashing the value
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TokenDuplicate:
+      x-model-version: 1.0
+      description: Token or data duplicate
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    LuhnFailure:
+      x-model-version: 1.0
+      description: Card number check (Luhn formula) failed
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    MissingSiteName:
+      x-model-version: 1.0
+      description: Missing or unknown site name
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TokenFormatBad:
+      x-model-version: 1.0
+      description: Token format is bad
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    RequestSignatureInvalid:
+      x-model-version: 1.0
+      description: Request signature is bad
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    RequestSignatureExpired:
+      x-model-version: 1.0
+      description: Request signature timestamp expired
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    RequestSignatureMismatch:
+      x-model-version: 1.0
+      description: Request signature mismatch
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    RequestSignatureFailure:
+      x-model-version: 1.0
+      description: Request signature failure
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    PINTranslationFail:
+      x-model-version: 1.0
+      description: PIN translation fail
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    KeystoreImportFail:
+      x-model-version: 1.0
+      description: Keystore import failure
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    KeystoreUserstoreFail:
+      x-model-version: 1.0
+      description: Keystore userstore failure
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    KeystoreInvalidProc:
+      x-model-version: 1.0
+      description: Keystore invalid processor
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UnauthTerminal:
+      x-model-version: 1.0
+      description: Unauthorized terminal
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    KeystoreRollbackFail:
+      x-model-version: 1.0
+      description: Keystore rollback failure
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UnauthDecrypt:
+      x-model-version: 1.0
+      description: Unauthorized decrypt
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InvalidEMVData:
+      x-model-version: 1.0
+      description: Invalid EMV tag data
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    EMVDataEmpty:
+      x-model-version: 1.0
+      description: EMV tag data empty
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    MissingReqParam:
+      x-model-version: 1.0
+      description: Missing required parameter
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InvalidEllipticParam:
+      x-model-version: 1.0
+      description: Invalid elliptic curve type parameter
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    JSONSerializationError:
+      x-model-version: 1.0
+      description: JSON serialization error
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    JSONDeserializationError:
+      x-model-version: 1.0
+      description: JSON deserialization error
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InvalidSwipeData:
+      x-model-version: 1.0
+      description: Invalid swipe data
+      content:
+        application/JSON:
+          schema:
+            $ref: '#/components/schemas/Error'
+  examples:
+    Successful:
+      value:
+        errorcode: 0,
+        data: "AAdoWZghKq4An1Pl0PJKDQfTQ"
+        message: "No error"
+    WrongVersion:
+      value:
+        type: 'integer'
+        code: '003'
+        message: 'Message'
+    EchoRequestExample:
+      value:
+        message: 'Hello?'
+        source:
+          sourcetype: EchoRequest
+    EchoResponseExample:
+      value:
+        message: 'Hello?'
+        errorcode: 0
+    TokenResponse:
+      value:
+        message: 'No Error'
+        errorcode: 0
+        token: 9417119164771111
+    PaymentCardRequestExample:
+      value:
+        account: 4444333322221111
+    EMVRequestExample:
+      value:
+        devicedata: DFEE25020203DFEE26022000DFEE120ACDCDCD94030006C001044F07A00000015230105008444953434F564552DFEF5D136510CCCCCCCC0133D2312201CCCCCCCCCCCCCC5718952CE912AC462F1D5261A811DE05633C65FBE2DF0BB56F54DFEF5B086510CCCCCCCC01335A100CFCF9EF17F00098F4C64D688AC3C3BE820218008407A00000015230108A025A33950580000080009A031905089B0268009C01005F24032312315F2A0208405F300202015F3401019F02060000000010009F03060000000000009F0607A00000015230109F0702FF009F080200019F090200019F1101019F0D053040E428009F0E0500100000409F0F053068C4F8009F1208446973636F7665729F1A0208409F1E085465726D696E616C9F21032230319F33036028C89F34035E03009F3501219F360200049F3704FDD4FBCC9F3901059F4005F000F0A0019F4104000002069F5301525F201A554154205553412F5465737420436172642031352020202020205F280208405F2D02656E9F2608A1B845A6577BFF189F2701809F10080106A00003800000DFEF4C06002700000000DFEF4D28218939A59B65F7A23A5CD3A39778E6B227E8D432BA99429DFD0FC63C9B5AF66FAB46BB817586ECD8DFEF57244944205445434820417567757374612053205553422D4B422056312E30322E3032312E53
+    MSRRequestExample:
+      value:
+        devicedata: 02A001801F372300839B%*6011********6668^DISCOVER TEST CARD^***************?*;6011********6668=***************?*10C1A6E1036EBEEAFCEE4C8A0899B2F6360B2A040D22DA853C91FC26AAE99A685B2550B263EE0C9DFECA54E364DD02E64A8286D10A72A95F591AB47592BA0D6D0A30D09A5AD82434AF2676299E5F531A96A314B48C34AA5E1AEA90E59509B1BD0000000000000000000000000000000000000000000000000000000000000000000000000000000038313554353935353138CDCDCD94030006C00106632303
+    ACHRequestExample:
+      value:
+        account: 011401533/1234123412341234
+    ApplePayRequestExample:
+      value:
+        encryptionhandler: EC_APPLE_PAY
+        devicedata: "VDlOajZ3MzVzT3R5TFBJUmxJc2tES2RE\/VdZY2pwdmZ1b1JLMWlFYllZajFoRVg5N0YxSzBDR21pSjRjTHc1NEg5OThsTFBsRVZQb2wzaW9sVXY3eGdWbWN1eWhHTGI1WnJKamZGMXBqdUNnYlBRaHNHQm0yVG9o\/kZxWUwxblJvU2hidGFOMnFjczM2SnV4UE44T3hxY3FSSXNnMGtKS2tXenk4akYxeHBnUXJGZEI0c3RTaDhHM0VnVXdub3lFOUhWM0ZITkx2RnoxTWFPcDR6Y3owbklteF\/KMm9pT3ZUang5dHNFOWl3cktTMFNMakR6VENxU2hZWWxXYnBob0pYRWRqcVJtSG9kNEdncnBqWVBwT0tPczlKWHhrU0hNUTFJMzJGTHRhSkdTV1pPUVVaSlNEUmJFbFd4OUJBQmV3Nk9wT&ectype=apple&ecsig=dGlzOWkxUnRvRGlJbDc5ZllQ\/UpQZGFzQW51OGt6OXd2b0d6S2V0TU5UNU5ZeGhtUkN4MnE5d0NSb0xMbGlhbEVLNVJJUXYzQ0o4VGdKa1JWTm9rc3hYYjRZM1Fsam5mNlhnY2puRGNITzJlc2kwem1RelBmeWFFUUNLNmFxczU1QkJzQ2p6RVFNdE8zYnh0bm1kTjh5bHpDd1l4MWs5azdSOEU4RmgwRUZSVHRmYUtqRzJiMzd4WmFuWDA5ZW5paVcxRVNMdzVCRlkxcTN5d0J0WUpYUlVXRzBEOG9rQzhQdlkxQTJGS09FMHhHVUwyMnVjbWlDakJOZmdGb0U4aFFLOUJqSHgzUnRCU0tLeWFRaGxzeE\/zOGNHa1RVTVNuTVpoZ2hiUmhOazMxRTRoMjREU2NWbWdibWI3TXdUNjMyUm80OGpRbzBOMlA5WXZ5OUVJTllPOHN5bGYyY0s0VjhuUG96YzRSYTlQWVcwVXdxOUo0VW5lWUs4RzFNNjJ4VUFtZ3lpT0ZGYWRzWmJqcWJnNlBpdDVXQk5keXlZTkhsWlhqaU5Od3QyZFNRQ2FpbzJPQVoxc09UdFFldzA3OTJocW0xMXM5TVR5dWxXZXB0bEZjQmx0cm56SUM0cG52NWFtcXE2SW40cWlJMjk3a2JVRk1SSGpOM3hjSHdwR1RuVXVubUo3Q28xeGpwenVoRURmd0ZjUFBGRzhvSHBMVnJpSnZxVXRQdHp1N0dvdExhSXBDU2dwdzBkRlVrUWJEQ2JwWmY5WjNyWlo1ZnVqQjVFZjhKMjE3aHZNcEtaVm9NZXZvNGZZMVVrTHFzUlJaa3FxZWU0dFRNbjFJZDk3UGl5R2VQMElNVVBxVGdkY0h4VVJhRFlxT2hmdU9adkdXSzA0Q3c1RVFteEYwZk8zRVQ0TjJhbUFjalF3VUl6UmpnT1VQeWRVMERacVFwbXpLR0FZZlF1ano0QmozeXp6VE54YzkzMk53YTUzVVo4QUQ4RUl1Vk51MFBjUFc3Y1BYd3J4QzRtV2NlbERwNG9ablczd3hDMTdRNERmdjBKOVp6NWE0ZmJtcEJHUnNLVmJTenVPOEt6NW1aTldjcmRWTXhYbWNI\/1FUSEFvOGtyUmJwOWl3ZEFJZVQ5S0FmQTV1YUxIZmFUZ2RZbjMwNUhuRnZXQTRuOG9saVBxbVNUeWVlV1h1V0t3ZHQ4ZjBSdnlBSEVpRUUwMXNEeHNsVndxRnN3OXNkSWFxOU45cTFBQldJQVBrcEFYQTJZenRBUHpRT05YZGlLVUhzM21NbGxvTU1BdFFGNkNlMmlvUmVyMkN2SXN4N1VCV0puRW1qU0lnR0VteUxaY1dQTmxTTGVxSFZxZHRVM1ZuaTlhc2RLUFpDRGRVN2RqaU1taG5wQTJrcUxhNmJmamo4ZlJlMENIVlB5S2plWmZnRzlXRGs0bHE0aFJDQ3A2amtFc2I3SDlCeWN3alJLV3F1azVIazIzTHNpbWRkRWtidmxIbWV2S2dCZzlEeVNpTmVaRzRaRWtHeXdGWE54Z1kydTFzZENnaXZyTjdhTjNQcHl5YWJoblp6cUVVSVlyT1N4ZEZETWhiaFp4SmJhV041TTVYSGJmN0J5WWZHNUhaQ1FYNmFvdkFXdVZCVjE3c2JWM2dzSWNmQVBaZ3dIODQwSkJQWlIyN\/hvaW9GUVk3OHZmVjVuWFFZbnMxS2RuMmF0ZkxIV2NJNzRmb29RQXQ2NHJtaXpDeHJqQW95YkYySnJNdDNFaTJYWkJlZlBLS0lIZTBSUW5HRVY5WW9xMDhhUE1pRVFCeWFBNndoeXBiNENxWFZoYW9EUnRSWENYNExoZGFnR1VLQ2NZNFpnSHU3NXBHYnI2bWpMMHlXVFo3YnVoSkVWZVkwQ1p3QUhQT0tGMHMwWGQzV2g3ektjeTBRbXZOekJ0TWdmclNnNExvQkdvSENGUFNOOFkwNzdBZVNNMDQzcnE2V2h4TXhKTkE0eDNZZzIzRkhQeHp3Ynh4djc0N004UTFxU2g0SHQxODFMQ052NFZMMFZNZnJnM0FBWWM1YnI4VW5scU5iNlc3d2FsZG5kNjlGNEZjaDhiTDAwcTlSNUVqbUQ3WkVSVElLeXlqWTczWTNBTmFvN05BY2FBSWFqNnhkWDkyT2dmdjU0ekhhSjRyOXgyUkEzYUg4NHh2ZzFrQTAxWGI3WFY4TTE4R3g5WldtejdGSUNqY0RJVnlaaWhKQWhsZWg3ZjFuYTI3WE00QzhUWWgwYzdtTXZ0TmNHVG5sblFZYXVrUVpYSWhieDEzWHVwSEhFUkFabjB1VHptUVlFWnNJSzBXTk5nbXk0YnMybEpsbHZnaHlhd29SbkZnbkNGY\/NiODZweUJ5c0dxeVUwMEFjQUFJMHk2dTB3SWlnazNWbE5XVGhSclZLdHo5aGlNa3JXekxBdm1KN2F3ZHc3bjN2UzIxQkhOTnh2YklBdHJvcXB1ZFBUaWlPb2I2c1ZodnVnRlpvVjgwWW8wa1lpRXo0WHF4Z1lXd3pLdklPcGVJTXpPdzBIUDU5RUJZcktDVzNMUXRLN3BPdzNTVWVoNU80Q2NWOVJSOUFlanBkNU9hT1hlZ1BCQVVkNEI3OUVFbk51RW5uYWFuVzNvZVlNOEl6WUtYZ3RtQVdqb3FQOTY3emQ2OFQxUGVSZUlJaDJPcDU0bFFGdFJTR25lQ1VPbGJhVG5hQmNpc0tBdFRQYXVwdEZ3b2RYd290NXZocDFXTTRoTnVWcGl3RzFIUHdzSjZjYU1qR1BFZjdIVWY2UVhTVm1Mb3FoRGpiWjNyUmd4akl4V1hyQzR5d3BFdFlDU0xuTGpGWEkxSTFkNFZKMmY5RTJYcndRZE9aY3ZTYUtWTUtzbklDZVJGWTZsZlFCckhlVkx1bmh0MEhqQXhv\/nBMTV\/acWxDcnB4ZnBkbW9OcFY0U1JJWjlBR3ZOaFo2NEV&eckey=VWZOUlkySmh1TEVaT0IyM2NlS3k1S3Bvd1B4aWx6MUs4VTRVa01hd1lpOGQ0dkZwZXFWbHliUXplNGNLQUww4UmczTmptcFB2ZUh2cmo4YTQ1dmF6WFNKaGwzcAo=&ectid=386c441cc42971d6f59b54e2b64c0b88fcb1108b41e61be8d3875b2328ad79a1&echash=&ecpublickeyhash=3Ahi2ZJsqPUsQY7FY5nl2o\/rM3NwxitS7jFHUt1JNRk="
+    GooglePayRequestExample:
+      value:
+        encryptionhandler: EC_GOOGLE_PAY
+        devicedata: "{\"signature\":\"MEYCIQCwmJRWgG8cT1et/SgjLXr8+dmZ2BZpiLEg/T474g2NZAIhAKVmDiozWuQoPED7qaGNDyoYslL2YzHSFM724Md89+33\",\"intermediateSigningKey\":{\"signedKey\":\"{\\\"keyValue\\\":\\\"MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEgY3czp0xq5QW3NTQgYvmDJ2i+Oj3YtFwfXHed6ZjtDIju/FkfPIT66AOAAEIe2UqS8dTL/AZkM98KAp4LdekAQ\\\\u003d\\\\u003d\\\",\\\"keyExpiration\\\":\\\"1585761306143\\\"}\",\"signatures\":[\"MEYCIQDb+LBzB21jEBRr0r/RqH6QDoYWqpcY5nJFdFKIpNmB5QIhAN3RdiHK0bl6kBigXnIe8qUEnrGqdC6q5NQWJHwEhF12\"]},\"protocolVersion\":\"ECv2\",\"signedMessage\":\"{\\\"encryptedMessage\\\":\\\"mJVt1VLA/CJMosu8s/C3ixVgNHW3ZuJSBx4mSU8HbQtB1Ll9jV0jgeSZ9CVnmCr9w9RiPKvdo1mJGz69aNky4oYMKt/2gUWsRDMKf0LOktjYQ9kLUpyJvkX5YGrwkeL12qUceIYcMX84L+tlV+FVVfhCcxsDNWKnKSxqzP5/KAN3is6YQ5YnTxfz7xEVXTFoAHv78XBowQq2GSioK7uV2MubHO+o5+G5+i/OJBNMsZevM27nE8gO5OQUOugkX7/cLbFHYlvJEpy7rWHj7yUV9r7eeji2uC0cKorOGdgoFjY6Hax8gtwiBJM56TlkChOA6JI8e3pO5a3r+ZkSMB95c/lAOSbesush02KNvIAKan5A6435mQ7VnQK3FJcX3s7cGO0yP2FHnbki+Oewzfoix1tNg1WuNiPXk2Cn1IM4cvk+GErEqDG1Uqh1KGb/P4F/bBDtwiqKR8FP/1dIVtgj8gi/sRG55Nm+SfRIprXv3g\\\\u003d\\\\u003d\\\",\\\"ephemeralPublicKey\\\":\\\"BK9KRSzyuwWyy9LUh2S2ue7M02xheyVtn42plZb6bp0EhZUyu0iL0QsvDsczs2fPGtJ3h0GsC9NE1Oa0BbMoIHs\\\\u003d\\\",\\\"tag\\\":\\\"KVHidXy9urg15Sjw/DeibMgxuqw73VajbEN/NZ7YEik\\\\u003d\\\"}\"}"
