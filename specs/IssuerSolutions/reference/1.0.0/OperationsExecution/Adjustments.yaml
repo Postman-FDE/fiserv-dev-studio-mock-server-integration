@@ -1,0 +1,2732 @@
+openapi: 3.0.1
+info:
+  title: fs-devportal-services-1
+  description: Welcome to the Financial Services API documentation
+  version: '1'
+servers:
+- url: https://qa-api.firstdata.com/fs
+paths:
+  /adjustments/v2/addBatchAdjustment:
+    post:
+      tags:
+      - Adjustments
+      - Transaction Processing
+      - Operations & Execution
+      summary: ADJUSTMENT_BATCH_ADD RPC
+      description: "The ADJUSTMENT_BATCH_ADD function enters and releases the batch\
+        \ header as well as the associated detail item records with one request. This\
+        \ function emulates the combined functionality of the JL, JB, JDE, and the\
+        \ JR transactions.\nThe ADJUSTMENT_BATCH_ADD syntax consists of two sections.\
+        \ The Header section begins with the \"BATCH TYPE\" parameter and ends with\
+        \ the \"DETAIL COUNT\" parameter.\nThe Detail section consists of the remaining\
+        \ parameters beginning with the \"DETAIL ACCOUNT\" parameter. When supplying\
+        \ multiple details, the Header section is supplied once, followed by the Detail\
+        \ section of each individual detail.\n\nRequired Fields: batchType, batchNumber,\
+        \ systemIdentifier, batchAmount, letterIdentifier, detailCount,detailAccount,\
+        \ detailTransactionCode, detailMerchantAccountIdentifier, detailAmount1. <br><br>\
+        \ <b>Relates to:</b>\n  \n  <blockquote style=\"border-left: 0.375em solid\
+        \ #40a9ff; background-color: #e6f7ff; border-radius: 3px; padding: 1em;\"\
+        \ ><div>ADJUSTMENT_BATCH_ADD RPC, <a target=\"_blank\" title=\"Click to open\
+        \ in a new tab\" href=\"https://documentation.fiserv.com/bundle/ODS/resource/ODS.pdf\"\
+        > click here</a>.</div></blockquote>"
+      operationId: addBatchAdjustment_v2_adjustments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdjustmentBatchAddRequest'
+        required: false
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateResult'
+      deprecated: false
+      x-proxy-name: addBatchAdjustment
+      x-region:
+      - North America
+      x-display: Adjustments
+      x-codegen-request-body-name: body
+      x-group-name: Transaction Processing
+      x-child-product-name: Operations & Execution
+  /adjustments/v2/addDualAdjustment:
+    post:
+      tags:
+      - Adjustments
+      - Transaction Processing
+      - Operations & Execution
+      summary: DUAL_ADJUSTMENT_ADD RPC
+      description: "The Dual Adjustment Add RPC is a quick way to modify all transactions\
+        \ with same prefixes and transaction codes.\n\nRequired Fields: common.accountId,\
+        \ batchPrefixIdentifier, transactionCode, transactionAmount<br><br> <b>Relates\
+        \ to:</b>\n  \n  <blockquote style=\"border-left: 0.375em solid #40a9ff; background-color:\
+        \ #e6f7ff; border-radius: 3px; padding: 1em;\" ><div>DUAL_ADJUSTMENT_ADD RPC,\
+        \ <a target=\"_blank\" title=\"Click to open in a new tab\" href=\"https://documentation.fiserv.com/bundle/ODS/resource/ODS.pdf\"\
+        > click here</a>.</div></blockquote>"
+      operationId: addDualAdjustment_v2_adjustments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DualAdjustmentAddRequest'
+        required: false
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateResult'
+      deprecated: false
+      x-proxy-name: addDualAdjustment
+      x-region:
+      - North America
+      x-display: Adjustments
+      x-codegen-request-body-name: body
+      x-group-name: Transaction Processing
+      x-child-product-name: Operations & Execution
+  /adjustments/v2/addEnhancedBatchAdjustment:
+    post:
+      tags:
+      - Adjustments
+      summary: ADJUSTMENT_BATCH_ENHANCED_ADD ODS RPC
+      description: "The ADJUSTMENT_BATCH_ENHANCED_ADD RPC will model the existing\
+        \ ADJUSTMENT_BATCH_ADD RPC but will have 2 additional reserved parameters.\
+        \ This transaction provides the ability to enter and release the batch header\
+        \ \nas well as the associated detail item records with one request. This function\
+        \ emulates the combined functionality of the JL, JB, JDE, and the JR transactions.\n\
+        The ADJUSTMENT_BATCH_ENHANCED_ADD syntax consists of two sections. The Header\
+        \ section begins with the \"BATCH TYPE\" parameter and ends with the \"DETAIL\
+        \ COUNT\" parameter.\nThe Detail section consists of the remaining parameters\
+        \ beginning with the \"DETAIL ACCOUNT\" parameter. When supplying multiple\
+        \ details, the Header section is supplied once, followed by the Detail section\
+        \ of each individual detail.\nRequired Fields: batchType, batchNumber, systemIdentifier,\
+        \ batchAmount, letterIdentifier, detailCount,detailAccount, detailTransactionCode,\
+        \ detailMerchantAccountIdentifier, detailAmount1. "
+      operationId: addEnhancedBatchAdjustment_v2_adjustments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddEnhancedBatchAdjustmentRequest'
+        required: false
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateResult'
+      deprecated: false
+      x-proxy-name: addEnhancedBatchAdjustment
+      x-region:
+      - North America
+      x-display: Adjustments
+      x-codegen-request-body-name: body
+      x-group-name: Adjustments
+  /adjustments/v2/amexChargeBackOutgoing:
+    post:
+      tags:
+      - Adjustments
+      - External Agencies
+      - Reference Data
+      - Chargeback
+      - Chargebacks
+      - Retrieval
+      - Retrievals
+      summary: AMEX_CB_OUTGOING_MANUAL RPC
+      description: "The AMEX_CB_OUTGOING_MANUAL function creates an outgoing chargeback\
+        \ for American Express\xAE accounts on the First Data\xAE System. When this\
+        \ RPC is issued with the correct syntax, a one records processed message will\
+        \ be received.\nRequired Fields: messageReasonCode, chargebackTypeCode, documentationIndicatorCode,\
+        \ acquirerReferenceIdentifier, americanExpressTransactionIdentifier, transactionMonetaryTypeCode,\
+        \ americanExpressProcessingCode, americanExpressFunctionCode, merchantCategoryCode,\
+        \ americanExpressIssuerInstitutionIdentifier, americanExpressIssuerProcessingInstitutionIdentifier,\
+        \ postDate, americanExpressAcquirerInstitutionIdentifier, americanExpressAcquirerProcessingInstitutionIdentifier,\
+        \ transactionDate, issuerCurrencyCode, processDate, processTime, issuerAmount,\
+        \ chargebackAmount, chargebackAmountCurrencyCode, chargebackAmountExponentCount,\
+        \ interchangeAmount, interchangeAmountCurrencyCode, interchangeAmountExponentCount,\
+        \ interchangeAmountConversionRate, transactionAmount, transactionAmountCurrencyCode,\
+        \ transactionAmountExponentCount, merchantTerminalIdentifier, americanExpressMerchantAccountIdentifier,\
+        \ transactionReferenceIdentifier.<br><br> <b>Relates to:</b>\n  \n  <blockquote\
+        \ style=\"border-left: 0.375em solid #40a9ff; background-color: #e6f7ff; border-radius:\
+        \ 3px; padding: 1em;\" ><div>AMEX_CB_OUTGOING_MANUAL RPC, <a target=\"_blank\"\
+        \ title=\"Click to open in a new tab\" href=\"https://documentation.fiserv.com/bundle/ODS/resource/ODS.pdf\"\
+        > click here</a>.</div></blockquote>"
+      operationId: amexChargeBackOutgoing_v2_adjustments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AmericanExpressChargeBackOutgoingRequest'
+        required: false
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateResult'
+      deprecated: false
+      x-proxy-name: amexChargeBackOutgoing
+      x-region:
+      - North America
+      x-display: Adjustments
+      x-codegen-request-body-name: body
+      x-group-name: External Agencies
+      x-child-product-name: Reference Data
+  /adjustments/v2/approveAdjustment:
+    post:
+      tags:
+      - Adjustments
+      - Transaction Processing
+      - Operations & Execution
+      summary: JQMTRN RPC
+      description: "The Approve Adjustment service calls the JQMTRN function to update\
+        \ an adjustment in the review queue to Approved. Required Fields: managerIdentifier,\
+        \ supervisorIdentifier, operatorIdentifier, entryDate, entryTime, statusCode.\
+        \ <br><br> <b>Relates to:</b>\n  \n  <blockquote style=\"border-left: 0.375em\
+        \ solid #40a9ff; background-color: #e6f7ff; border-radius: 3px; padding: 1em;\"\
+        \ ><div>JQMTRN RPC, <a target=\"_blank\" title=\"Click to open in a new tab\"\
+        \ href=\"https://documentation.fiserv.com/bundle/ODS/resource/ODS.pdf\"> click\
+        \ here</a>.</div></blockquote>"
+      operationId: approveAdjustment_v2_adjustments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdjustmentReviewQueueUpdateRequest'
+        required: false
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateResult'
+      deprecated: false
+      x-proxy-name: approveAdjustment
+      x-region:
+      - North America
+      x-display: Adjustments
+      x-codegen-request-body-name: body
+      x-group-name: Transaction Processing
+      x-child-product-name: Operations & Execution
+  /adjustments/v2/approvedQueue:
+    post:
+      tags:
+      - Adjustments
+      - Transaction Processing
+      - Operations & Execution
+      - JRQ
+      summary: JRQTRN ODS View
+      description: "The Approved Queue service calls the JRQTRN view, providing access\
+        \ to the automated adjustment review queue for the operator, returning only\
+        \ Approved items. <br><br> <b>Relates to:</b>\n  \n  <blockquote style=\"\
+        border-left: 0.375em solid #40a9ff; background-color: #e6f7ff; border-radius:\
+        \ 3px; padding: 1em;\" ><div>JRQTRN View, <a target=\"_blank\" title=\"Click\
+        \ to open in a new tab\" href=\"https://documentation.fiserv.com/bundle/ODS/resource/ODS.pdf\"\
+        > click here</a>.</div></blockquote>"
+      operationId: approvedQueue_v2_adjustments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdjustmentReviewQueueRequest'
+        required: false
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdjustmentReviewQueueResponse'
+      deprecated: false
+      x-proxy-name: approvedQueue
+      x-region:
+      - North America
+      x-display: Adjustments
+      x-codegen-request-body-name: body
+      x-group-name: Transaction Processing
+      x-child-product-name: Operations & Execution
+  /adjustments/v2/deleteAdjustment:
+    post:
+      tags:
+      - Adjustments
+      - Transaction Processing
+      - Operations & Execution
+      summary: JQMTRN RPC
+      description: "The Delete Adjustment service calls the JQMTRN function to delete\
+        \ an adjustment in the review queue. Required Fields: managerIdentifier, supervisorIdentifier,\
+        \ operatorIdentifier, entryDate, entryTime, statusCode. <br><br> <b>Relates\
+        \ to:</b>\n  \n  <blockquote style=\"border-left: 0.375em solid #40a9ff; background-color:\
+        \ #e6f7ff; border-radius: 3px; padding: 1em;\" ><div>JQMTRN RPC, <a target=\"\
+        _blank\" title=\"Click to open in a new tab\" href=\"https://documentation.fiserv.com/bundle/ODS/resource/ODS.pdf\"\
+        > click here</a>.</div></blockquote>"
+      operationId: deleteAdjustment_v2_adjustments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdjustmentReviewQueueUpdateRequest'
+        required: false
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateResult'
+      deprecated: false
+      x-proxy-name: deleteAdjustment
+      x-region:
+      - North America
+      x-display: Adjustments
+      x-codegen-request-body-name: body
+      x-group-name: Transaction Processing
+      x-child-product-name: Operations & Execution
+  /adjustments/v2/deleteBatchAdjustment:
+    post:
+      tags:
+      - Adjustments
+      - Transaction Processing
+      - Operations & Execution
+      summary: ADJUSTMENT_BATCH_DELETE RPC
+      description: "The ADJUSTMENT_BATCH_DELETE function provides the abilityto cancel\
+        \ an entire adjustment batch header as well as the detail items entered when\
+        \ that batch is reworked.This function emulates the combined functionality\
+        \ of the JC transaction.\n\nRequired Fields: adjustmentLetterName,adjustmentBatchIdentifier,systemIdentifier,principalIdentifier\
+        \ <br><br> <b>Relates to:</b>\n  \n  <blockquote style=\"border-left: 0.375em\
+        \ solid #40a9ff; background-color: #e6f7ff; border-radius: 3px; padding: 1em;\"\
+        \ ><div>ADJUSTMENT_BATCH_DELETE RPC, <a target=\"_blank\" title=\"Click to\
+        \ open in a new tab\" href=\"https://documentation.fiserv.com/bundle/ODS/resource/ODS.pdf\"\
+        > click here</a>.</div></blockquote>"
+      operationId: deleteBatchAdjustment_v2_adjustments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteBatchAdjustmentRequest'
+        required: false
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateResult'
+      deprecated: false
+      x-proxy-name: deleteBatchAdjustment
+      x-region:
+      - North America
+      x-display: Adjustments
+      x-codegen-request-body-name: body
+      x-group-name: Transaction Processing
+      x-child-product-name: Operations & Execution
+  /adjustments/v2/feeAdjustmentReversal:
+    post:
+      tags:
+      - Adjustments
+      - Transaction Processing
+      - Operations & Execution
+      - Fee
+      - Fees
+      summary: FEE_RECALC_ADJUSTMENT RPC
+      description: "RESTFUL API that emulates ODS RPC FEE_RECALC_ADJUSTMENT.The FEE_RECALC_ADJUSTMENT\
+        \ function issues an automated fee adjustment reversal to a cardholder's account.\n\
+        Required Fields: common.accountId, batchType, tranCode<br><br> <b>Relates\
+        \ to:</b>\n  \n  <blockquote style=\"border-left: 0.375em solid #40a9ff; background-color:\
+        \ #e6f7ff; border-radius: 3px; padding: 1em;\" ><div>FEE_RECALC_ADJUSTMENT\
+        \ RPC, <a target=\"_blank\" title=\"Click to open in a new tab\" href=\"https://documentation.fiserv.com/bundle/ODS/resource/ODS.pdf\"\
+        > click here</a>.</div></blockquote>"
+      operationId: feeAdjustmentReversal_v2_adjustments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeeAdjustmentReversalRequest'
+        required: false
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateResult'
+      deprecated: false
+      x-proxy-name: feeAdjustmentReversal
+      x-region:
+      - North America
+      x-display: Adjustments
+      x-codegen-request-body-name: body
+      x-group-name: Transaction Processing
+      x-child-product-name: Operations & Execution
+  /adjustments/v2/mcChargeBackOutgoing:
+    post:
+      tags:
+      - Adjustments
+      - Cards Accounts Management/Payments
+      - Operations & Execution
+      - Chargeback
+      - Chargebacks
+      - Retrieval
+      - Retrievals
+      summary: MC_CB_OUTGOING_MANUAL RPC
+      description: "The MC_CB_OUTGOING_MANUAL function enters outgoing chargebacks\
+        \ on MasterCard accounts into the FDR\xAE System. This function emulates the\
+        \ OMC transaction.\nRequired Fields: messageReasonCode, chargebackTypeCode,\
+        \ chargebackMessageCode, acquirerReferenceIdentifier, feeAttributeCode, postDate,\
+        \ transactionDate, processCode, functionCode, chargebackAmount, chargebackCurrencyCode,\
+        \ transactionAmount, transactionCurrencyCode, merchantCategoryCode, interchangeRateIdentifier.<br><br>\
+        \ <b>Relates to:</b>\n  \n  <blockquote style=\"border-left: 0.375em solid\
+        \ #40a9ff; background-color: #e6f7ff; border-radius: 3px; padding: 1em;\"\
+        \ ><div>MC_CB_OUTGOING_MANUAL RPC, <a target=\"_blank\" title=\"Click to open\
+        \ in a new tab\" href=\"https://documentation.fiserv.com/bundle/ODS/resource/ODS.pdf\"\
+        > click here</a>.</div></blockquote>"
+      operationId: mcChargeBackOutgoing_v2_adjustments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MasterCardChargeBackOutgoingRequest'
+        required: false
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MasterCardChargeBackOutgoingResponse'
+      deprecated: false
+      x-proxy-name: mcChargeBackOutgoing
+      x-region:
+      - North America
+      x-display: Adjustments
+      x-codegen-request-body-name: body
+      x-group-name: Cards Accounts Management/Payments
+      x-child-product-name: Operations & Execution
+  /adjustments/v2/mcFeeCollectionOutgoing:
+    post:
+      tags:
+      - Adjustments
+      - Collections
+      - Operations & Execution
+      - Fee
+      - Fees
+      summary: MC_OUTGOING_FEE_COLLECTION RPC
+      description: "Use the MC_OUTGOING_FEE_COLLECTION function to recover fees and\
+        \ rewards from other MasterCard\xAE members. The MC_OUTGOING_FEE_COLLECTION\
+        \ RPC entered and the Integrated Product Message response appear on the next\
+        \ day's SD-126, MasterCard Fee Income Journal, and the SD-127, MasterCard\
+        \ Intra-FDR Fee Expense Journal. This function emulates the MRF transaction.\n\
+        Required Fields: messageReasonCode, transactionOriginator, transactionDestination,\
+        \ transactionDate, transactionAmount, processingDebitorCreditCode, functionCode,\
+        \ controlIdentifier, dataRecord.<br><br> <b>Relates to:</b>\n  \n  <blockquote\
+        \ style=\"border-left: 0.375em solid #40a9ff; background-color: #e6f7ff; border-radius:\
+        \ 3px; padding: 1em;\" ><div>MC_OUTGOING_FEE_COLLECTION RPC, <a target=\"\
+        _blank\" title=\"Click to open in a new tab\" href=\"https://documentation.fiserv.com/bundle/ODS/resource/ODS.pdf\"\
+        > click here</a>.</div></blockquote>"
+      operationId: mcFeeCollectionOutgoing_v2_adjustments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MasterCardFeeCollectionOutgoingRequest'
+        required: false
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateResult'
+      deprecated: false
+      x-proxy-name: mcFeeCollectionOutgoing
+      x-region:
+      - North America
+      x-display: Adjustments
+      x-codegen-request-body-name: body
+      x-group-name: Collections
+      x-child-product-name: Operations & Execution
+  /adjustments/v2/pendingQueue:
+    post:
+      tags:
+      - Adjustments
+      - Transaction Processing
+      - Operations & Execution
+      - JRQ
+      summary: JRQTRN ODS View
+      description: "The Pending Queue service calls the JRQTRN view, providing access\
+        \ to the automated adjustment review queue for the operator, returning only\
+        \ Pending items. <br><br> <b>Relates to:</b>\n  \n  <blockquote style=\"border-left:\
+        \ 0.375em solid #40a9ff; background-color: #e6f7ff; border-radius: 3px; padding:\
+        \ 1em;\" ><div>JRQTRN View, <a target=\"_blank\" title=\"Click to open in\
+        \ a new tab\" href=\"https://documentation.fiserv.com/bundle/ODS/resource/ODS.pdf\"\
+        > click here</a>.</div></blockquote>"
+      operationId: pendingQueue_v2_adjustments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdjustmentReviewQueueRequest'
+        required: false
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdjustmentReviewQueueResponse'
+      deprecated: false
+      x-proxy-name: pendingQueue
+      x-region:
+      - North America
+      x-display: Adjustments
+      x-codegen-request-body-name: body
+      x-group-name: Transaction Processing
+      x-child-product-name: Operations & Execution
+  /adjustments/v2/rejectAdjustment:
+    post:
+      tags:
+      - Adjustments
+      - Transaction Processing
+      - Operations & Execution
+      summary: JQMTRN RPC
+      description: "The Reject Adjustment service calls the JQMTRN function to update\
+        \ an adjustment in the review queue to Rejected. Required Fields: managerIdentifier,\
+        \ supervisorIdentifier, operatorIdentifier, entryDate, entryTime, statusCode.\
+        \ <br><br> <b>Relates to:</b>\n  \n  <blockquote style=\"border-left: 0.375em\
+        \ solid #40a9ff; background-color: #e6f7ff; border-radius: 3px; padding: 1em;\"\
+        \ ><div>JQMTRN RPC, <a target=\"_blank\" title=\"Click to open in a new tab\"\
+        \ href=\"https://documentation.fiserv.com/bundle/ODS/resource/ODS.pdf\"> click\
+        \ here</a>.</div></blockquote>"
+      operationId: rejectAdjustment_v2_adjustments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdjustmentReviewQueueUpdateRequest'
+        required: false
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateResult'
+      deprecated: false
+      x-proxy-name: rejectAdjustment
+      x-region:
+      - North America
+      x-display: Adjustments
+      x-codegen-request-body-name: body
+      x-group-name: Transaction Processing
+      x-child-product-name: Operations & Execution
+  /adjustments/v2/rejectedQueue:
+    post:
+      tags:
+      - Adjustments
+      - Transaction Processing
+      - Operations & Execution
+      - JRQ
+      summary: JRQTRN ODS View
+      description: "The Rejected Queue service calls the JRQTRN view, providing access\
+        \ to the automated adjustment review queue for the operator, returning only\
+        \ Rejected items. <br><br> <b>Relates to:</b>\n  \n  <blockquote style=\"\
+        border-left: 0.375em solid #40a9ff; background-color: #e6f7ff; border-radius:\
+        \ 3px; padding: 1em;\" ><div>JRQTRN View, <a target=\"_blank\" title=\"Click\
+        \ to open in a new tab\" href=\"https://documentation.fiserv.com/bundle/ODS/resource/ODS.pdf\"\
+        > click here</a>.</div></blockquote>"
+      operationId: rejectedQueue_v2_adjustments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdjustmentReviewQueueRequest'
+        required: false
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdjustmentReviewQueueResponse'
+      deprecated: false
+      x-proxy-name: rejectedQueue
+      x-region:
+      - North America
+      x-display: Adjustments
+      x-codegen-request-body-name: body
+      x-group-name: Transaction Processing
+      x-child-product-name: Operations & Execution
+  /adjustments/v2/visaAuthorizationIssues:
+    post:
+      tags:
+      - Adjustments
+      - External Agencies
+      - Reference Data
+      - Chargeback
+      - Chargebacks
+      - Retrieval
+      - Retrievals
+      summary: VISA_CB_OUTGOING_MANUAL RPC D1/I1
+      description: "Use the VISA_CB_OUTGOING_MANUAL RPC to enter outgoing chargebacks\
+        \ on Visa accounts into the First Data System. \nTo process certain outgoing\
+        \ chargeback requests, input in the five message parameters text fields (messageParameterOneText,\
+        \ messageParameterTwoText, ...) may be required. \nD1 - Domestic Issuer/Acquirer\
+        \ Dispute Type Authorizations Issues. \nI1 - International Issuer/Acquirer\
+        \ Dispute Type Authorizations Issues. \nNA - No Fast Track Form Needed. \n\
+        Required Fields: fastTrackFormCode, chargeBackCurrencyCode, multipleClearingSequenceNumber,presentationInstrumentIdentifier,\
+        \ feeAttributeCode, transactionDate, chargeBackTypeCode, messageReasonCode,\
+        \ visaInterchangeProcessingDate, chargeBackTransactionTypeCode, transactionAmount,\
+        \ chargeBackMessageCode, postDate, acquirerReferenceIdentifier, chargeBackActionCode,\
+        \ chargeBackAmount. <br><br> <b>Relates to:</b>\n  \n  <blockquote style=\"\
+        border-left: 0.375em solid #40a9ff; background-color: #e6f7ff; border-radius:\
+        \ 3px; padding: 1em;\" ><div>VISA_CB_OUTGOING_MANUAL RPC, <a target=\"_blank\"\
+        \ title=\"Click to open in a new tab\" href=\"https://documentation.fiserv.com/bundle/ODS/resource/ODS.pdf\"\
+        > click here</a>.</div></blockquote>"
+      operationId: visaAuthorizationIssues_v2_adjustments
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisaChargeBackOutgoingResponse'
+      deprecated: false
+      x-proxy-name: visaAuthorizationIssues
+      x-region:
+      - North America
+      x-display: Adjustments
+      x-group-name: External Agencies
+      x-child-product-name: Reference Data
+  /adjustments/v2/visaCancellationsAndReturns:
+    post:
+      tags:
+      - Adjustments
+      - External Agencies
+      - Reference Data
+      - Chargeback
+      - Chargebacks
+      - Retrieval
+      - Retrievals
+      summary: VISA_CB_OUTGOING_MANUAL RPC D2/I2
+      description: "Use the VISA_CB_OUTGOING_MANUAL RPC to enter outgoing chargebacks\
+        \ on Visa accounts into the First Data System. \nTo process certain outgoing\
+        \ chargeback requests, input in the five message parameters text fields (messageParameterOneText,\
+        \ messageParameterTwoText, ...) may be required. \nD2 - Domestic Issuer/Acquirer\
+        \ Dispute Type Cancellations and Returns. \nI2 - International Issuer/Acquirer\
+        \ Dispute Type Cancellations and Returns. \nNA - No Fast Track Form Needed.\
+        \ \nRequired Fields: fastTrackFormCode, chargeBackCurrencyCode, multipleClearingSequenceNumber,presentationInstrumentIdentifier,\
+        \ feeAttributeCode, transactionDate, chargeBackTypeCode, messageReasonCode,\
+        \ visaInterchangeProcessingDate, chargeBackTransactionTypeCode, transactionAmount,\
+        \ chargeBackMessageCode, postDate, acquirerReferenceIdentifier, chargeBackActionCode,\
+        \ chargeBackAmount. <br><br> <b>Relates to:</b>\n  \n  <blockquote style=\"\
+        border-left: 0.375em solid #40a9ff; background-color: #e6f7ff; border-radius:\
+        \ 3px; padding: 1em;\" ><div>VISA_CB_OUTGOING_MANUAL RPC, <a target=\"_blank\"\
+        \ title=\"Click to open in a new tab\" href=\"https://documentation.fiserv.com/bundle/ODS/resource/ODS.pdf\"\
+        > click here</a>.</div></blockquote>"
+      operationId: visaCancellationsAndReturns_v2_adjustments
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisaChargeBackOutgoingResponse'
+      deprecated: false
+      x-proxy-name: visaCancellationsAndReturns
+      x-region:
+      - North America
+      x-display: Adjustments
+      x-group-name: External Agencies
+      x-child-product-name: Reference Data
+  /adjustments/v2/visaFraudIssues:
+    post:
+      tags:
+      - Adjustments
+      - External Agencies
+      - Reference Data
+      - Chargeback
+      - Chargebacks
+      - Retrieval
+      - Retrievals
+      summary: VISA_CB_OUTGOING_MANUAL RPC D3/I3
+      description: "Use the VISA_CB_OUTGOING_MANUAL RPC to enter outgoing chargebacks\
+        \ on Visa accounts into the First Data System. \nTo process certain outgoing\
+        \ chargeback requests, input in the five message parameters text fields (messageParameterOneText,\
+        \ messageParameterTwoText, ...) may be required. \nD3 - Domestic Issuer/Acquirer\
+        \ Dispute Type Fraud Issues. \nI3 - International Issuer/Acquirer Dispute\
+        \ Type Fraud Issues. \nNA - No Fast Track Form Needed. \nRequired Fields:\
+        \ fastTrackFormCode, chargeBackCurrencyCode, multipleClearingSequenceNumber,presentationInstrumentIdentifier,\
+        \ feeAttributeCode, transactionDate, chargeBackTypeCode, messageReasonCode,\
+        \ visaInterchangeProcessingDate, chargeBackTransactionTypeCode, transactionAmount,\
+        \ chargeBackMessageCode, postDate, acquirerReferenceIdentifier, chargeBackActionCode,\
+        \ chargeBackAmount. <br><br> <b>Relates to:</b>\n  \n  <blockquote style=\"\
+        border-left: 0.375em solid #40a9ff; background-color: #e6f7ff; border-radius:\
+        \ 3px; padding: 1em;\" ><div>VISA_CB_OUTGOING_MANUAL RPC, <a target=\"_blank\"\
+        \ title=\"Click to open in a new tab\" href=\"https://documentation.fiserv.com/bundle/ODS/resource/ODS.pdf\"\
+        > click here</a>.</div></blockquote>"
+      operationId: visaFraudIssues_v2_adjustments
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisaChargeBackOutgoingResponse'
+      deprecated: false
+      x-proxy-name: visaFraudIssues
+      x-region:
+      - North America
+      x-display: Adjustments
+      x-group-name: External Agencies
+      x-child-product-name: Reference Data
+  /adjustments/v2/visaNonReceiptGoodsServices:
+    post:
+      tags:
+      - Adjustments
+      - External Agencies
+      - Reference Data
+      - Chargeback
+      - Chargebacks
+      - Retrieval
+      - Retrievals
+      summary: VISA_CB_OUTGOING_MANUAL RPC D4/I4
+      description: "Use the VISA_CB_OUTGOING_MANUAL RPC to enter outgoing chargebacks\
+        \ on Visa accounts into the First Data System. \nTo process certain outgoing\
+        \ chargeback requests, input in the five message parameters text fields (messageParameterOneText,\
+        \ messageParameterTwoText, ...) may be required. \nD4 - Domestic Issuer/Acquirer\
+        \ Dispute Type Non-Receipt of Goods/Services. \nI4 - International Issuer/Acquirer\
+        \ Dispute Type Non-Receipt of Goods/Services. \nNA - No Fast Track Form Needed.\
+        \ \nRequired Fields: fastTrackFormCode, chargeBackCurrencyCode, multipleClearingSequenceNumber,presentationInstrumentIdentifier,\
+        \ feeAttributeCode, transactionDate, chargeBackTypeCode, messageReasonCode,\
+        \ visaInterchangeProcessingDate, chargeBackTransactionTypeCode, transactionAmount,\
+        \ chargeBackMessageCode, postDate, acquirerReferenceIdentifier, chargeBackActionCode,\
+        \ chargeBackAmount. <br><br> <b>Relates to:</b>\n  \n  <blockquote style=\"\
+        border-left: 0.375em solid #40a9ff; background-color: #e6f7ff; border-radius:\
+        \ 3px; padding: 1em;\" ><div>VISA_CB_OUTGOING_MANUAL RPC, <a target=\"_blank\"\
+        \ title=\"Click to open in a new tab\" href=\"https://documentation.fiserv.com/bundle/ODS/resource/ODS.pdf\"\
+        > click here</a>.</div></blockquote>"
+      operationId: visaNonReceiptGoodsServices_v2_adjustments
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisaChargeBackOutgoingResponse'
+      deprecated: false
+      x-proxy-name: visaNonReceiptGoodsServices
+      x-region:
+      - North America
+      x-display: Adjustments
+      x-group-name: External Agencies
+      x-child-product-name: Reference Data
+  /adjustments/v2/visaNonReceiptInformation:
+    post:
+      tags:
+      - Adjustments
+      - External Agencies
+      - Reference Data
+      - Chargeback
+      - Chargebacks
+      - Retrieval
+      - Retrievals
+      summary: VISA_CB_OUTGOING_MANUAL RPC D7/I7
+      description: "Use the VISA_CB_OUTGOING_MANUAL RPC to enter outgoing chargebacks\
+        \ on Visa accounts into the First Data System. \nTo process certain outgoing\
+        \ chargeback requests, input in the five message parameters text fields (messageParameterOneText,\
+        \ messageParameterTwoText, ...) may be required. \nD7 - Domestic Issuer/Acquirer\
+        \ Dispute Type Non-Receipt of Information. \nI7 - International Issuer/Acquirer\
+        \ Dispute Type Non-Receipt of Information. \nNA - No Fast Track Form Needed.\
+        \ \nRequired Fields: fastTrackFormCode, chargeBackCurrencyCode, multipleClearingSequenceNumber,presentationInstrumentIdentifier,\
+        \ feeAttributeCode, transactionDate, chargeBackTypeCode, messageReasonCode,\
+        \ visaInterchangeProcessingDate, chargeBackTransactionTypeCode, transactionAmount,\
+        \ chargeBackMessageCode, postDate, acquirerReferenceIdentifier, chargeBackActionCode,\
+        \ chargeBackAmount. <br><br> <b>Relates to:</b>\n  \n  <blockquote style=\"\
+        border-left: 0.375em solid #40a9ff; background-color: #e6f7ff; border-radius:\
+        \ 3px; padding: 1em;\" ><div>VISA_CB_OUTGOING_MANUAL RPC, <a target=\"_blank\"\
+        \ title=\"Click to open in a new tab\" href=\"https://documentation.fiserv.com/bundle/ODS/resource/ODS.pdf\"\
+        > click here</a>.</div></blockquote>"
+      operationId: visaNonReceiptInformation_v2_adjustments
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisaChargeBackOutgoingResponse'
+      deprecated: false
+      x-proxy-name: visaNonReceiptInformation
+      x-region:
+      - North America
+      x-display: Adjustments
+      x-group-name: External Agencies
+      x-child-product-name: Reference Data
+  /adjustments/v2/visaProcessingErrors:
+    post:
+      tags:
+      - Adjustments
+      - External Agencies
+      - Reference Data
+      - Chargeback
+      - Chargebacks
+      - Retrieval
+      - Retrievals
+      summary: VISA_CB_OUTGOING_MANUAL RPC D5/I5
+      description: "Use the VISA_CB_OUTGOING_MANUAL RPC to enter outgoing chargebacks\
+        \ on Visa accounts into the First Data System. \nTo process certain outgoing\
+        \ chargeback requests, input in the five message parameters text fields (messageParameterOneText,\
+        \ messageParameterTwoText, ...) may be required. \nD5 - Domestic Issuer/Acquirer\
+        \ Dispute Type Processing Errors. \nI5 - International Issuer/Acquirer Dispute\
+        \ Type Processing Errors. \nNA - No Fast Track Form Needed. \nRequired Fields:\
+        \ fastTrackFormCode, chargeBackCurrencyCode, multipleClearingSequenceNumber,presentationInstrumentIdentifier,\
+        \ feeAttributeCode, transactionDate, chargeBackTypeCode, messageReasonCode,\
+        \ visaInterchangeProcessingDate, chargeBackTransactionTypeCode, transactionAmount,\
+        \ chargeBackMessageCode, postDate, acquirerReferenceIdentifier, chargeBackActionCode,\
+        \ chargeBackAmount. <br><br> <b>Relates to:</b>\n  \n  <blockquote style=\"\
+        border-left: 0.375em solid #40a9ff; background-color: #e6f7ff; border-radius:\
+        \ 3px; padding: 1em;\" ><div>VISA_CB_OUTGOING_MANUAL RPC, <a target=\"_blank\"\
+        \ title=\"Click to open in a new tab\" href=\"https://documentation.fiserv.com/bundle/ODS/resource/ODS.pdf\"\
+        > click here</a>.</div></blockquote>"
+      operationId: visaProcessingErrors_v2_adjustments
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisaChargeBackOutgoingResponse'
+      deprecated: false
+      x-proxy-name: visaProcessingErrors
+      x-region:
+      - North America
+      x-display: Adjustments
+      x-group-name: External Agencies
+      x-child-product-name: Reference Data
+components:
+  schemas:
+    AccountHeader:
+      type: object
+      properties:
+        user:
+          type: string
+          description: Setting this value will assign OCS user id for internal ODS
+            Calls for auditing.
+        agent:
+          type: string
+          description: Agent, copyBookList = [{copybook:"CCNDPUBS", fields:[{name:"'PMXDS'-RI-ACCT-LVL-3",
+            length:"4", eventTypes:[""]}]}, {copybook:"CCTOKNWS", fields:[{name:"'XXX'-AGENT-NR",
+            length:"4", eventTypes:["TOKEN"]}]}, {copybook:"MCATDSHB", fields:[{name:"&T.AGENT",
+            length:"4", eventTypes:["TRAN"]}]}, {copybook:"MCPIPDAT", fields:[{name:"&T.AGENT",
+            length:"4", eventTypes:["TRAN"]}]}, {copybook:"FRFALLOG", fields:[{name:"FFSL-AGENT-NUM",
+            length:"4", eventTypes:["FRFAD"]}]}], eventTypeList:["ALL"]
+          example: '4000'
+        cycle:
+          type: string
+          description: Setting this value will assign cycle destination for backend
+            system, copyBookList = [{copybook:"MCATDSHB", fields:[{name:"&T.CYCLE",
+            length:"1", eventTypes:["TRAN"]}]}, {copybook:"MCPIPDAT", fields:[{name:"&T.CENTER",
+            length:"1", eventTypes:["TRAN"]}]}], eventTypeList:["TRAN"]
+          example: T
+        clientNumber:
+          type: string
+          description: Client Number, copyBookList = [{copybook:"CCNDPUBS", fields:[{name:"'PMXDS'-RI-CLIENT-ID",
+            length:"4", eventTypes:[""]}]}, {copybook:"CCTOKNWS", fields:[{name:"'XXX'-CLIENT-NR",
+            length:"4", eventTypes:["TOKEN"]}]}, {copybook:"MCATDSHB", fields:[{name:"&T.CLIENT",
+            length:"4", eventTypes:["TRAN"]}]}, {copybook:"MCPIPDAT", fields:[{name:"&T.CLIENT",
+            length:"4", eventTypes:["TRAN"]}]}, {copybook:"FRFALLOG", fields:[{name:"FFSL-CLIENT-NUMBER",
+            length:"5", eventTypes:["FRFAD"]}]}], eventTypeList:["ALL"]
+          example: '1000'
+        system:
+          type: string
+          description: A client often has more than one Billing System/Prin.  A client
+            uses Billing System/Prins to segregate their expenses on their General
+            Ledger for accounting purposes.System, copyBookList = [{copybook:"CCNDPUBS",
+            fields:[{name:"'PMXDS'-RI-ACCT-LVL-1", length:"4", eventTypes:[""]}]},
+            {copybook:"CCTOKNWS", fields:[{name:"'XXX'-SYSTEM-NR", length:"4", eventTypes:["TOKEN"]}]},
+            {copybook:"MCATDSHB", fields:[{name:"&T.SYS", length:"4", eventTypes:["TRAN"]}]},
+            {copybook:"MCPIPDAT", fields:[{name:"&T.SYS", length:"4", eventTypes:["TRAN"]}]},
+            {copybook:"FRFALLOG", fields:[{name:"FFSL-SYSTEM-NUM", length:"4", eventTypes:["FRFAD"]}]}],
+            eventTypeList:["ALL"]
+          example: '2000'
+        prin:
+          type: string
+          description: A client often has more than one Billing System/Prin.  A client
+            uses Billing System/Prins to segregate their expenses on their General
+            Ledger for accounting purposes.Principal, copyBookList = [{copybook:"CCNDPUBS",
+            fields:[{name:"'PMXDS'-RI-ACCT-LVL-2", length:"4", eventTypes:[""]}]},
+            {copybook:"CCTOKNWS", fields:[{name:"'XXX'-PRIN-NR", length:"4", eventTypes:["TOKEN"]}]},
+            {copybook:"MCATDSHB", fields:[{name:"&T.PRIN", length:"4", eventTypes:["TRAN"]}]},
+            {copybook:"MCPIPDAT", fields:[{name:"&T.PRIN", length:"4", eventTypes:["TRAN"]}]},
+            {copybook:"FRFALLOG", fields:[{name:"FFSL-PRIN-NUM", length:"4", eventTypes:["FRFAD"]}]}],
+            eventTypeList:["ALL"]
+          example: '3000'
+        debug:
+          type: boolean
+          description: Setting this value to false will disable additional error details
+            from backend calls.
+        org:
+          type: string
+          description: Setting this value will assign to the organization identifier.
+        processor:
+          type: boolean
+          description: Setting this value to true will return processor information
+            on the response. Defaults to false
+        contentType:
+          type: string
+        retry:
+          type: integer
+          description: Transactions on the Fiserv system that do not complete within
+            the "timeout" interval can be retried the number of times specified in
+            this parameter.The default value is "0", meaning a transaction will not
+            be retried. If an application calling the API does not wish to have the
+            Fiserv system retry the transaction, they must specify a "0" in this parameter.
+          format: int64
+          example: 0
+        timeout:
+          type: integer
+          description: This parameter dictates the duration by which the REST layer
+            will wait for a transaction to complete before attempting a retry. The
+            default value for this parameter is 45000 milliseconds.
+          format: int64
+          example: 45000
+        siteId:
+          type: string
+          description: 'This field will be used by the service to determine the First
+            Track, First Dispute, Fraud Detection Work Center destination. Site Id
+            will be provided by these applications to the calling applications '
+          example: '4201'
+        internalOrigin:
+          type: boolean
+          description: Flag to indicate whether it is an event originated internally
+        uuid:
+          maxLength: 36
+          minLength: 0
+          type: string
+          description: UUID. Universally Unique Identifier. A client-defined, client-supplied
+            value thatthe client may use to uniquely identify a specific API request
+            they have made. Can be used to identifyretries of the same request to
+            complete fulfillment.
+          example: a5eac27d-cd89-4096-a331-306480bfee76
+        queryParamsMap:
+          type: object
+          additionalProperties:
+            type: string
+          description: This list will be used to read the query parameters that are
+            sent in a request to our RESTful API
+          example: {}
+        externalCustomerId:
+          type: string
+          description: Client specific, external to FiServ, customer identifier.
+        accountId:
+          type: string
+          description: Account identifier on the system of record.
+          example: '8888888888888888'
+        presentationId:
+          type: string
+          description: Presentment account identifier, also can be referred to as
+            a card number.
+        rts:
+          type: string
+          format: date-time
+          example: '2026-06-26T11:57:35Z'
+    AddEnhancedBatchAdjustmentRequest:
+      required:
+      - accountIdentifier
+      - batchNumber
+      - batchRecordCount
+      - batchTypeCode
+      - originalTransactionAmount
+      - systemIdentifier
+      - totalAdjustmentAmount
+      - transactionCode
+      type: object
+      properties:
+        common:
+          $ref: '#/components/schemas/AccountHeader'
+        batchTypeCode:
+          pattern: '04|05|15|24|25|55'
+          type: string
+          description: "#### Valid Codes: \n**04** - Customer/merchant clearing adjustment\
+            \ \n**05** - Customer nonclearing adjustment \n**15** - Merchant nonclearing\
+            \ adjustment with constant batch number MOADJ \n**24** - Customer/merchant\
+            \ clearing adjustment for 90/180 day same as cash processing \n**25**\
+            \ - Customer/merchant nonclearing adjustment for 90/180 day same as cash\
+            \ processing \n**55** - Merchant nonclearing adjustment with client-defined\
+            \ batch number. "
+          example: '55'
+        batchNumber:
+          pattern: '[A-Za-z0-9]{5}'
+          type: string
+          description: Identifier of the adjustment batch
+          example: JY0xH
+        principalIdentifier:
+          pattern: '[0-9]{4}'
+          type: string
+          description: Number identifying the principal
+          example: '2046'
+        systemIdentifier:
+          pattern: '[0-9]{4}'
+          type: string
+          description: Number identifying the system
+          example: '9468'
+        totalAdjustmentAmount:
+          type: string
+          description: Dollar-and-cent amount displayed on the adjustment batch header
+        adjustmentLetterIdentifier:
+          pattern: '[0-9]{4}'
+          type: string
+          description: Identifier of the adjustment batch
+          example: '9733'
+        debitIndicator:
+          pattern: '[YN]|'
+          type: string
+          description: "Code indicating the adjustment batch is for a proprietary\
+            \ debit card.\n Code Y allows you to enter a 19-position cardholder account\
+            \ number"
+          example: Y
+        accountIdentifier:
+          type: array
+          description: Account number for the batch detail
+          items:
+            type: string
+        batchRecordCount:
+          pattern: '[1-9]|[0-9]{2}'
+          type: string
+          description: The number of batches you want to submit
+          example: '1'
+        transactionCode:
+          type: array
+          description: "#### Example Values:\n**253** - Sale \n**254** - Cash Advance\
+            \ \n **255** - Return \n**256** - Merchandise Sale Reversal \n**257**\
+            \ - Cash Advance Reversal \n**258** - Return Reversal \n**272** - Payment\
+            \ Reversal"
+          items:
+            type: string
+        merchantAccountIdentifier:
+          type: array
+          description: Identifier for the Merchant Account
+          items:
+            type: string
+        enteredIdentifier:
+          type: array
+          items:
+            type: string
+        expandedReferenceNumber:
+          type: array
+          description: The detail reference identifier
+          items:
+            type: string
+        originalTransactionAmount:
+          type: array
+          description: The first detail amount. Length 15
+          items:
+            type: string
+        adjustedTransactionAmount:
+          type: array
+          description: The second detail amount. Length 15
+          items:
+            type: string
+        originalTransactionPostingDate:
+          type: array
+          description: 'The detail post date. Ods Format: MMDDYY'
+          items:
+            type: string
+        collectorIdentifier:
+          type: array
+          description: The detail collection code
+          items:
+            type: string
+        nextAccountExternalStatusReasonCode:
+          type: array
+          description: The detail reason code
+          items:
+            type: string
+        feeAttributeCode:
+          type: array
+          description: The detail fee attribute
+          items:
+            type: string
+        adjustmentDescriptionText:
+          type: array
+          description: The detail description code
+          items:
+            type: string
+        promotionIdentifier:
+          type: array
+          description: The detail promotion identifier
+          items:
+            type: string
+        promotionBalanceIdentifier:
+          type: array
+          description: The detail balance identifier
+          items:
+            type: string
+        adjustmentDetailControlNumber:
+          type: array
+          description: The detail control number
+          items:
+            type: string
+        originalTransactionDate:
+          type: array
+          description: The original transaction date
+          items:
+            type: string
+        itemLevelFeeMethodIdentifier:
+          type: array
+          description: The item fee method
+          items:
+            type: string
+        merchantDescriptionOverrideText:
+          type: array
+          description: The merchant description override
+          items:
+            type: string
+        promotionPlanIdentifier:
+          type: array
+          description: The plan identifier
+          items:
+            type: string
+        promotionTermsCode:
+          type: array
+          description: The retail terms code
+          items:
+            type: string
+        clientDefinedReferenceInvoiceIdentifier:
+          type: array
+          description: The client defined reference identifier
+          items:
+            type: string
+        department1Code:
+          type: array
+          description: The department one code
+          items:
+            type: string
+        department2Code:
+          type: array
+          description: The department two code
+          items:
+            type: string
+        department3Code:
+          type: array
+          description: The department three code
+          items:
+            type: string
+        department5Code:
+          type: array
+          description: The department five code
+          items:
+            type: string
+        department4Code:
+          type: array
+          description: The department four code
+          items:
+            type: string
+        department6Code:
+          type: array
+          description: The department six code
+          items:
+            type: string
+        department7Code:
+          type: array
+          description: The department seven code
+          items:
+            type: string
+        department9Code:
+          type: array
+          description: The department nine code
+          items:
+            type: string
+        department8Code:
+          type: array
+          description: The department eight code
+          items:
+            type: string
+        department10Code:
+          type: array
+          description: The department ten code
+          items:
+            type: string
+        presentationInstrumentIdentifier:
+          type: array
+          description: The card identifier
+          items:
+            type: string
+        processorTransactionIdentifier:
+          type: array
+          description: The ticket identifier
+          items:
+            type: string
+        captureCode:
+          type: array
+          description: The work capture code
+          items:
+            type: string
+        penaltyFeePostedCycleCode:
+          type: array
+          description: The cycle to date identifier
+          items:
+            type: string
+        externalPresentationInstrumentTypeCode:
+          type: array
+          description: The card type external identifier
+          items:
+            type: string
+        monetaryTransactionRejectCodeOverrideIndicator:
+          type: array
+          description: The monetary reject override indicator
+          items:
+            type: string
+        interchangeFeeRate:
+          type: array
+          description: The inter change rate
+          items:
+            type: string
+        previousPromotionBalanceIdentifier:
+          type: array
+          description: The previous balance identifier
+          items:
+            type: string
+        cardAcceptorIdentifier:
+          type: array
+          description: The card acceptor identifier
+          items:
+            type: string
+        disputeIdentifier:
+          type: array
+          description: The transformed Dispute Universal Unique Identifier Code
+          items:
+            type: string
+    AdjustmentBatchAddRequest:
+      required:
+      - batchAmount
+      - batchNumber
+      - batchType
+      - detailAccount
+      - detailAmount1
+      - detailCount
+      - detailMerchantAccountIdentifier
+      - detailTransactionCode
+      - systemIdentifier
+      type: object
+      properties:
+        common:
+          $ref: '#/components/schemas/AccountHeader'
+        batchType:
+          pattern: '04|05|15|24|25|55'
+          type: string
+          description: "#### Valid Codes: \n**04** - Customer/merchant clearing adjustment\
+            \ \n**05** - Customer nonclearing adjustment \n**15** - Merchant nonclearing\
+            \ adjustment with constant batch number MOADJ \n**24** - Customer/merchant\
+            \ clearing adjustment for 90/180 day same as cash processing \n**25**\
+            \ - Customer/merchant nonclearing adjustment for 90/180 day same as cash\
+            \ processing \n**55** - Merchant nonclearing adjustment with client-defined\
+            \ batch number. "
+          example: '55'
+        batchNumber:
+          pattern: '[A-Za-z0-9]{5}'
+          type: string
+          description: The first two positions of the field are the Batch Alpha Code.The
+            last three are an iterative value to provide uniqueness
+          example: XdSRG
+        systemIdentifier:
+          pattern: '[0-9]{4}'
+          type: string
+          description: Number identifying the system
+          example: '2607'
+        principalIdentifier:
+          pattern: '[0-9]{4}'
+          type: string
+          description: Number identifying the principal
+          example: '1310'
+        batchAmount:
+          type: string
+          description: Dollar-and-cent amount displayed on the adjustment batch header
+        debitIndicator:
+          pattern: '[YN]|'
+          type: string
+          description: "Code indicating the adjustment batch is for a proprietary\
+            \ debit card.\n Code Y allows you to enter a 19-position cardholder account\
+            \ number"
+          example: Y
+        letterIdentifier:
+          pattern: '[0-9]{4}'
+          type: string
+          description: Identifier of the adjustment batch
+          example: '3346'
+        detailCount:
+          pattern: '[1-9]|[0-9]{2}'
+          type: string
+          description: The number of batches you want to submit
+          example: '7'
+        detailAccount:
+          type: array
+          description: Account number for the batch detail
+          items:
+            type: string
+        detailTransactionCode:
+          type: array
+          description: "#### Example Values:\n**253** - Sale \n**254** - Cash Advance\
+            \ \n **255** - Return \n**256** - Merchandise Sale Reversal \n**257**\
+            \ - Cash Advance Reversal \n**258** - Return Reversal \n**272** - Payment\
+            \ Reversal"
+          items:
+            type: string
+        enteredIdentifier:
+          type: array
+          items:
+            type: string
+        detailMerchantAccountIdentifier:
+          type: array
+          description: Identifier for the Merchant Account
+          items:
+            type: string
+        detailAmount1:
+          type: array
+          description: The first detail amount. Length 15
+          items:
+            type: string
+        detailReferenceIdentifier:
+          type: array
+          description: The detail reference identifier
+          items:
+            type: string
+        detailPostDate:
+          type: array
+          description: 'The detail post date. Ods Format: MMDDYY'
+          items:
+            type: string
+        detailAmount2:
+          type: array
+          description: The second detail amount. Length 15
+          items:
+            type: string
+        detailReasonCode:
+          type: array
+          description: The detail reason code
+          items:
+            type: string
+        detailCollectionCode:
+          type: array
+          description: The detail collection code
+          items:
+            type: string
+        detailDescription:
+          type: array
+          description: The detail description code
+          items:
+            type: string
+        detailFeeAttribute:
+          type: array
+          description: The detail fee attribute
+          items:
+            type: string
+        detailPromotionIdentifier:
+          type: array
+          description: The detail promotion identifier
+          items:
+            type: string
+        detailBalanceIdentifier:
+          type: array
+          description: The detail balance identifier
+          items:
+            type: string
+        detailControlNumber:
+          type: array
+          description: The detail control number
+          items:
+            type: string
+        itemFeeMethod:
+          type: array
+          description: The item fee method
+          items:
+            type: string
+        originalTransactionDate:
+          type: array
+          description: The original transaction date
+          items:
+            type: string
+        planIdentifier:
+          type: array
+          description: The plan identifier
+          items:
+            type: string
+        merchantDescriptionOverride:
+          type: array
+          description: The merchant description override
+          items:
+            type: string
+        clientDefinedReferenceIdentifier:
+          type: array
+          description: The client defined reference identifier
+          items:
+            type: string
+        retailTermsCode:
+          type: array
+          description: The retail terms code
+          items:
+            type: string
+        departmentOneCode:
+          type: array
+          description: The department one code
+          items:
+            type: string
+        departmentTwoCode:
+          type: array
+          description: The department two code
+          items:
+            type: string
+        departmentThreeCode:
+          type: array
+          description: The department three code
+          items:
+            type: string
+        departmentFourCode:
+          type: array
+          description: The department four code
+          items:
+            type: string
+        departmentFiveCode:
+          type: array
+          description: The department five code
+          items:
+            type: string
+        departmentSixCode:
+          type: array
+          description: The department six code
+          items:
+            type: string
+        departmentSevenCode:
+          type: array
+          description: The department seven code
+          items:
+            type: string
+        departmentEightCode:
+          type: array
+          description: The department eight code
+          items:
+            type: string
+        departmentNineCode:
+          type: array
+          description: The department nine code
+          items:
+            type: string
+        departmentTenCode:
+          type: array
+          description: The department ten code
+          items:
+            type: string
+        ticketIdentifier:
+          type: array
+          description: The ticket identifier
+          items:
+            type: string
+        cardIdentifier:
+          type: array
+          description: The card identifier
+          items:
+            type: string
+        cycleToDateIdentifier:
+          type: array
+          description: The cycle to date identifier
+          items:
+            type: string
+        workCaptureCode:
+          type: array
+          description: The work capture code
+          items:
+            type: string
+        monetaryRejectOverrideIndicator:
+          type: array
+          description: The monetary reject override indicator
+          items:
+            type: string
+        cardTypeExternalIdentifier:
+          type: array
+          description: The card type external identifier
+          items:
+            type: string
+        interchangeRate:
+          type: array
+          description: The inter change rate
+          items:
+            type: string
+        cardAcceptorIdentifier:
+          type: array
+          description: The card acceptor identifier
+          items:
+            type: string
+        previousBalanceIdentifier:
+          type: array
+          description: The previous balance identifier
+          items:
+            type: string
+    AdjustmentReviewQueueFields:
+      type: object
+      properties:
+        selectedFields:
+          type: object
+          additionalProperties:
+            type: string
+          example: {}
+        accountIdentifier:
+          type: string
+          description: 'ODS field ACCT_ID, Length 19. '
+        accountNumber:
+          type: string
+          description: 'ODS field JRQ_ACCTNO, Length 19. '
+        adjustmentControlNumber:
+          type: string
+          description: 'ODS field JRQ_ADJ_CNTL_NUM, Length 8. '
+        amount:
+          type: string
+          description: 'ODS field JRQ_AMOUNT, Length 13, Format 9999999999999. '
+        balanceIdentifier:
+          type: string
+          description: 'ODS field BAL_ID, Length 7. '
+        batchCodePrefix:
+          type: string
+          description: 'ODS field JRQ_BATCOD, Length 2. '
+        batchType:
+          type: string
+          description: 'ODS field JRQ_BATTYP, Length 2. '
+        captureCode:
+          type: string
+          description: 'ODS field CPTR_CD, Length 1. '
+        cardAcceptorIdentifier:
+          type: string
+          description: 'ODS field CARD_ACCP_ID, Length 15. '
+        cardIdentifier:
+          type: string
+          description: 'ODS field CARD_ID, Length 5. '
+        clientDefinedReferenceIdentifier:
+          type: string
+          description: 'ODS field CLNT_DFND_RFRN_ID, Length 23. '
+        departmentOneCode:
+          type: string
+          description: 'ODS field DEPT_ONE_CD, Length 4. '
+        departmentTwoCode:
+          type: string
+          description: 'ODS field DEPT_TWO_CD, Length 4. '
+        departmentThreeCode:
+          type: string
+          description: 'ODS field DEPT_THRE_CD, Length 4. '
+        departmentFourCode:
+          type: string
+          description: 'ODS field DEPT_FOUR_CD, Length 4. '
+        departmentFiveCode:
+          type: string
+          description: 'ODS field DEPT_FIVE_CD, Length 4. '
+        departmentSixCode:
+          type: string
+          description: 'ODS field DEPT_SIX_CD, Length 4. '
+        departmentSevenCode:
+          type: string
+          description: 'ODS field DEPT_SEVN_CD, Length 4. '
+        departmentEightCode:
+          type: string
+          description: 'ODS field DEPT_EGHT_CD, Length 4. '
+        departmentNineCode:
+          type: string
+          description: 'ODS field DEPT_NINE_CD, Length 4. '
+        departmentTenCode:
+          type: string
+          description: 'ODS field DEPT_TEN_CD, Length 4. '
+        description:
+          type: string
+          description: 'ODS field JRQ_DESC, Length 37. '
+        entryDate:
+          type: string
+          description: 'ODS field JRQ_EDATE, Length 5, Format YYJJJ. '
+        operatorIdentifier:
+          type: string
+          description: 'ODS field JRQ_OPERID, Length 3. '
+        entryTime:
+          type: string
+          description: 'ODS field JRQ_ETIME, Length 11, Format HH:MM:SS.SS. '
+        externalCardTypeIdentifier:
+          type: string
+          description: 'ODS field EXTR_CARD_TYPE_ID, Length 5. '
+        interchangeRate:
+          type: string
+          description: 'ODS field ICHG_RT, Length 7, Format 9.99999. '
+        itemFeeMethod:
+          type: string
+          description: 'ODS field ITEM_FEE_MTHD_NM, Length 8. '
+        merchantAssessmentCode:
+          type: string
+          description: 'ODS field MRCH_ASMT_CD, Length 1. '
+        merchantCardDebitCreditIndicator:
+          type: string
+          description: 'ODS field MRCH_CARD_DBT_CRDT_IN, Length 1. '
+        merchantCardProductCode:
+          type: string
+          description: 'ODS field MRCH_CARD_PRDT_CD, Length 3. '
+        merchantCardRoutingDestinationCode:
+          type: string
+          description: 'ODS field MRCH_CARD_RTNG_DSTN_CD, Length 5. '
+        merchantCardTypeCode:
+          type: string
+          description: 'ODS field MRCH_CARD_TYPE_CD, Length 5. '
+        merchantCategoryCode:
+          type: string
+          description: 'ODS field MRCH_CTGR_CD, Length 4. '
+        merchantDescriptionOverrideText:
+          type: string
+          description: 'ODS field MRCH_DESC_OVRR_TX, Length 23. '
+        merchantNumber:
+          type: string
+          description: 'ODS field JRQ_MRCHNO, Length 16. '
+        newAmount:
+          type: string
+          description: 'ODS field JRQ_AMOUNT2, Length 13, Format 9999999999999. '
+        planIdentifier:
+          type: string
+          description: 'ODS field PLAN_ID, Length 8. '
+        postDate:
+          type: string
+          description: 'ODS field JRQ_POST_DT, Length 6, Format MMDDYY. '
+        promotionIdentifier:
+          type: string
+          description: 'ODS field PRMT_ID, Length 8. '
+        referenceNumber:
+          type: string
+          description: 'ODS field JRQ_REF_NO, Length 17. '
+        retailTermsCode:
+          type: string
+          description: 'ODS field RETL_TRMS_CD, Length 4. '
+        status:
+          type: string
+          description: 'ODS field JRQ_STATUS, Length 1. '
+        transactionCode:
+          type: string
+          description: 'ODS field JRQ_TRAN, Length 3. '
+        transactionIdentifier:
+          type: string
+          description: 'ODS field TRAN_ID, Length 15. '
+        managerIdentifier:
+          type: string
+          description: 'ODS field MANAGER_ID, Length 3. '
+        supervisorIdentifier:
+          type: string
+          description: 'ODS field SUPERVISOR_ID, Length 3. '
+    AdjustmentReviewQueueRequest:
+      required:
+      - endSequence
+      - selectFields
+      - startSequence
+      type: object
+      properties:
+        common:
+          $ref: '#/components/schemas/AccountHeader'
+        selectFields:
+          maxItems: 2147483647
+          minItems: 1
+          type: array
+          description: Fields to select from ODS view.
+          example:
+          - anyvalidfieldname1
+          - anyvalidfieldname2
+          - anyvalidfieldname3
+          - "anyvalidfieldname\u2026"
+          - "anyvalidfieldname\u2026n"
+          items:
+            type: string
+        odsNaming:
+          type: boolean
+          description: 'Use ODS or human readable names.  Default is false. '
+        startSequence:
+          pattern: \d+
+          type: string
+          description: 'Start sequence number. Default value is 1. '
+          example: '1'
+        endSequence:
+          pattern: \d+
+          type: string
+          description: 'End sequence number. Default value is 25. '
+          example: '25'
+    AdjustmentReviewQueueResponse:
+      type: object
+      properties:
+        processorInfo:
+          $ref: '#/components/schemas/ProcessorInfo'
+        adjustmentReviewQueueList:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdjustmentReviewQueueFields'
+    AdjustmentReviewQueueUpdateRequest:
+      required:
+      - entryDate
+      - entryTime
+      - managerIdentifier
+      - operatorIdentifier
+      - statusCode
+      - supervisorIdentifier
+      type: object
+      properties:
+        common:
+          $ref: '#/components/schemas/AccountHeader'
+        managerIdentifier:
+          type: string
+          description: 'Identifier of the operator code you established on the Password
+            System B user shell for the manager now responsible for reviewing the
+            pending and rejected items made by the operatorIdentifier. '
+        supervisorIdentifier:
+          type: string
+          description: 'Identifier of the operator code you established on the Password
+            System B user shell for the supervisor responsible for reviewing the pending
+            and rejected items initiated by the operatorIdentifier. '
+        operatorIdentifier:
+          type: string
+          description: 'Identifier of the operator code you established on the Password
+            System B user shell for the operator who originally entered the pending
+            and rejected items. '
+        entryDate:
+          type: string
+          description: 'Date the operator entered the adjustment. Format MM-dd-yyyy. '
+        entryTime:
+          type: string
+          description: 'Time the operator entered the adjustment. Format HH:MM:SS.SS. '
+        amount:
+          type: string
+          description: 'Amount of the adjustment transaction. Format 99999999999.99. '
+        newAmount:
+          type: string
+          description: 'Amount of the item you are adjusting. Format 99999999999.99. '
+        shell:
+          type: string
+          description: 'Shell name of the employee to whom you are reassigning all
+            pending and rejected items initiated by the operatorIdentifier. '
+        controlNumber:
+          type: string
+          description: 'Identifier of the adjustment detail. '
+        statusCode:
+          type: string
+          description: 'Code determining the current status of an adjustment. Valid
+            Codes: A - Approve, P - Pending, R - Rejected. '
+    AmericanExpressChargeBackOutgoingRequest:
+      required:
+      - acquirerReferenceIdentifier
+      - americanExpressAcquirerInstitutionIdentifier
+      - americanExpressAcquirerProcessingInstitutionIdentifier
+      - americanExpressFunctionCode
+      - americanExpressIssuerInstitutionIdentifier
+      - americanExpressIssuerProcessingInstitutionIdentifier
+      - americanExpressMerchantAccountIdentifier
+      - americanExpressProcessingCode
+      - americanExpressTransactionIdentifier
+      - chargeBackAmount
+      - chargeBackAmountCurrencyCode
+      - chargeBackAmountExponentCount
+      - chargeBackTypeCode
+      - documentationIndicatorCode
+      - interchangeAmount
+      - interchangeAmountConversionRate
+      - interchangeAmountCurrencyCode
+      - interchangeAmountExponentCount
+      - issuerAmount
+      - issuerCurrencyCode
+      - merchantCategoryCode
+      - merchantTerminalIdentifier
+      - messageReasonCode
+      - postDate
+      - processDate
+      - processTime
+      - transactionAmount
+      - transactionAmountCurrencyCode
+      - transactionAmountExponentCount
+      - transactionDate
+      - transactionMonetaryTypeCode
+      - transactionReferenceIdentifier
+      type: object
+      properties:
+        common:
+          $ref: '#/components/schemas/AccountHeader'
+        messageReasonCode:
+          type: string
+          description: ODS field MSSG_RESN_CD, Length 4
+        chargeBackTypeCode:
+          type: string
+          description: ODS field CB_TYPE_CD, Length 1, Format 9
+        documentationIndicatorCode:
+          type: string
+          description: ODS field DCMN_INDC_CD, Length 2
+        acquirerReferenceIdentifier:
+          type: string
+          description: ODS field ACQR_RFRN_ID, Length 1 to 23
+        americanExpressTransactionIdentifier:
+          type: string
+          description: ODS field AMEX_TRAN_ID, Length 15, Format 999999999999999
+        transactionMonetaryTypeCode:
+          type: string
+          description: ODS field TRAN_MON_TYPE_CD, Length 3, Format 999
+        americanExpressProcessingCode:
+          type: string
+          description: ODS field AMEX_PRCS_CD, Length 6
+        americanExpressFunctionCode:
+          type: string
+          description: ODS field AMEX_FNCT_CD, Length 3
+        merchantCategoryCode:
+          type: string
+          description: ODS field MRCH_CTGR_CD, Length 4
+        directSellCode:
+          type: string
+          description: ODS field DRCT_SELL_CD, Length 2
+        americanExpressIssuerInstitutionIdentifier:
+          type: string
+          description: ODS field AMEX_ISSR_INST_ID, Length 1 to 11
+        americanExpressIssuerProcessingInstitutionIdentifier:
+          type: string
+          description: ODS field AMEX_ISSR_PRCS_INST_ID, Length 1 to 11
+        postDate:
+          type: string
+          description: ODS field POST_DT, Length 6, Format YYMMDD
+        americanExpressAcquirerInstitutionIdentifier:
+          type: string
+          description: ODS field AMEX_ACQR_INST_ID, Length 1 to 11
+        americanExpressAcquirerProcessingInstitutionIdentifier:
+          type: string
+          description: ODS field AMEX_ACQR_PRCS_INST_ID, Length 1 to 11
+        optionalIssuerFeeAmount:
+          type: string
+          description: ODS field OPTN_ISSR_FEE_AM, Length 1 to 15, Format 9999999999999.99
+        transactionDate:
+          type: string
+          description: ODS field TRAN_DT, Length 6, Format YYMMDD
+        transactionTime:
+          type: string
+          description: ODS field TRAN_TM, Length 6, Format 999999
+        issuerCurrencyCode:
+          type: string
+          description: ODS field ISSR_CNCY_CD, Length 3
+        processDate:
+          type: string
+          description: ODS field PRCS_DT, Length 6, Format YYMMDD
+        processTime:
+          type: string
+          description: ODS field PRCS_TM, Length 6, Format 999999
+        issuerAmount:
+          type: string
+          description: ODS field ISSR_AM, Length 1 to 15, Format 999999999999999
+        chargeBackAmount:
+          type: string
+          description: ODS field CB_AM, Length 1 to 15, Format 999999999999999
+        chargeBackAmountCurrencyCode:
+          type: string
+          description: ODS field CB_AM_CNCY_CD, Length 3
+        chargeBackAmountExponentCount:
+          type: string
+          description: ODS field CB_AM_EXPN_CT, Length 1, Format 9
+        interchangeAmount:
+          type: string
+          description: ODS field ICHG_AM, Length 1 to 15, Format 999999999999999
+        interchangeAmountCurrencyCode:
+          type: string
+          description: ODS field ICHG_AM_CNCY_CD, Length 3
+        interchangeAmountExponentCount:
+          type: string
+          description: ODS field ICHG_AM_EXPN_CT, Length 1, Format 9
+        interchangeAmountConversionRate:
+          type: string
+          description: ODS field ICHG_AM_CNVR_RT, Length 8 to 15, Format 9999999.99999999
+        transactionAmount:
+          type: string
+          description: ODS field TRAN_AM, Length 1 to 15, Format 999999999999999
+        transactionAmountCurrencyCode:
+          type: string
+          description: ODS field TRAN_AM_CNCY_CD, Length 3
+        transactionAmountExponentCount:
+          type: string
+          description: ODS field TRAN_AM_EXPN_CT, Length 1, Format 9
+        merchantTerminalIdentifier:
+          type: string
+          description: ODS field MRCH_TRMN_ID, Length 1 to 8
+        americanExpressMerchantAccountIdentifier:
+          type: string
+          description: ODS field AMEX_MRCH_ACCT_ID, Length 15
+        americanExpressChargebackReasonText:
+          type: string
+          description: ODS field AMEX_CB_RESN_TX, Length 1 to 95
+        departmentCode:
+          type: string
+          description: ODS field DEPT_CD, Length 1 to 3
+        operatorIdentifier:
+          type: string
+          description: ODS field OPRT_ID, Length 1 to 3
+        transactionReferenceIdentifier:
+          type: string
+          description: ODS field TRAN_RFRN_ID, Length 23
+        emvChipPresentIndicator:
+          type: string
+          description: ODS field EMV_CHIP_PRSN_IN, Length 1
+        firstDataProcessingDate:
+          type: string
+          description: ODS field FRST_DATA_PRCS_DT, Length 8
+        partialIndicatorCode:
+          type: string
+          description: ODS field PRTL_INDC_CD, Length 1
+        balanceIdentifier:
+          type: string
+          description: ODS field BAL_ID, Length 7, Format 9999999
+        promotionIdentifier:
+          type: string
+          description: ODS field PRMT_ID, Length 1 to 8
+    DeleteBatchAdjustmentRequest:
+      required:
+      - adjustmentBatchIdentifier
+      - adjustmentLetterName
+      - principalIdentifier
+      - systemIdentifier
+      type: object
+      properties:
+        common:
+          $ref: '#/components/schemas/AccountHeader'
+        adjustmentLetterName:
+          pattern: '[0-9]{4}'
+          type: string
+          description: Identifier of the adjustment batch
+          example: '6791'
+        adjustmentBatchIdentifier:
+          pattern: '[A-Za-z0-9]{5}'
+          type: string
+          description: Identifier of the adjustment batch
+          example: GXfwz
+        systemIdentifier:
+          pattern: '[0-9]{4}'
+          type: string
+          description: Number identifying the system
+          example: '6171'
+        principalIdentifier:
+          pattern: '[0-9]{4}'
+          type: string
+          description: Number identifying the principal
+          example: '0159'
+    DualAdjustmentAddRequest:
+      required:
+      - batchPrefixIdentifier
+      - merchantIdentifier
+      - transactionAmount
+      - transactionCode
+      type: object
+      properties:
+        common:
+          $ref: '#/components/schemas/AccountHeader'
+        batchPrefixIdentifier:
+          type: string
+          description: 'The batch prefix identifier corresponds to the first 2 letters
+            of the batch number.
+
+            Example: NS - Insufficient'
+        transactionCode:
+          type: string
+          description: "#### Example Values:\n**253** - Sale \n**254** - Cash Advance\
+            \ \n **255** - Return \n**256** - Merchandise Sale Reversal \n**257**\
+            \ - Cash Advance Reversal \n**258** - Return Reversal \n**272** - Payment\
+            \ Reversal"
+        merchantIdentifier:
+          type: string
+          description: Identifier for the Merchant Account
+        transactionAmount:
+          type: string
+          description: The transaction amount to adjust
+        bypassCode:
+          pattern: '[B ]'
+          type: string
+          description: "Code determining whether the reversal or transaction adjustment\
+            \ is eligible to bypass \nthe supervisor review queuing feature of the\
+            \ JRQ, Adjustment Review Queue Display Transaction\nValid codes in comments.\n\
+            .#### Example Values: \n  blank - If the adjustment or reversal request\
+            \ exceeds the amount established for an operator,           or a value\
+            \ is entered in either the merchant description or merchant description\
+            \ override fields,           automatically send the transaction to a supervisor\
+            \ to review \n  B - Do not queue the adjustment or reversal request to\
+            \ the JRQ transaction. \n"
+          example: B
+    FeeAdjustmentReversalRequest:
+      required:
+      - batchType
+      - tranAmount
+      - tranCode
+      type: object
+      properties:
+        common:
+          $ref: '#/components/schemas/AccountHeader'
+        batchType:
+          pattern: '|[\d]{2}'
+          type: string
+          description: Identifier of the batch type, Length 2.
+          example: ''
+        batchPrefix:
+          pattern: '|[\w\s]{2}'
+          type: string
+          description: Identifier of the batch prefix.
+          example: ''
+        tranCode:
+          pattern: 256|257|272|259|260|273
+          type: string
+          description: "Code representing the monetary transaction, Length 3 Fixed.\
+            \ \n#### Example Values: \n  **256** - Sale reversal/returned check charge\
+            \ reversal \n  **257** - Cash advance reversal \n  **272** - Payment reversal\
+            \ \n  **259** - Sale reversal/returned check charge reversal \n  **260**\
+            \ - Cash advance reversal \n  **273** - Payment reversal."
+          example: '260'
+        tranDate:
+          type: string
+          description: 'Date the transaction originally posted to the customer account,
+            Length 6 Fixed. Format MMDDYY. '
+        merchantId:
+          pattern: '|[\w\s\W]{6,16}'
+          type: string
+          description: Identifier of the merchant account.
+          example: I1|zmL9ff]47!
+        tranAmount:
+          type: string
+          description: Amount of the item being adjusted, Length 13, Format 9999999999.99
+        referenceNumber:
+          pattern: '|[\w\s\W]{1,23}'
+          type: string
+          description: Identifier of the item being reversed.
+          example: eHU_Z*N= sM
+        transactionPostingDate:
+          type: string
+          description: Date the original transaction occurred, Length 6 Fixed. Format
+            MMDDYY.
+        adjustedTranAmount:
+          pattern: '|[\d]{1,10}\.?[0-9]{0,2}'
+          type: string
+          description: New amount of the item being adjusted, Length 13, Format 9999999999.99
+          example: ''
+        merchantDescriptionText:
+          pattern: '|[\w\s\W\.]{1,37}'
+          type: string
+          description: Text of the client-defined message that describes the adjustment
+            detail item being entered, Length 37.
+          example: ''
+        tranFeeAttr:
+          pattern: '|[\w\s\W]{3}'
+          type: string
+          description: Identifier of the type of discounted interchange rate applicable
+            for this transaction.
+          example: ''
+        promotionalId:
+          pattern: '|[\w\s\W]{1,8}'
+          type: string
+          description: "PROMO ID Client-defined identifier of a promotional method\
+            \ of the Transaction Level \n ProcessingSM (TLPSM) service. This field\
+            \ displays for Transaction Level Processing service (TLP service) \ntransactions\
+            \ only."
+          example: "\rYtnu1E\n"
+        promotionalBalanceId:
+          pattern: '|[\d]{1,7}'
+          type: string
+          description: "BALANCE ID\nFirst Data-assigned identifier of the promotional\
+            \ purchase\nThis field contains a value only for TLP transactions for\
+            \ which a balance identification has already been generated on an account.\
+            \ \nThe System requires this field if entering an adjustment for a specific\
+            \ TLP balance.\nTo post a payment directly to a specific TLP balance,\
+            \ enter the appropriate balance ID in this field. \nA value of 9999999\
+            \ appears in this field when you post a payment directly to the standard\
+            \ balance of the account.\n"
+          example: ''
+        controlId:
+          pattern: '|[\w\s]{1,8}'
+          type: string
+          description: Identifier of the adjustment detail, Length 8.
+          example: ''
+        itemFeeMethodId:
+          pattern: '|[\w\s\W]{1,8}'
+          type: string
+          description: "Identification of the item fee method used to process the\
+            \ transaction. \nEnter an item fee method in this field to identify the\
+            \ transaction level fee for the adjustment.\n."
+          example: N
+        planId:
+          pattern: '|[\w\s\W]{1,8}'
+          type: string
+          description: "Method name assigned to the plan identifying the pricing method\
+            \ used for the \n promotional balance associated with the plan, Length\
+            \ 8."
+          example: ''
+        merchantDescriptionOverride:
+          pattern: '|[\w\s\W]{1,23}'
+          type: string
+          description: Text that overrides the System-generated description, any Product
+            Control File generated override, and the merchant description originally
+            on the statement, Length 23.
+          example: "_/[8Lbqi_S5+$OV\f"
+        clientDefinedReference:
+          pattern: '|[\w\s\W]{1,23}'
+          type: string
+          description: Client-defined reference identifier or invoice identifier of
+            a specific transaction.Length 23.
+          example: ilS[<l
+        retailTermCode:
+          pattern: '|[\d]{4}'
+          type: string
+          description: Client-defined code representing the ticket terms under which
+            the promotional purchase was processed, Length 4.
+          example: ''
+        departmentCodes:
+          type: array
+          description: Client-defined code representing the department where the customer
+            made a purchase, Length 90.
+          items:
+            type: string
+        cardId:
+          pattern: '|[\w\s\W]{1,5}'
+          type: string
+          description: Identifier of the card associated with the account identifier,
+            Length 5.
+          example: ''
+        tranId:
+          pattern: '|[\w\s\W]{1,15}'
+          type: string
+          description: "Visa\xAE or First Data\xAE-assigned identifier of the transaction\
+            \ during a chargeback, retrieval, or fraud advice transaction, Length\
+            \ 15."
+          example: "EI)cprDG\"\f"
+        extraCardTypeId:
+          pattern: '|[\w\s\W]{1,15}'
+          type: string
+          description: Client-defined identifier of the card type, Length 5.
+          example: ''
+        bypassCode:
+          pattern: '[B ]'
+          type: string
+          description: "Code determining whether the transaction adjustment or reversal\
+            \ is eligible to bypass \nthe supervisor review queuing feature of the\
+            \ JRQ, Adjustment Review Queue Display Transaction\nValid codes in comments.\n\
+            .#### Example Values: \n  B - Do not queue the adjustment or reversal\
+            \ request to the JRQ transaction. \n  blank - If the adjustment or reversal\
+            \ request exceeds the amount established for an operator,           or\
+            \ a value is entered in either the merchant description or merchant description\
+            \ override fields,           automatically send the transaction to a supervisor\
+            \ to review \n"
+          example: ' '
+    MasterCardChargeBackOutgoingRequest:
+      required:
+      - acquirerReferenceIdentifier
+      - chargeBackAmount
+      - chargeBackCurrencyCode
+      - chargeBackMessageCode
+      - chargeBackTypeCode
+      - feeAttributeCode
+      - functionCode
+      - interchangeRateIdentifier
+      - merchantCategoryCode
+      - messageReasonCode
+      - postDate
+      - processCode
+      - transactionAmount
+      - transactionCurrencyCode
+      - transactionDate
+      type: object
+      properties:
+        common:
+          $ref: '#/components/schemas/AccountHeader'
+        messageReasonCode:
+          type: string
+          description: ODS field MSSG_RESN_CD, Length 4, Format 9999
+        chargeBackTypeCode:
+          type: string
+          description: ODS field CB_TYPE_CD, Length 1
+        chargeBackMessageCode:
+          type: string
+          description: ODS field CB_MSSG_CD, Length 3, Format 999
+        messageReversalIndicator:
+          type: string
+          description: ODS field MSSG_RVRS_IN, Length 1
+        processingDate:
+          type: string
+          description: ODS field PRCS_DT, Length 6, Format YYMMDD
+        acquirerReferenceIdentifier:
+          type: string
+          description: ODS field ACQR_RFRN_ID, Length 23, Format 99999999999999999999999
+        directSellCode:
+          type: string
+          description: ODS field DRCT_SELL_CD, Length 2
+        endpointControlSuffixIdentifier:
+          type: string
+          description: ODS field ENDP_CNTR_SFFX_ID, Length 1 to 2
+        feeAttributeCode:
+          type: string
+          description: ODS field FEE_ATTR_CD, Length 3
+        disputeBatchIdentifier:
+          type: string
+          description: ODS field DSPT_BTCH_ID, Length 2
+        postDate:
+          type: string
+          description: ODS field POST_DT, Length 6, Format YYMMDD
+        transactionDate:
+          type: string
+          description: ODS field TRAN_DT, Length 6, Format YYMMDD
+        transactionTime:
+          type: string
+          description: ODS field TRAN_TM, Length 6, Format 999999
+        processCode:
+          type: string
+          description: ODS field PRCS_CD, Length 2, Format 99
+        chargeBackReferenceIdentifier:
+          type: string
+          description: ODS field CB_RFRN_ID, Length 1 to 10
+        functionCode:
+          type: string
+          description: ODS field FNCT_CD, Length 3, Format 999
+        serviceLevelCode:
+          type: string
+          description: ODS field SRVC_LEVL_CD, Length 1
+        serviceIdentifier:
+          type: string
+          description: ODS field SRVC_ID, Length 6
+        chargeBackAmount:
+          type: string
+          description: ODS field CB_AM, Length 1 to 13, Format 9999999999999
+        chargeBackCurrencyCode:
+          type: string
+          description: ODS field CB_CNCY_CD, Length 3, Format 999
+        transactionAmount:
+          type: string
+          description: ODS field TRAN_AM, Length 1 to 13, Format 9999999999999
+        transactionCurrencyCode:
+          type: string
+          description: ODS field TRAN_CNCY_CD, Length 3, Format 999
+        interchangeAmount:
+          type: string
+          description: ODS field ICHG_AM, Length 1 to 13, Format 9999999999999
+        interchangeCurrencyCode:
+          type: string
+          description: ODS field ICHG_CNCY_CD, Length 3, Format 999
+        issuerAmount:
+          type: string
+          description: ODS field ISSR_AM, Length 1 to 13, Format 9999999999999
+        issuerCurrencyCode:
+          type: string
+          description: ODS field ISSR_CNCY_CD, Length 3, Format 999
+        optionalIssuerFeeAmount:
+          type: string
+          description: ODS field OPTN_ISSR_FEE_AM, Length 1 to 13, Format 9999999999999
+        departmentCode:
+          type: string
+          description: ODS field DEPT_CD, Length 1 to 2
+        operatorIdentifier:
+          type: string
+          description: ODS field OPRT_ID, Length 1 to 3
+        bankNetReferenceNumber:
+          type: string
+          description: ODS field BNKN_RFRN_ID, Length 1 to 9
+        bankNetReferenceDate:
+          type: string
+          description: ODS field BNKN_RFRN_DT, Length 4, Format MMYY
+        merchantAccountIdentifier:
+          type: string
+          description: ODS field MRCH_ACCT_ID, Length 1 to 16, Format 9999999999999999
+        merchantName:
+          type: string
+          description: ODS field MRCH_NM, Length 1 to 22
+        merchantCityName:
+          type: string
+          description: ODS field MRCH_CITY_NM, Length 1 to 13
+        merchantSubdivisionCode:
+          type: string
+          description: ODS field MRCH_SBDV_CD, Length 1 to 3
+        merchantAddressText:
+          type: string
+          description: ODS field MRCH_ADDR_TX, Length 1 to 46
+        merchantCountryCode:
+          type: string
+          description: ODS field MRCH_CTRY_CD, Length 1 to 3
+        merchantIdentifier:
+          type: string
+          description: ODS field MC_MRCH_ID, Length 1 to 15
+        merchantPostalCode:
+          type: string
+          description: ODS field MRCH_PSTL_CD, Length 1 to 10
+        merchantCategoryCode:
+          type: string
+          description: ODS field MRCH_CTGR_CD, Length 4, Format 9999
+        merchantCustomerServicePhoneIdentifier:
+          type: string
+          description: ODS field MRCH_CUST_SRVC_PHON_ID, Length 1 to 16
+        acquirerIdentifier:
+          type: string
+          description: ODS field ACQR_ID, Length 6, Format 999999
+        merchantAdditionalContactInformation:
+          type: string
+          description: ODS field MRCH_ADDL_CNTC_INFR_TX, Length 1 to 25
+        merchantTelephoneIdentifier:
+          type: string
+          description: ODS field MRCH_TLPH_ID, Length 1 to 16
+        pointOfInteractionPhoneIdentifier:
+          type: string
+          description: ODS field PONT_OF_INTR_PHON_ID, Length 1
+        pointOfInteractionPhoneText:
+          type: string
+          description: ODS field PONT_OF_INTR_PHON_TX, Length 1 to 40
+        authorizationCode:
+          type: string
+          description: ODS field AUTH_CD, Length 1 to 6
+        merchantTerminalTypeCode:
+          type: string
+          description: ODS field MRCH_TRMN_TYPE_CD, Length 3
+        programRegistrationIdentifier:
+          type: string
+          description: ODS field PGM_RGST_ID, Length 3
+        pointOfSaleDataText:
+          type: string
+          description: ODS field POS_DATA_TX, Length 12
+        partnerIdentifier:
+          type: string
+          description: ODS field PRTN_ID, Length 1 to 6
+        exclusionRequestCode:
+          type: string
+          description: ODS field EXCL_RQST_CD, Length 1 to 2
+        presentationInstrumentExpirationDate:
+          type: string
+          description: ODS field PI_EXPR_DT, Length 4, Format YYMM or MMYY
+        merchantTerminalIdentifier:
+          type: string
+          description: ODS field MRCH_TRMN_ID, Length 1 to 8
+        balanceIdentifier:
+          type: string
+          description: ODS field BAL_ID, Length 7, Format 9999999
+        promotionIdentifier:
+          type: string
+          description: ODS field PRMT_ID, Length 1 to 8
+        retrievalReferenceIdentifier:
+          type: string
+          description: ODS field RTVL_RFRN_ID, Length 12
+        interchangeRateIdentifier:
+          type: string
+          description: ODS field ICHG_RATE_ID, Length 2
+        cardholderAuthenticationCode:
+          type: string
+          description: ODS field CHD_ATHN_CD, Length 1
+        securityProtocolIdentifier:
+          type: string
+          description: ODS field SCRT_PRTC_ID, Length 1
+        transactionFeeAmount:
+          type: string
+          description: ODS field TRAN_FEE_AM, Length 1 to 12, Format 999999999999
+        additionalAmount:
+          type: string
+          description: ODS field ADDL_AM, Length 1 to 12, Format 999999999999
+        transactionCategoryCode:
+          type: string
+          description: ODS field TRAN_CTGR_CD, Length 1 to 2
+        assignedIdentifier:
+          type: string
+          description: ODS field ASSG_ID, Length 6
+        universalCardAuthenticationFieldIdentifier:
+          type: string
+          description: ODS field UCAF_ID, Length 1
+        additionalCurrencyCode:
+          type: string
+          description: ODS field ADDL_CNCY_CD, Length 3, Format 999
+        additionalTypeCode:
+          type: string
+          description: ODS field ADDL_TYPE_CD, Length 2, Format 99
+        messageParameterOneText:
+          maxLength: 36
+          minLength: 0
+          type: string
+          description: 'The first of seven input message parameters that may be required
+            to process certain chargebacks; variable-length, 36-position, optional
+            parameter.
+
+            The syntax for the message parameters varies according to the MSSG_RESN_CD
+            (reason code) and CB_MSSG_CD (message code) that is entered.'
+          example: LbRKbJrrC4aFKfdbFinD9sEsvykfq3FwSraT
+        messageParameterTwoText:
+          maxLength: 36
+          minLength: 0
+          type: string
+          description: 'The second of seven input message parameters that may be required
+            to process certain chargebacks; variable-length, 36-position, optional
+            parameter.
+
+            The syntax for the message parameters varies according to the MSSG_RESN_CD
+            (reason code) and CB_MSSG_CD (message code) that is entered.'
+          example: PtB0pDowlFvE0EbelhB4A0KSTq7sAX4TzUHM
+        messageParameterThreeText:
+          maxLength: 36
+          minLength: 0
+          type: string
+          description: 'The third of seven input message parameters that may be required
+            to process certain chargebacks; variable-length, 36-position, optional
+            parameter.
+
+            The syntax for the message parameters varies according to the MSSG_RESN_CD
+            (reason code) and CB_MSSG_CD (message code) that is entered.'
+          example: o8lC7ElbGLNMx5aKibGpmsPZpPPoEnTL3NcF
+        messageParameterFourText:
+          maxLength: 36
+          minLength: 0
+          type: string
+          description: 'The fourth of seven input message parameters that may be required
+            to process certain chargebacks; variable-length, 36-position, optional
+            parameter.
+
+            The syntax for the message parameters varies according to the MSSG_RESN_CD
+            (reason code) and CB_MSSG_CD (message code) that is entered.'
+          example: NYUIjucW1vWCjD25dOmVKcpPb0DUsxxtVbox
+        messageParameterFiveText:
+          maxLength: 36
+          minLength: 0
+          type: string
+          description: 'The fifth of seven input message parameters that may be required
+            to process certain chargebacks; variable-length, 36-position, optional
+            parameter.
+
+            The syntax for the message parameters varies according to the MSSG_RESN_CD
+            (reason code) and CB_MSSG_CD (message code) that is entered.'
+          example: qQdqLtU3awAm4lpUCQWe2YrAnWfgWaQrSeaq
+        messageParameterSixText:
+          maxLength: 36
+          minLength: 0
+          type: string
+          description: 'The sixth of seven input message parameters that may be required
+            to process certain chargebacks; variable-length, 36-position, optional
+            parameter.
+
+            The syntax for the message parameters varies according to the MSSG_RESN_CD
+            (reason code) and CB_MSSG_CD (message code) that is entered.'
+          example: IYtlLQwXuX3SXU48FIvP6G0mhrApREzUKwRL
+        messageParameterSevenText:
+          maxLength: 36
+          minLength: 0
+          type: string
+          description: 'The last of seven input message parameters that may be required
+            to process certain chargebacks; variable-length, 36-position, optional
+            parameter.
+
+            The syntax for the message parameters varies according to the MSSG_RESN_CD
+            (reason code) and CB_MSSG_CD (message code) that is entered.'
+          example: hVigkGQxcJdiXVoMKofFtFq4ylBNdOaFYjs3
+        transitTransactionTypeCode:
+          type: string
+          description: ODS field TNST_TRAN_TYPE_CD, Length 2
+        transitTransportationModeCode:
+          type: string
+          description: ODS field TNST_TRAN_MODE_CD, Length 2
+        additionalTwoAmount:
+          type: string
+          description: ODS field ADDL_TWO_AM, Length 1 to 12, Format 999999999999
+        additionalCurrencyTwoCode:
+          type: string
+          description: ODS field ADDL_CNCY_TWO_CD, Length 3, Format 999
+        additionalTypeTwoCode:
+          type: string
+          description: ODS field ADDL_TYPE_TWO_CD, Length 2, Format 99
+        additionalAmountIndicator:
+          type: string
+          description: ODS field ADDL_AM_IN, Length 1
+        additionalAmountTwoIndicator:
+          type: string
+          description: ODS field ADDL_AM_TWO_IN, Length 1
+        industryTransactionIdentifier:
+          type: string
+          description: ODS field INDS_TRAN_ID, Length 1 to 15, Format 999999999999999
+        tokenAssuranceMethodCode:
+          type: string
+          description: ODS field TOKN_ASSR_CD, Length 1 to 2
+        tokenRequestorIdentifier:
+          type: string
+          description: ODS field TOKN_RQST_ID, Length 1 to 11, Format 99999999999
+        paymentFacilitatorIdentifier:
+          type: string
+          description: ODS field PYMT_FCLT_ID, Length 1 to 11, Format 99999999999
+        subMerchantIdentifier:
+          type: string
+          description: ODS field SUB_MRCH_ID, Length 1 to 15
+        independentSalesOrganizationIdentifier:
+          type: string
+          description: ODS field INDP_SALS_ORG_ID, Length 1 to 11, Format 99999999999
+        walletId:
+          type: string
+          description: ODS field WLLT_ID, Length 1 to 3
+    MasterCardChargeBackOutgoingResponse:
+      type: object
+      properties:
+        processorInfo:
+          $ref: '#/components/schemas/ProcessorInfo'
+        messages:
+          type: array
+          description: 'List of response messages from server. '
+          items:
+            $ref: '#/components/schemas/ResponseMessage'
+        chargeBackProcessingIdentifier:
+          type: string
+          description: ODS field for CB_PRCS_ID
+        chargeBackReferenceIdentifier:
+          type: string
+          description: ODS field for CB_RFRN_ID
+        outputFormIdentifier:
+          type: string
+          description: ODS field for OTPT_FORM_ID
+    MasterCardFeeCollectionOutgoingRequest:
+      required:
+      - controlIdentifier
+      - dataRecord
+      - functionCode
+      - messageReasonCode
+      - processingDebitorCreditCode
+      - transactionAmount
+      - transactionDate
+      - transactionDestination
+      - transactionOriginator
+      type: object
+      properties:
+        common:
+          $ref: '#/components/schemas/AccountHeader'
+        messageReasonCode:
+          type: string
+          description: ODS field MSSG_RESN_CD, Length 4, Format 9999
+        transactionOriginator:
+          type: string
+          description: ODS field TRAN_ORGN_ID, Length 6, Format 999999
+        transactionDestination:
+          type: string
+          description: ODS field TRAN_DSTN_ID, Length 6, Format 999999
+        transactionDate:
+          type: string
+          description: ODS field TRAN_DT, Length 6, Format YYMMDD
+        transactionCurrencyCode:
+          type: string
+          description: ODS field TRAN_CNCY_CD, Length 3, Format 999
+        transactionAmount:
+          type: string
+          description: ODS field TRAN_AM, Length 1 to 13, Format 9999999999999
+        processingDebitorCreditCode:
+          type: string
+          description: ODS field PRCS_DBT_CRDT_CD, Length 1
+        functionCode:
+          type: string
+          description: ODS field FNCT_CD, Length 3
+        controlIdentifier:
+          type: string
+          description: ODS field CNTL_ID, Length 1 to 20
+        messageReversalIndicator:
+          type: string
+          description: ODS field MSSG_RVRS_IN, Length 1
+        processingDate:
+          type: string
+          description: ODS field PRCS_DT, Length 6, Format YYMMDD
+        documentationIndicator:
+          type: string
+          description: ODS field DCMN_IN, Length 1, Format 9
+        acquirerReferenceData:
+          type: string
+          description: ODS field ACQR_RFRN_ID, Length 23
+        dataRecord:
+          type: string
+          description: ODS field FEE_MEMO_LINE_TX, Length 1 to 65
+        authorizationCode:
+          type: string
+          description: ODS field AUTH_CD, Length 1 to 6
+        merchantTerminalIdentifier:
+          type: string
+          description: ODS field MRCH_TRMN_ID, Length 8
+        originalTransactionCurrencyCode:
+          type: string
+          description: ODS field ORGN_TRAN_CNCY_CD, Length 3, Format 999
+        originalTransactionAmount:
+          type: string
+          description: ODS field ORGN_TRAN_AM, Length 1 to 13, Format 9999999999999
+        originatorPrincipalMemberIdentifier:
+          type: string
+          description: ODS field SNDR_PRIN_ID, Length 4, Format 9999
+        merchantIdentifier:
+          type: string
+          description: ODS field MC_MRCH_ID, Length 1 to 15
+        merchantName:
+          type: string
+          description: ODS field MRCH_NM, Length 1 to 22
+        merchantCategoryCode:
+          type: string
+          description: ODS field MRCH_CTGR_CD, Length 4
+        merchantCity:
+          type: string
+          description: ODS field MRCH_CITY_NM, Length 1 to 13
+        merchantState:
+          type: string
+          description: ODS field MRCH_SBDV_CD, Length 1 to 3
+        merchantCountryCode:
+          type: string
+          description: ODS field MRCH_CTRY_CD, Length 1 to 3
+        bankNetReferenceIdentifier:
+          type: string
+          description: ODS field BNKN_RFRN_ID, Length 1 to 9
+        bankNetReferenceDate:
+          type: string
+          description: ODS field BNKN_RFRN_DT, Length 4
+        originalReasonRequestCode:
+          type: string
+          description: ODS field ORGN_RESN_RQST_CD, Length 4, Format 9999
+        retrievalReferenceIdentifier:
+          type: string
+          description: ODS field RTVL_RFRN_ID, Length 12
+        fulfillmentDocumentCode:
+          type: string
+          description: ODS field FLFL_DCMN_CD, Length 1, Format 9
+        retrievalDocumentCode:
+          type: string
+          description: ODS field RTRV_DCMN_CD, Length 1, Format 9
+        issuerReferenceIdentifier:
+          type: string
+          description: ODS field CB_RFRN_ID, Length 1 to 10
+        interchangeRateIdentifier:
+          type: string
+          description: ODS field ICHG_RATE_ID, Length 2
+    ProcessorInfo:
+      type: object
+      properties:
+        system:
+          type: string
+          description: System where the Processing took Place.
+        cycle:
+          type: string
+          description: Cycle where the Processing took Place.
+        tor:
+          type: string
+          description: Terminal Owning Region in CICS where the transaction was initially
+            received.
+        mode:
+          type: string
+          description: Capabilities of the processing environment. READ/WRITE or  READ
+            ONLY.
+    ResponseMessage:
+      type: object
+      properties:
+        resultCode:
+          type: string
+        messageText:
+          type: string
+        transactionStatus:
+          type: string
+    UpdateResult:
+      type: object
+      properties:
+        processorInfo:
+          $ref: '#/components/schemas/ProcessorInfo'
+        messages:
+          type: array
+          description: 'List of response messages from server. '
+          items:
+            $ref: '#/components/schemas/ResponseMessage'
+    VisaChargeBackOutgoingResponse:
+      type: object
+      properties:
+        processorInfo:
+          $ref: '#/components/schemas/ProcessorInfo'
+        coreMessages:
+          type: array
+          description: List of Core Message Texts from ODS
+          items:
+            type: string
+        messageReasonCode:
+          type: string
+          description: ODS field for MSSG_RESN_CD
+        chargeBackTypeCode:
+          type: string
+          description: ODS field for CB_TYPE_CD
+        chargeBackMessageCode:
+          type: string
+          description: ODS field for CB_MSSG_CD
+        chargeBackProcessingIdentifier:
+          type: string
+          description: ODS field for CB_PRCS_ID
+        outputFormIdentifier:
+          type: string
+          description: ODS field for OTPT_FORM_ID
+        dataRecordText:
+          type: string
+          description: ODS field for DATA_RCRD_TX
+        accountIdentifier:
+          type: string
+          description: ODS field for ACCT_ID
+        additionalDocumentationIndicator:
+          type: string
+          description: ODS field for ADD_DOC_IN
+        acquirerReferenceIndicator:
+          type: string
+          description: ODS field for AQRN_RFRN_ID
+        chargeBackAmount:
+          type: string
+          description: ODS field for CB_AM
+        chargeBackReferenceIdentifier:
+          type: string
+          description: ODS field for CB_RFRN_ID
+        chargeBackReasonCode:
+          type: string
+          description: ODS field for CB_RESN_CD
+        clientAddressLineOneText:
+          type: string
+          description: ODS field for CLNT_ADDR_LINE_ONE_TX
+        clientAddressLineTwoText:
+          type: string
+          description: ODS field for CLNT_ADDR_LINE_TWO_TX
+        clientAddressLineThreeText:
+          type: string
+          description: ODS field for CLNT_ADDR_LINE_THRE_TX
+        clientAddressLineFourText:
+          type: string
+          description: ODS field for CLNT_ADDR_LINE_FOUR_TX
+        clientAddressLineFiveText:
+          type: string
+          description: ODS field for CLNT_ADDR_LINE_FIVE_TX
+        clientAddressLineSixText:
+          type: string
+          description: ODS field for CLNT_ADDR_LINE_SIX_TX
+        csdDocumentationMessageText:
+          type: string
+          description: ODS field for CSD_DCMN_MSSG_TX
+        disputeDocumentationIdentifier:
+          type: string
+          description: ODS field for DSPT_DCMN_ID
+        memberCaseIdentifier:
+          type: string
+          description: ODS field for MBR_CASE_ID
+        messageText:
+          type: string
+          description: ODS field for MSSG_TX
+        representmentReasonCode:
+          type: string
+          description: ODS field for RP_RSN_CD
+        processingCycleCode:
+          type: string
+          description: ODS field for PRCS_CYCL_CD
+        processingIdentifier:
+          type: string
+          description: ODS field for PRCS_ID
+        processingText:
+          type: string
+          description: ODS field for PRCS_TX
+        receivingBinIdentifier:
+          type: string
+          description: ODS field for RCVN_BIN_ID
+        sendingBinIdentifier:
+          type: string
+          description: ODS field for SNDN_BIN_ID
+        sequenceIdentifier:
+          type: string
+          description: ODS field for SQNC_ID
+        transactionDate:
+          type: string
+          description: ODS field for TRAN_DT
+        transactionIdentifier:
+          type: string
+          description: ODS field for TRAN_ID
+        transactionTypeCode:
+          type: string
+          description: ODS field for TRAN_TYPE_CD
+        postDateOriginalTransaction:
+          type: string
+          description: ODS field for VIC_DT
+        merchantRiskIdentificationServiceTypeCode:
+          type: string
+          description: ODS field for MRCH_RIS_IN
+x-original-swagger-version: '2.0'
