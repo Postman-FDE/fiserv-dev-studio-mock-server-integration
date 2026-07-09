@@ -49,6 +49,30 @@ java -jar target/mock-server-integration-0.0.1-SNAPSHOT.jar
 
 The app listens on `http://localhost:8080` (configurable in `application.properties`).
 
+### Running with local secrets (`local` profile)
+
+MongoDB and the Postman API key are supplied via a **gitignored** `src/main/resources/application-local.properties`. It is loaded only when the `local` profile is active — otherwise the app falls back to the `mongodb://localhost:27017` default in `application.properties` and cannot reach the cloud cluster or Postman.
+
+`application-local.properties` should contain:
+
+```properties
+postman.api-key=PMAK-...your-service-account-key...
+spring.data.mongodb.uri=mongodb+srv://USER:PASS@cluster.mongodb.net/mockserver?retryWrites=true&w=majority
+spring.data.mongodb.auto-index-creation=true
+```
+
+Run with the profile active:
+
+```sh
+# Via the Maven wrapper
+SPRING_PROFILES_ACTIVE=local ./mvnw spring-boot:run
+
+# Or the packaged jar
+SPRING_PROFILES_ACTIVE=local java -jar target/mock-server-integration-0.0.1-SNAPSHOT.jar
+```
+
+Confirm it picked up the cloud DB: the startup `MongoClient` log line should show your Atlas hosts (e.g. `hosts=[...mongodb.net]`), **not** `localhost:27017`.
+
 ## Verify
 
 ```sh

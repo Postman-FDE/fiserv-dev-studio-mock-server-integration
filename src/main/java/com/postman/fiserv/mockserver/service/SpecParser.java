@@ -3,6 +3,7 @@ package com.postman.fiserv.mockserver.service;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 
 import com.postman.fiserv.mockserver.model.SpecFileInfo;
@@ -11,6 +12,11 @@ import com.postman.fiserv.mockserver.model.SpecFileInfo;
 public class SpecParser {
 
     private static final String PATH_PREFIX = "reference/";
+
+    // SnakeYAML defaults codePointLimit to 3 MB, which rejects larger specs during load()
+    // with "The incoming YAML document exceeds the limit: 3145728 code points." Raise it so
+    // big specs parse locally; Postman's own create-spec size limit (if any) is enforced later.
+    private static final int MAX_YAML_CODE_POINTS = 20 * 1024 * 1024;
 
     public SpecFileInfo parse(String filePath, String rawYaml) {
         Map<String, Object> root = parseYamlRoot(rawYaml);
@@ -44,7 +50,9 @@ public class SpecParser {
     }
 
     private Map<String, Object> parseYamlRoot(String rawYaml) {
-        Yaml yaml = new Yaml();
+        LoaderOptions options = new LoaderOptions();
+        options.setCodePointLimit(MAX_YAML_CODE_POINTS);
+        Yaml yaml = new Yaml(options);
         Object loaded = yaml.load(rawYaml);
         if (!(loaded instanceof Map<?, ?> map)) {
             throw new IllegalArgumentException("Spec root is not a YAML mapping");

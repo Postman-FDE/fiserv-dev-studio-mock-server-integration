@@ -1,0 +1,102 @@
+panels:
+  - name: uncategorized
+    panelType: 1
+    isUncategorized: true
+    items:
+      - relativePath: postman/collections/Mock Server Integration
+        elementType: collection
+      - relativePath: postman/environments/Local.environment.yaml
+        elementType: environment
+      - relativePath: README.md
+        elementType: doc
+      - relativePath: CLAUDE.md
+        elementType: doc
+      - relativePath: HELP.md
+        elementType: doc
+      - relativePath: specs/SignatureInternational/3.0/Teller Transactions/TellerV1.yaml
+        elementType: specification
+      - relativePath: specs/carddeveloper/reference/specs/account-3.2.0.yaml
+        elementType: specification
+      - relativePath: specs/carddeveloper/reference/specs/cards-2.13.0.yaml
+        elementType: specification
+      - relativePath: specs/carddeveloper/reference/specs/cca-1.0.0.yaml
+        elementType: specification
+      - relativePath: specs/carddeveloper/reference/specs/company-1.1.0.yaml
+        elementType: specification
+      - relativePath: specs/carddeveloper/reference/specs/dispute-1.7.0.yaml
+        elementType: specification
+      - relativePath: specs/carddeveloper/reference/specs/fraud-2.1.1.yaml
+        elementType: specification
+      - relativePath: specs/carddeveloper/reference/specs/fraudalert-2.0.0.yaml
+        elementType: specification
+      - relativePath: specs/carddeveloper/reference/specs/ite-1.0.0.yaml
+        elementType: specification
+      - relativePath: specs/carddeveloper/reference/specs/payment-1.0.0.yaml
+        elementType: specification
+      - relativePath: specs/carddeveloper/reference/specs/rewards-1.0.0.yaml
+        elementType: specification
+      - relativePath: specs/carddeveloper/reference/specs/smb-1.0.0.yaml
+        elementType: specification
+      - relativePath: specs/carddeveloper/reference/specs/token.yaml
+        elementType: specification
+      - relativePath: specs/carddeveloper/reference/specs/tokenapi.yaml
+        elementType: specification
+      - relativePath: specs/carddeveloper/reference/specs/travel-2.0.1.yaml
+        elementType: specification
+      - relativePath: specs/carddeveloper/reference/specs/uchoose-1.0.2.yaml
+        elementType: specification
+      - relativePath: specs/commercehub/reference/1.26.0101/openapi.yaml
+        elementType: specification
+      - relativePath: specs/commercehub/reference/1.26.0402/openapi.yaml
+        elementType: specification
+      - relativePath: specs/cashflowcentral/reference/1.0.0/openapi.yaml
+        elementType: specification
+      - relativePath: specs/giftsolutions/reference/1.0.0/openapi.yml
+        elementType: specification
+      - relativePath: specs/bankinghub/reference/Premier/Transactions/CreditService-11.0.0_PRM.yaml
+        elementType: specification
+      - relativePath: specs/firstvisionapac/reference/1.9.0/accounts_api.yaml
+        elementType: specification
+      - relativePath: specs/bankinghub/reference/DNA/Accounts/AcctService-11.0.0_DNA-Add_DDA_SDA_CDA.yaml
+        elementType: specification
+      - relativePath: specs/firstvisionapac/reference/1.9.0/autorization_api.yaml
+        elementType: specification
+      - relativePath: specs/bankinghub/reference/Signature/Transactions/CreditService-11.0.0_SIG-Add_CDA_Teller.yaml
+        elementType: specification
+      - relativePath: specs/firstvisionapac/reference/1.9.0/bnpl_api.yaml
+        elementType: specification
+      - relativePath: specs/firstvisionapac/reference/1.9.0/cards_api.yaml
+        elementType: specification
+      - relativePath: specs/issuersolutions/reference/1.0.0/OperationsExecution/Adjustments.yaml
+        elementType: specification
+      - relativePath: specs/issuersolutions/reference/1.0.0/OperationsExecution/Maintenance.yaml
+        elementType: specification
+      - relativePath: specs/issuersolutions/reference/1.0.0/internal/ODS-Inquiry.yaml
+        elementType: specification
+      - relativePath: specs/firstvisionapac/reference/1.9.0/customer_api.yaml
+        elementType: specification
+      - relativePath: specs/firstvisionapac/reference/1.9.0/insurance_api.yaml
+        elementType: specification
+      - relativePath: specs/firstvisionapac/reference/1.9.0/loan_api.yaml
+        elementType: specification
+      - relativePath: specs/commercehub/reference/1.25.2000/openapi.yaml
+        elementType: specification
+      - relativePath: specs/card-pointe/reference/1.0.0/CardSecureAPI/CardSecureAPI.yaml
+        elementType: specification
+      - relativePath: specs/finxact/reference/1.27.0/openapi.yaml
+        elementType: specification
+      - relativePath: specs/firstvisionapac/reference/1.9.0/users_api.yaml
+        elementType: specification
+      - relativePath: specs/firstvisionapac/reference/1.9.0/wallet_api.yaml
+        elementType: specification
+      - relativePath: specs/firstvisionapac/reference/1.9.0/loyalty_api.yaml
+        elementType: specification
+      - relativePath: specs/firstvisionapac/reference/1.9.0/miscellaneous_api.yaml
+        elementType: specification
+      - relativePath: specs/firstvisionapac/reference/1.9.0/product_api.yaml
+        elementType: specification
+      - relativePath: specs/firstvisionapac/reference/1.9.0/security_api.yaml
+        elementType: specification
+  - name: uncategorized
+    panelType: 2
+    isUncategorized: true

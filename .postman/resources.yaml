@@ -2,8 +2,47 @@
 workspace:
   id: a63b60b4-ffdf-43d3-8d0b-83e34a27f66d
 
-# All resources in the `postman/` folder are automatically registered in Local View.
-# Point to additional files outside the `postman/` folder to register them individually. Example:
-#localResources:
-#  collections:
-#    - ../tests/E2E Test Collection/
+localResources:
+  specs:
+    - ../specs/SignatureInternational/3.0/Teller Transactions/TellerV1.yaml
+    - ../specs/carddeveloper/reference/specs/account-3.2.0.yaml
+    - ../specs/carddeveloper/reference/specs/cards-2.13.0.yaml
+    - ../specs/carddeveloper/reference/specs/cca-1.0.0.yaml
+    - ../specs/carddeveloper/reference/specs/company-1.1.0.yaml
+    - ../specs/carddeveloper/reference/specs/dispute-1.7.0.yaml
+    - ../specs/carddeveloper/reference/specs/fraud-2.1.1.yaml
+    - ../specs/carddeveloper/reference/specs/fraudalert-2.0.0.yaml
+    - ../specs/carddeveloper/reference/specs/ite-1.0.0.yaml
+    - ../specs/carddeveloper/reference/specs/payment-1.0.0.yaml
+    - ../specs/carddeveloper/reference/specs/rewards-1.0.0.yaml
+    - ../specs/carddeveloper/reference/specs/smb-1.0.0.yaml
+    - ../specs/carddeveloper/reference/specs/token.yaml
+    - ../specs/carddeveloper/reference/specs/tokenapi.yaml
+    - ../specs/carddeveloper/reference/specs/travel-2.0.1.yaml
+    - ../specs/carddeveloper/reference/specs/uchoose-1.0.2.yaml
+    - ../specs/commercehub/reference/1.26.0101/openapi.yaml
+    - ../specs/commercehub/reference/1.26.0402/openapi.yaml
+    - ../specs/cashflowcentral/reference/1.0.0/openapi.yaml
+    - ../specs/giftsolutions/reference/1.0.0/openapi.yml
+    - ../specs/bankinghub/reference/Premier/Transactions/CreditService-11.0.0_PRM.yaml
+    - ../specs/firstvisionapac/reference/1.9.0/accounts_api.yaml
+    - ../specs/bankinghub/reference/DNA/Accounts/AcctService-11.0.0_DNA-Add_DDA_SDA_CDA.yaml
+    - ../specs/firstvisionapac/reference/1.9.0/autorization_api.yaml
+    - ../specs/bankinghub/reference/Signature/Transactions/CreditService-11.0.0_SIG-Add_CDA_Teller.yaml
+    - ../specs/firstvisionapac/reference/1.9.0/bnpl_api.yaml
+    - ../specs/firstvisionapac/reference/1.9.0/cards_api.yaml
+    - ../specs/issuersolutions/reference/1.0.0/OperationsExecution/Adjustments.yaml
+    - ../specs/issuersolutions/reference/1.0.0/OperationsExecution/Maintenance.yaml
+    - ../specs/issuersolutions/reference/1.0.0/internal/ODS-Inquiry.yaml
+    - ../specs/firstvisionapac/reference/1.9.0/customer_api.yaml
+    - ../specs/firstvisionapac/reference/1.9.0/insurance_api.yaml
+    - ../specs/firstvisionapac/reference/1.9.0/loan_api.yaml
+    - ../specs/commercehub/reference/1.25.2000/openapi.yaml
+    - ../specs/card-pointe/reference/1.0.0/CardSecureAPI/CardSecureAPI.yaml
+    - ../specs/finxact/reference/1.27.0/openapi.yaml
+    - ../specs/firstvisionapac/reference/1.9.0/users_api.yaml
+    - ../specs/firstvisionapac/reference/1.9.0/wallet_api.yaml
+    - ../specs/firstvisionapac/reference/1.9.0/loyalty_api.yaml
+    - ../specs/firstvisionapac/reference/1.9.0/miscellaneous_api.yaml
+    - ../specs/firstvisionapac/reference/1.9.0/product_api.yaml
+    - ../specs/firstvisionapac/reference/1.9.0/security_api.yaml
