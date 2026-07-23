@@ -1,0 +1,648 @@
+################################################################################
+# Copyrights © 2021-2022 Fiserv, Inc. or its affiliates.
+# Fiserv is a trademark of Fiserv, Inc.,
+# registered or used in the United States and foreign countries,
+# and may or may not be registered in your country.
+# All trademarks, service marks,
+# and trade names referenced in this
+# material are the property of their
+# respective owners. This work, including its contents
+# and programming, is confidential and its use
+# is strictly limited. This work is furnished only
+# for use by duly authorized licensees of Fiserv, Inc.
+# or its affiliates, and their designated agents
+# or employees responsible for installation or
+# operation of the products. Any other use,
+# duplication, or dissemination without the
+# prior written consent of Fiserv, Inc.
+# or its affiliates is strictly prohibited.
+# Except as specified by the agreement under
+# which the materials are furnished, Fiserv, Inc.
+# and its affiliates do not accept any liabilities
+# with respect to the information contained herein
+# and are not responsible for any direct, indirect,
+# special, consequential or exemplary damages
+# resulting from the use of this information.
+# No warranties, either express or implied,
+# are granted or extended by this work or
+# the delivery of this work
+################################################################################
+
+openapi: 3.0.1
+info:
+  title: Silvercore™ Alerts Service - API Documentation
+  description: This documentation describes the REST APIs provided by the Silvercore™
+  version: "2.0"
+servers:
+  - url: https://int.latam.api.fiservapps.com/latam-gfs-new-apis/v2/
+    description: Sandbox Test
+paths:
+  /alerts/accounts/v1/alerts/{alertId}:
+    put:
+      tags:
+        - Modify
+      summary: La API hace la modificacion de una alerta, asociando la alerta a un usuario y una entidad.
+      operationId: subscription
+      parameters:
+        - name: X-ClientID
+          in: header
+          description: Número que representa la entidad cliente del servicio en Fiserv.
+          required: true
+          schema:
+            pattern: '[0-9]{1,3}'
+            type: string
+            description: Número que representa la entidad cliente del servicio en Fiserv.
+        - name: username
+          in: header
+          description: Identificador que representa al usuario.
+          required: true
+          schema:
+            type: string
+            description: Identificador que representa al usuario.
+        - name: security-context
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: requestId
+          in: header
+          description: ' Identificador único global de la solicitud enviada con formato de dígitos hexadecimales con grupos separados por guiones. Ejemplo: b3d27f9b-d21d-327c-164e-7fb6776f87b0'
+          required: false
+          schema:
+            type: string
+            description: ' Identificador único global de la solicitud enviada con formato de dígitos hexadecimales con grupos separados por guiones. Ejemplo: b3d27f9b-d21d-327c-164e-7fb6776f87b0'
+        - name: alertId
+          in: path
+          description: "Este campo de entrada proporciona el id de la alerta, pueden ser los Valores:\r\n•\t1: Transacción por monto;\r\n•\t2: Transacciones por monto acumulado;\r\n•\t3: Vencimiento del Estado de Cuenta;\r\n•\t4: Transacciones a plazos por monto acumulado;\r\n•\t6: Caducidad de la credencial.\r\n"
+          required: true
+          schema:
+            pattern: ^[0-9]{1}
+            type: string
+            description: "Este campo de entrada proporciona el id de la alerta, pueden ser los Valores:\r\n•\t1: Transacción por monto;\r\n•\t2: Transacciones por monto acumulado;\r\n•\t3: Vencimiento del Estado de Cuenta;\r\n•\t4: Transacciones a plazos por monto acumulado;\r\n•\t6: Caducidad de la credencial.\r\n"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertSubscribeRequest'
+        required: true
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              examples:
+                Response 1:
+                  description: Validation of required fields
+                  value:
+                    fieldName1: string
+                    fieldName2: string
+                Response 2:
+                  description: Mainframe message
+                  value:
+                    errorResponse:
+                      code: 0
+                      description: string
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorFiserVResponse'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorFiserVResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetailsResponse'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorFiserVResponse'
+      x-proxy-name: Modify
+      x-group-name: Alerts
+      x-child-product-name: Cards
+    delete:
+      tags:
+        - Unsuscribe
+      summary: La API hace la baja de una suscripción de una alerta
+      operationId: unsubscription
+      parameters:
+        - name: X-ClientID
+          in: header
+          description: Número que representa la entidad cliente del servicio en Fiserv.
+          required: true
+          schema:
+            pattern: '[0-9]{1,3}'
+            type: string
+            description: Número que representa la entidad cliente del servicio en Fiserv.
+        - name: username
+          in: header
+          description: Identificador que representa al usuario.
+          required: true
+          schema:
+            type: string
+            description: Identificador que representa al usuario.
+        - name: security-context
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: requestId
+          in: header
+          description: ' Identificador único global de la solicitud enviada con formato de dígitos hexadecimales con grupos separados por guiones. Ejemplo: b3d27f9b-d21d-327c-164e-7fb6776f87b0'
+          required: false
+          schema:
+            type: string
+            description: ' Identificador único global de la solicitud enviada con formato de dígitos hexadecimales con grupos separados por guiones. Ejemplo: b3d27f9b-d21d-327c-164e-7fb6776f87b0'
+        - name: alertId
+          in: path
+          description: "Este campo de entrada proporciona el id de la alerta, pueden ser los Valores:\r\n•\t1: Transacción por monto;\r\n•\t2: Transacciones por monto acumulado;\r\n•\t3: Vencimiento del Estado de Cuenta;\r\n•\t4: Transacciones a plazos por monto acumulado;\r\n•\t6: Caducidad de la credencial.\r\n"
+          required: true
+          schema:
+            pattern: ^[0-9]{1}
+            type: string
+            description: "Este campo de entrada proporciona el id de la alerta, pueden ser los Valores:\r\n•\t1: Transacción por monto;\r\n•\t2: Transacciones por monto acumulado;\r\n•\t3: Vencimiento del Estado de Cuenta;\r\n•\t4: Transacciones a plazos por monto acumulado;\r\n•\t6: Caducidad de la credencial.\r\n"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertUnsubscribeRequest'
+        required: true
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              examples:
+                Response 1:
+                  description: Validation of required fields
+                  value:
+                    fieldName1: string
+                    fieldName2: string
+                Response 2:
+                  description: Mainframe message
+                  value:
+                    errorResponse:
+                      code: 0
+                      description: string
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorFiserVResponse'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorFiserVResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetailsResponse'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorFiserVResponse'
+      x-proxy-name: Unsuscribe
+      x-group-name: Alerts
+      x-child-product-name: Cards
+  /alerts/accounts/v1/alerts:
+    post:
+      tags:
+        - Suscribe
+      summary: La API hace la suscripción de una alerta, asociando la alerta a un usuario y una entidad.
+      operationId: subscription_1
+      parameters:
+        - name: X-ClientID
+          in: header
+          description: Número que representa la entidad cliente del servicio en Fiserv.
+          required: true
+          schema:
+            pattern: '[0-9]{1,3}'
+            type: string
+            description: Número que representa la entidad cliente del servicio en Fiserv.
+        - name: username
+          in: header
+          description: Identificador que representa al usuario.
+          required: true
+          schema:
+            type: string
+            description: Identificador que representa al usuario.
+        - name: security-context
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: requestId
+          in: header
+          description: ' Identificador único global de la solicitud enviada con formato de dígitos hexadecimales con grupos separados por guiones. Ejemplo: b3d27f9b-d21d-327c-164e-7fb6776f87b0'
+          required: false
+          schema:
+            type: string
+            description: ' Identificador único global de la solicitud enviada con formato de dígitos hexadecimales con grupos separados por guiones. Ejemplo: b3d27f9b-d21d-327c-164e-7fb6776f87b0'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertSubscribeRequest'
+        required: true
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              examples:
+                Response 1:
+                  description: Validation of required fields
+                  value:
+                    fieldName1: string
+                    fieldName2: string
+                Response 2:
+                  description: Mainframe message
+                  value:
+                    errorResponse:
+                      code: 0
+                      description: string
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorFiserVResponse'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorFiserVResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetailsResponse'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorFiserVResponse'
+      x-proxy-name: Suscribe
+      x-group-name: Alerts
+      x-child-product-name: Cards
+  /alerts/accounts/v1/alerts/status:
+    post:
+      tags:
+        - Search Alert
+      summary: La API devuelve lista de alertas
+      operationId: alertsEntity
+      parameters:
+        - name: X-ClientID
+          in: header
+          description: Número que representa la entidad cliente del servicio en Fiserv.
+          required: true
+          schema:
+            pattern: '[0-9]{1,3}'
+            type: string
+            description: Número que representa la entidad cliente del servicio en Fiserv.
+        - name: username
+          in: header
+          description: Identificador que representa al usuario.
+          required: true
+          schema:
+            type: string
+            description: Identificador que representa al usuario.
+        - name: security-context
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: requestId
+          in: header
+          description: ' Identificador único global de la solicitud enviada con formato de dígitos hexadecimales con grupos separados por guiones. Ejemplo: b3d27f9b-d21d-327c-164e-7fb6776f87b0'
+          required: false
+          schema:
+            type: string
+            description: ' Identificador único global de la solicitud enviada con formato de dígitos hexadecimales con grupos separados por guiones. Ejemplo: b3d27f9b-d21d-327c-164e-7fb6776f87b0'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertSearchRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiAlertAlertSearchResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              examples:
+                Response 1:
+                  description: Validation of required fields
+                  value:
+                    fieldName1: string
+                    fieldName2: string
+                Response 2:
+                  description: Mainframe message
+                  value:
+                    errorResponse:
+                      code: 0
+                      description: string
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorFiserVResponse'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorFiserVResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetailsResponse'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorFiserVResponse'
+      x-proxy-name: Search Alert
+      x-group-name: Alerts
+      x-child-product-name: Cards
+components:
+  schemas:
+    ErrorDetailsResponse:
+      type: object
+      properties:
+        dateError:
+          type: string
+          format: date-time
+        message:
+          type: string
+        detail:
+          type: string
+    AlertSubscribeRequest:
+      required:
+        - accountNumber
+        - additional
+        - cardNumber
+      type: object
+      properties:
+        accountNumber:
+          pattern: ^[0-9A-F]{32}$
+          type: string
+          description: Este campo de entrada, permite ingresar el número de cuenta del tarjetahabiente encriptado.
+          example: B47A195B4DF76B04D036F0A8FFEF4416
+        additional:
+          pattern: ^[0-9]{1}
+          type: string
+          description: Este campo de entrada, complementa al dato cuenta para identificar unívocamente Titulares y Adicionales de la misma. Conocido también como "AUTORIZADO"
+          example: '0'
+        cardNumber:
+          pattern: ^[0-9A-F]{64}$
+          type: string
+          description: Este campo de entrada permite ingresar el número de tarjeta (PAN) encriptado
+          example: FCBDA6EEB6BE198F41D19D38C8B7AD1F66C91533A439A78F006628214AB6A02E
+        alert:
+          $ref: '#/components/schemas/ApiAlert'
+      description: Estructura de campos para la solicitud de subcripción de una alerta
+    ApiAlert:
+      required:
+        - contact
+      type: object
+      properties:
+        parameters:
+          $ref: '#/components/schemas/Parameters'
+        contact:
+          type: array
+          description: Lista de tipos de envío de alerta
+          items:
+            $ref: '#/components/schemas/ApiSendTypeMethod'
+      description: Este campo de entrada hace referencia al objeto Alerta que se data de alta.
+      oneOf:
+        - $ref: '#/components/schemas/ApiAlertComplete'
+    ApiAlertComplete:
+      required:
+        - contact
+        - id
+      type: object
+      properties:
+        parameters:
+          $ref: '#/components/schemas/Parameters'
+        contact:
+          type: array
+          description: Lista de tipos de envío de alerta
+          items:
+            $ref: '#/components/schemas/ApiSendTypeMethod'
+        id:
+          maximum: 6
+          minimum: 1
+          type: integer
+          description: "Este campo de entrada proporciona el id de la alerta, pueden ser los Valores:\r\n•\t1: Transacción por monto;\r\n•\t2: Transacciones por monto acumulado;\r\n•\t3: Vencimiento del Estado de Cuenta;\r\n•\t4: Transacciones a plazos por monto acumulado;\r\n•\t6: Caducidad de la credencial.\r\n"
+          format: int32
+        numeroValido:
+          type: boolean
+      description: Este campo de salida, proporciona la lista de alertas encontradas
+      example:
+        alerts:
+          - parameters:
+              amount: null
+              operationState: null
+              location: null
+            contact:
+              - sendMethod: MAIL
+                value: null
+            id: 3
+          - parameters:
+              amount: '850'
+              operationState: TODOS
+              location: AR
+            contact:
+              - sendMethod: MAIL
+                value: null
+            id: 1
+    ApiSendTypeMethod:
+      required:
+        - sendMethod
+        - value
+      type: object
+      properties:
+        sendMethod:
+          type: string
+          description: 'Este campo de entrada, permite ingresar el tipo de envío, ejemplo: </br>MAIL</br>SMSPUSH'
+          example: MAIL
+          enum:
+            - MAIL
+            - SMS
+            - PUSH
+        value:
+          pattern: ^.{0,60}$
+          type: string
+          description: Valor de Contacto según el Tipo de Contacto
+          example: example@fiserv.com
+      description: Lista de tipos de envío de alerta
+    Parameters:
+      required:
+        - amount
+        - location
+        - operationState
+      type: object
+      properties:
+        amount:
+          pattern: ^(0|[1-9]\d{0,12})(\.\d{1,2}?$)
+          type: string
+          description: |
+            Amount 
+             Required when alertId is 1, 2, or 4 
+            Monto mínimo a partir del cual se genera la Alerta por compra. Longitud máxima 15. Formato: EEEEEEEEEEEEE.DD
+          example: '185000'
+        operationState:
+          pattern: (APROBADA|RECHAZADA|TODOS)
+          type: string
+          description: "operationState \n Required when alertId is 1 \nEstado de la operación de compra por el cual se genera la Alerta.\r\nValores:\r\n•\tAPROBADA,\r\n•\tRECHAZADA,\r\n•\tTODOS.\r\n"
+          example: TODOS
+        location:
+          pattern: ^[a-zA-Z]{1,5}$
+          type: string
+          description: Proporciona la opción de ingresar la abreviatura de dos letras del país (localidad) de la operación de compra a generar la alerta o la opción TODAS. ISO-3166 ALPHA-2 ISO-3166 ALPHA-2
+          example: ARG
+      description: Este campo de entrada, permite ingresar un objecto con los parametros de la alerts
+    ErrorFiserVDetailsResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        description:
+          type: string
+    ErrorFiserVResponse:
+      type: object
+      properties:
+        errorResponse:
+          $ref: '#/components/schemas/ErrorFiserVDetailsResponse'
+    AlertSearchRequest:
+      required:
+        - accountNumber
+        - additional
+        - cardNumber
+      type: object
+      properties:
+        accountNumber:
+          pattern: ^[0-9A-F]{32}$
+          type: string
+          description: Este campo de entrada, permite ingresar el número de cuenta del tarjetahabiente encriptado.
+          example: B47A195B4DF76B04D036F0A8FFEF4416
+        additional:
+          pattern: ^[0-9]{1}
+          type: string
+          description: Este campo de entrada, complementa al dato cuenta para identificar unívocamente Titulares y Adicionales de la misma. Conocido también como "AUTORIZADO"
+          example: '0'
+        cardNumber:
+          pattern: ^[0-9A-F]{64}$
+          type: string
+          description: Este campo de entrada permite ingresar el número de tarjeta (PAN) encriptado
+          example: FCBDA6EEB6BE198F41D19D38C8B7AD1F66C91533A439A78F006628214AB6A02E
+      description: Estructura de campos para la solicitud de subcripción de una alerta
+    ApiAlertAlertSearchResponse:
+      type: object
+      properties:
+        alerts:
+          type: array
+          description: Este campo de salida, proporciona la lista de alertas encontradas
+          example:
+            alerts:
+              - parameters:
+                  amount: null
+                  operationState: null
+                  location: null
+                contact:
+                  - sendMethod: MAIL
+                    value: null
+                id: 3
+              - parameters:
+                  amount: '850'
+                  operationState: TODOS
+                  location: AR
+                contact:
+                  - sendMethod: MAIL
+                    value: null
+                id: 1
+          items:
+            $ref: '#/components/schemas/ApiAlertComplete'
+      description: Estructura de campos que responde la API AlertSearch
+    AlertUnsubscribeRequest:
+      required:
+        - accountNumber
+        - additional
+        - cardNumber
+      type: object
+      properties:
+        accountNumber:
+          pattern: ^[0-9A-F]{32}$
+          type: string
+          description: Este campo de entrada, permite ingresar el número de cuenta del tarjetahabiente encriptado.
+          example: B47A195B4DF76B04D036F0A8FFEF4416
+        additional:
+          pattern: ^[0-9]{1}
+          type: string
+          description: Este campo de entrada, complementa al dato cuenta para identificar unívocamente Titulares y Adicionales de la misma. Conocido también como "AUTORIZADO"
+          example: '0'
+        cardNumber:
+          pattern: ^[0-9A-F]{64}$
+          type: string
+          description: Este campo de entrada permite ingresar el número de tarjeta (PAN) encriptado
+          example: FCBDA6EEB6BE198F41D19D38C8B7AD1F66C91533A439A78F006628214AB6A02E
+      description: Estructura de campos para la solicitud de subcripción de una alerta
