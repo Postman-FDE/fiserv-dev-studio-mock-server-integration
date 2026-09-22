@@ -1,0 +1,1071 @@
+components:
+  parameters:
+    organizationId:
+      description: >-
+        An organization ID indicating the context for the operation. This is the
+        organization for which data will be read/modified. When acting as an
+        application (no user context) this parameter can be used to imply a
+        user/org context. When acting as a user, this allows a user to manage a
+        specific organization. When omitted, the context is assumed to be the
+        authenticated user's organization.
+      in: query
+      name: organizationId
+      required: false
+      schema:
+        $ref: '#/components/schemas/organizationId'
+    templateId:
+      description: The ID of the template on which the operation executes.
+      in: path
+      name: id
+      required: true
+      schema:
+        $ref: '#/components/schemas/templateId'
+    templateTypeId:
+      description: The ID of the template type on which the operation executes.
+      in: path
+      name: id
+      required: true
+      schema:
+        $ref: '#/components/schemas/templateTypeId'
+    tenantId:
+      description: >-
+        A tenant ID indicating the context for the operation. This is the tenant
+        for which data will be read/modified. When acting as an application (no
+        user context), this parameter can be used to imply a tenant context.
+        When acting as a user, this allows a user to manage a specific tenant.
+        When omitted, the context is assumed to be the authenticated user's
+        tenant.
+      in: query
+      name: tenantId
+      required: false
+      schema:
+        $ref: '#/components/schemas/tenantId'
+  responses:
+    303seeOther:
+      description: >-
+        The requested operation is not allowed because the resource already
+        exists. The server is redirecting the caller to the existing resource,
+        as indicated by a URI in the Location header field.
+    400badRequest:
+      description: >-
+        The request could not be processed by the server. This may be due to
+        malformed syntax or a semantic error (for example, a value in the
+        request failed validation for length, range, and so on). Check your
+        parameters and retry.
+    401unauthorized:
+      description: The request is missing valid authentication credentials.
+    403forbidden:
+      description: The authenticated client is not authorized to perform the operation.
+    404notFound:
+      description: >-
+        The server has not found a resource matching the request URI.The
+        resource is no longer available or one or more identifiers are
+        incorrect.
+  schemas:
+    alternateIdentifiers:
+      description: >-
+        Alternate means of identifying the template. Not all of these uniquely
+        identify this specific template; they may be secondary identifiers, such
+        as a company identifier that is associated with this template.
+      items:
+        description: A single alternate identifier.
+        properties:
+          id:
+            description: The value of the alternate identifier.
+            example: '123456789'
+            maxLength: 100
+            minLength: 1
+            type: string
+          scheme:
+            description: >-
+              The type of identifier described by this entity. The list of
+              well-known schemes should be published externally.
+            example: companyId
+            maxLength: 50
+            minLength: 1
+            type: string
+        required:
+          - id
+          - scheme
+        type: object
+      type: array
+    amount:
+      description: Specifies the decimal point to be added to format the whole number.
+      properties:
+        currency:
+          $ref: '#/components/schemas/currencyCode'
+        inferredPrecision:
+          description: Number of decimal points to be added to the amount.
+          example: 2
+          minimum: 0
+          type: number
+      required:
+        - currency
+        - inferredPrecision
+      type: object
+    currencyCode:
+      description: ISO 4217 currency code.
+      example: USD
+      pattern: ^[A-Z]{3,3}$
+      type: string
+    exclude:
+      description: >-
+        A specified number of beginning or ending records to exclude while
+        importing a file.
+      properties:
+        footer:
+          description: >-
+            The number of rows to exclude after the last transaction ends in the
+            imported file.
+          example: 1
+          type: number
+        header:
+          description: >-
+            The number of rows to exclude before the first transaction starts in
+            the imported file.
+          example: 1
+          minimum: 0
+          type: number
+      type: object
+    fixedWidth:
+      description: >-
+        A data format or layout where each data element or field is allocated a
+        specific, fixed amount of space or width.
+      properties:
+        from:
+          description: The starting value of a range for the field.
+          example: 1
+          minimum: 1
+          type: number
+        to:
+          description: The ending value of a range for the field.
+          example: 10
+          minimum: 1
+          type: number
+      required:
+        - from
+        - to
+      type: object
+    identifier:
+      description: >-
+        An identifier used while parsing data to apply data validation to a
+        field.
+      example: transactionCodeCustom
+      maxLength: 75
+      minLength: 1
+      type: string
+    jsonPatchDocument:
+      description: RFC 6902 JSON Patch document - http://json.schemastore.org/json-patch.
+      items:
+        description: A single patch operation.
+        oneOf:
+          - additionalProperties: false
+            description: Add, replace, or test operations.
+            properties:
+              op:
+                description: The operation to perform.
+                enum:
+                  - add
+                  - replace
+                  - test
+                type: string
+              path:
+                $ref: '#/components/schemas/jsonPatchPath'
+              value:
+                description: The value to add, replace, or test.
+            required:
+              - op
+              - path
+              - value
+            type: object
+          - additionalProperties: false
+            description: Remove operation.
+            properties:
+              op:
+                description: The operation to perform.
+                enum:
+                  - remove
+                type: string
+              path:
+                $ref: '#/components/schemas/jsonPatchPath'
+            required:
+              - op
+              - path
+            type: object
+          - additionalProperties: false
+            description: Copy and move operations.
+            properties:
+              from:
+                $ref: '#/components/schemas/jsonPatchPath'
+              op:
+                description: The operation to perform.
+                enum:
+                  - copy
+                  - move
+                type: string
+              path:
+                $ref: '#/components/schemas/jsonPatchPath'
+            required:
+              - from
+              - op
+              - path
+            type: object
+      type: array
+    jsonPatchPath:
+      description: A JSON Pointer path pointing to the location of the patch operation.
+      type: string
+    localizedValue:
+      allOf:
+        - $ref: '#/components/schemas/localizedValuePatch'
+      description: >-
+        The string dictionary used to capture localized versions of a given
+        value. The special key `$default` is used as the default/fallback value
+        in case the requested language is not supported. Keys other than
+        `$default` must be an RFC 5646 language tag.
+      example:
+        $default: Transaction Code Custom
+        en: Transaction Code Custom
+        es: Código de transacción personalizado
+      required:
+        - $default
+      type: object
+    localizedValuePatch:
+      additionalProperties:
+        maxLength: 1024
+        type: string
+      description: >-
+        Mutable version of a localized string dictionary that can be used to
+        merge patch localized values.
+      example:
+        $default: Custom Transaction Code
+        es: Código de transacción personalizado
+      type: object
+    organizationId:
+      description: >-
+        A unique and immutable identifier used to identify an organization
+        resource.
+      example: a57a83c3-18fd-4350-96e5-43be5475cf7a
+      maxLength: 40
+      minLength: 1
+      type: string
+    parsing:
+      description: >-
+        A text qualifier used to identify and extract specific pieces of
+        information from an import file.
+      properties:
+        delimiter:
+          description: >-
+            A character or sequence of characters used to separate or identify
+            different fields for an imported file. Any whitespace around the
+            delimiter in a file will be ignored.
+          example: ','
+          type: string
+        textQualifier:
+          description: >-
+            A character that distinguishes the location at which the contents of
+            a text field should begin and end.
+          example: ''''
+          type: string
+        type:
+          description: Indicates the format of the imported file that uses the template.
+          enum:
+            - delimited
+            - fixedWidth
+          example: delimited
+          type: string
+      required:
+        - type
+      type: object
+    promptOnImport:
+      description: >-
+        A value indicating whether the user can be presented with an interface
+        to provide the essential information. Default is false if not supplied.
+      example: false
+      type: boolean
+    template:
+      allOf:
+        - $ref: '#/components/schemas/templatePost'
+        - description: >-
+            Properties that get added to a template to make a complete template
+            response.
+          properties:
+            feature:
+              description: >-
+                Feature name of the template that can be used to differentiate
+                templates.
+              example: ACH
+              maxLength: 50
+              minLength: 1
+              type: string
+            id:
+              $ref: '#/components/schemas/templateId'
+          type: object
+      description: >-
+        A pre-designed format that serves as a starting point for importing a
+        file.
+      required:
+        - feature
+        - id
+      type: object
+    templateField:
+      description: Defines position or value of a template type reference.
+      properties:
+        customMapping:
+          description: Data elements that a consumer manually inputs.
+          items:
+            $ref: '#/components/schemas/templateFieldCustomMapping'
+          type: array
+        fixedWidth:
+          $ref: '#/components/schemas/fixedWidth'
+        identifier:
+          $ref: '#/components/schemas/identifier'
+        position:
+          description: A column number in a delimited file which holds the field data.
+          type: number
+        promptOnImport:
+          $ref: '#/components/schemas/promptOnImport'
+        value:
+          description: Predefined value of the template field.
+          example: John Doe
+          type: string
+      required:
+        - identifier
+      type: object
+    templateFieldCustomMapping:
+      description: >-
+        Data elements that a consumer manually inputs. The input is applied to
+        all records.
+      example:
+        fields:
+          - identifier: issue
+            value: i
+          - identifier: stop
+            value: s
+          - identifier: void
+            value: v
+      properties:
+        fields:
+          description: The complete set of information that defines custom mapping field.
+          items:
+            $ref: '#/components/schemas/templateFieldCustomMappingField'
+          type: array
+      required:
+        - fields
+      type: object
+    templateFieldCustomMappingField:
+      description: >-
+        Base information that defines the custom field information that is
+        related to a template field.
+      properties:
+        identifier:
+          $ref: '#/components/schemas/identifier'
+        value:
+          description: >-
+            A specific piece of data stored in a field that is used to identify
+            an item type in the imported file.
+          example: v
+          type: string
+      required:
+        - identifier
+        - value
+      type: object
+    templateId:
+      description: A unique and immutable identifier used to identify a template resource.
+      example: b435ebdb-2882-40cc-b751-382aeff7ec23
+      maxLength: 40
+      minLength: 1
+      type: string
+    templatePatch:
+      description: Patchable properties for a template.
+      properties:
+        alternateIdentifiers:
+          $ref: '#/components/schemas/alternateIdentifiers'
+        amount:
+          $ref: '#/components/schemas/amount'
+        exclude:
+          $ref: '#/components/schemas/exclude'
+        fields:
+          description: The field information of a template.
+          items:
+            $ref: '#/components/schemas/templateField'
+          type: array
+        name:
+          description: >-
+            The name or title of the template. This value is not localized. The
+            name must be unique within the context of a tenant but is not
+            case-sensitive.
+          example: My payroll PPD payments template
+          maxLength: 75
+          minLength: 1
+          type: string
+        organizationId:
+          $ref: '#/components/schemas/organizationId'
+        parsing:
+          $ref: '#/components/schemas/parsing'
+        templateTypeId:
+          $ref: '#/components/schemas/templateTypeId'
+      type: object
+    templatePost:
+      allOf:
+        - $ref: '#/components/schemas/templatePatch'
+      description: Base properties required for creating a template.
+      required:
+        - fields
+        - name
+        - parsing
+        - templateTypeId
+      type: object
+    templateType:
+      allOf:
+        - $ref: '#/components/schemas/templateTypePost'
+        - description: An identifier property that gets added to a template type.
+          properties:
+            id:
+              $ref: '#/components/schemas/templateTypeId'
+          type: object
+      description: >-
+        The type of templates used by the organization to create a template for
+        file import.
+      required:
+        - id
+      type: object
+    templateTypeBase:
+      description: Base information defining a template type related to a tenant.
+      properties:
+        feature:
+          description: >-
+            Feature name of the template type that can be used to differentiate
+            template types.
+          example: ACH
+          maxLength: 50
+          minLength: 1
+          type: string
+        fields:
+          description: The field information of a template type.
+          items:
+            $ref: '#/components/schemas/templateTypeField'
+          type: array
+        tenantId:
+          $ref: '#/components/schemas/tenantId'
+        transactionType:
+          $ref: '#/components/schemas/transactionType'
+      type: object
+    templateTypeCustomMappingField:
+      allOf:
+        - $ref: '#/components/schemas/templateTypeFieldBase'
+        - description: >-
+            Properties that get added template type field base to make a
+            complete template type custom mapping field.
+          properties:
+            value:
+              description: >-
+                A value that replaces the end-user custom mapping field data
+                from the imported file.
+              example: '1'
+              maxLength: 10
+              type: string
+          type: object
+      description: >-
+        The defined structure of the custom mapping field within the template
+        type.
+      required:
+        - value
+      type: object
+    templateTypeField:
+      allOf:
+        - $ref: '#/components/schemas/templateTypeFieldBase'
+        - description: >-
+            Properties that get added template type field base to make a
+            complete template type field.
+          properties:
+            customMapping:
+              description: Data elements which the user should manually insert.
+              items:
+                $ref: '#/components/schemas/templateTypeFieldCustomMapping'
+              type: array
+            promptOnImport:
+              $ref: '#/components/schemas/promptOnImport'
+          type: object
+      description: The defined structure of the field within the template.
+      required:
+        - dataType
+        - identifier
+        - name
+      type: object
+    templateTypeFieldBase:
+      description: Base information defining a template type related to a tenant.
+      properties:
+        dataType:
+          description: Data type of the template type field for validation.
+          enum:
+            - boolean
+            - date
+            - integer
+            - number
+            - string
+          example: string
+          type: string
+        identifier:
+          $ref: '#/components/schemas/identifier'
+        mandatory:
+          description: >-
+            A boolean indicates that this field is required. Default is false if
+            not supplied.
+          example: true
+          type: boolean
+        maximumLength:
+          default: 1024
+          description: Maximum length of the template type field value.
+          example: 10
+          type: number
+        name:
+          $ref: '#/components/schemas/localizedValue'
+      required:
+        - dataType
+        - identifier
+        - name
+      type: object
+    templateTypeFieldCustomMapping:
+      description: >-
+        Data elements which the user should manually insert; the inputs are
+        applied to all records.
+      example:
+        description:
+          $default: Debit
+        fields:
+          - dataType: string
+            identifier: debitChecking
+            mandatory: false
+            name:
+              $default: Checking
+            value: '27'
+      properties:
+        description:
+          $ref: '#/components/schemas/localizedValue'
+        fields:
+          description: The complete set of information that defines custom mapping field.
+          items:
+            $ref: '#/components/schemas/templateTypeCustomMappingField'
+          type: array
+      required:
+        - description
+        - fields
+      type: object
+    templateTypeId:
+      description: >-
+        A unique and immutable identifier used to identify a template type
+        resource.
+      example: 424d8c29-d385-4cb9-9ec1-b273a0fa72b6
+      maxLength: 40
+      minLength: 1
+      type: string
+    templateTypePatch:
+      allOf:
+        - $ref: '#/components/schemas/templateTypeBase'
+        - description: >-
+            Properties that get added to a template type to make a complete
+            template type patch request.
+          properties:
+            name:
+              $ref: '#/components/schemas/localizedValuePatch'
+          type: object
+      description: Patchable properties for a template type.
+      type: object
+    templateTypePost:
+      allOf:
+        - $ref: '#/components/schemas/templateTypeBase'
+        - description: >-
+            Properties that get added to a template type to make a complete
+            template type post request.
+          properties:
+            name:
+              $ref: '#/components/schemas/localizedValue'
+          type: object
+      description: Base properties required for creating a template type.
+      required:
+        - feature
+        - fields
+        - name
+      type: object
+    tenantId:
+      description: A unique and immutable identifier used to identify a tenant resource.
+      example: 424d8c29-d385-4cb9-9ec1-b273a0fa72b5
+      maxLength: 40
+      minLength: 1
+      type: string
+    transactionType:
+      description: >-
+        Defines the financial activity type and standard entry class code (SEC
+        code) while creating a new Non-NACHA template.
+      properties:
+        kind:
+          description: >-
+            Defines the financial activity while creating a new Non-NACHA
+            template, either it is a collection or a payment.
+          enum:
+            - collection
+            - payment
+          example: payment
+          type: string
+        secCode:
+          description: >-
+            A standard entry class code (SEC code) that identifies a specific
+            payment type.
+          enum:
+            - CCD
+            - PPD
+          example: PPD
+          maxLength: 3
+          minLength: 1
+          type: string
+      required:
+        - kind
+        - secCode
+      type: object
+  securitySchemes:
+    bearerAuth:
+      bearerFormat: JWT
+      description: Normalized JSON Web Token (JWT) for these services.
+      scheme: bearer
+      type: http
+info:
+  contact:
+    email: support@fiserv.com
+    name: Fiserv
+    url: https://fiserv.com
+  description: Routes for retrieving template details.
+  license:
+    name: Licensed by Fiserv
+    url: https://fiserv.com
+  title: 'Payments: Templates'
+  version: v1
+openapi: 3.0.3
+paths:
+  /consumer/payments/v1/templates:
+    get:
+      description: Gets the templates for an organization.
+      operationId: get-consumer-payments-templates
+      parameters:
+        - description: >-
+            An optional OData (https://www.odata.org/odata-services/) query for
+            searching/filtering templates.
+          examples:
+            alternateIdentifierFilter:
+              value: >-
+                alternateIdentifiers/any(a: a/scheme eq 'companyId' and a/id eq
+                '123456789')
+            featureFilter:
+              value: feature eq 'ACH'
+          in: query
+          name: $filter
+          required: false
+          schema:
+            type: string
+        - description: >-
+            An optional OData (https://www.odata.org/odata-services/) parameter
+            used to skip a specified number (n) of entries from the collection
+            of templates. If a value less than zero is specified, the URI is
+            considered malformed.
+          example: 10
+          in: query
+          name: $skip
+          required: false
+          schema:
+            default: 0
+            type: integer
+        - description: >-
+            An optional OData (https://www.odata.org/odata-services/) parameter
+            used to select only a subset (first n) of transaction entries from
+            the collection of templates. If a value less than zero is specified,
+            the URI is considered malformed.
+          example: 20
+          in: query
+          name: $top
+          required: false
+          schema:
+            type: integer
+        - $ref: '#/components/parameters/organizationId'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/template'
+                type: array
+          description: Successfully retrieved the list of templates.
+        '400':
+          $ref: '#/components/responses/400badRequest'
+        '401':
+          $ref: '#/components/responses/401unauthorized'
+        '403':
+          $ref: '#/components/responses/403forbidden'
+      tags:
+        - context-payments
+        - party-consumer
+        - resource-templates
+      x-child-product-name: Payments
+      x-group-name: Templates
+      x-proxy-name: Get all templates
+    post:
+      description: Creates a template for an organization.
+      operationId: post-consumer-payments-templates
+      requestBody:
+        content:
+          application/json:
+            example:
+              alternateIdentifiers:
+                - id: '123456789'
+                  scheme: companyId
+              amount:
+                currency: USD
+                inferredPrecision: 2
+              exclude:
+                footer: 1
+                header: 1
+              fields:
+                - customMapping:
+                    - fields:
+                        - identifier: debitChecking
+                          value: dc
+                        - identifier: debitSavings
+                          value: ds
+                        - identifier: debitLoan
+                          value: dl
+                  fixedWidth:
+                    from: 1
+                    to: 2
+                  identifier: transactionCodeCustom
+                - fixedWidth:
+                    from: 3
+                    to: 23
+                  identifier: accountNumber
+              id: b435ebdb-2882-40cc-b751-382aeff7ec23
+              name: My payroll PPD payments template
+              organizationId: a57a83c3-18fd-4350-96e5-43be5475cf7a
+              parsing:
+                type: fixedWidth
+              templateTypeId: 424d8c29-d385-4cb9-9ec1-b273a0fa72b6
+            schema:
+              $ref: '#/components/schemas/templatePost'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/template'
+          description: Successfully created the template.
+        '303':
+          $ref: '#/components/responses/303seeOther'
+        '400':
+          $ref: '#/components/responses/400badRequest'
+        '401':
+          $ref: '#/components/responses/401unauthorized'
+        '403':
+          $ref: '#/components/responses/403forbidden'
+      tags:
+        - context-payments
+        - party-consumer
+        - resource-templates
+      x-child-product-name: Payments
+      x-group-name: Templates
+      x-proxy-name: Create a template
+  /consumer/payments/v1/templates/{id}:
+    delete:
+      description: Deletes a template for an organization.
+      operationId: delete-consumer-payments-templates-by-id
+      parameters:
+        - $ref: '#/components/parameters/templateId'
+        - $ref: '#/components/parameters/organizationId'
+      responses:
+        '204':
+          description: Successfully deleted the template.
+        '400':
+          $ref: '#/components/responses/400badRequest'
+        '401':
+          $ref: '#/components/responses/401unauthorized'
+        '403':
+          $ref: '#/components/responses/403forbidden'
+        '404':
+          $ref: '#/components/responses/404notFound'
+      tags:
+        - context-payments
+        - party-consumer
+        - resource-templates
+      x-child-product-name: Payments
+      x-group-name: Templates
+      x-proxy-name: Delete a template
+    get:
+      description: Gets a specific template by ID.
+      operationId: get-consumer-payments-templates-by-id
+      parameters:
+        - $ref: '#/components/parameters/templateId'
+        - $ref: '#/components/parameters/organizationId'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/template'
+          description: Successfully retrieved the template.
+        '400':
+          $ref: '#/components/responses/400badRequest'
+        '401':
+          $ref: '#/components/responses/401unauthorized'
+        '403':
+          $ref: '#/components/responses/403forbidden'
+        '404':
+          $ref: '#/components/responses/404notFound'
+      tags:
+        - context-payments
+        - party-consumer
+        - resource-templates
+      x-child-product-name: Payments
+      x-group-name: Templates
+      x-proxy-name: Get a template by ID
+    patch:
+      description: Updates a template for an organization.
+      operationId: patch-consumer-payments-templates-by-id
+      parameters:
+        - $ref: '#/components/parameters/templateId'
+        - $ref: '#/components/parameters/organizationId'
+      requestBody:
+        content:
+          application/json-patch+json:
+            example:
+              - op: replace
+                path: /name
+                value: ACH test template
+            schema:
+              $ref: '#/components/schemas/jsonPatchDocument'
+          application/merge-patch+json:
+            example:
+              name: ACH test template
+            schema:
+              $ref: '#/components/schemas/templatePatch'
+        description: A JSON Patch document with the set of template updates.
+        required: true
+      responses:
+        '204':
+          description: All operations in the patch document succeeded.
+        '303':
+          $ref: '#/components/responses/303seeOther'
+        '400':
+          $ref: '#/components/responses/400badRequest'
+        '401':
+          $ref: '#/components/responses/401unauthorized'
+        '403':
+          $ref: '#/components/responses/403forbidden'
+        '404':
+          $ref: '#/components/responses/404notFound'
+      tags:
+        - context-payments
+        - party-consumer
+        - resource-templates
+      x-child-product-name: Payments
+      x-group-name: Templates
+      x-proxy-name: Update a template
+  /tenant/payments/v1/templates/types:
+    get:
+      description: Gets template types for a tenant.
+      operationId: get-tenant-payments-templates-types
+      parameters:
+        - description: >-
+            An optional OData (https://www.odata.org/odata-services/) query for
+            searching/filtering template types.
+          examples:
+            featureFilter:
+              value: feature eq 'ACH'
+          in: query
+          name: $filter
+          required: false
+          schema:
+            type: string
+        - $ref: '#/components/parameters/tenantId'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/templateType'
+                type: array
+          description: Successfully retrieved the list of template types.
+        '400':
+          $ref: '#/components/responses/400badRequest'
+        '401':
+          $ref: '#/components/responses/401unauthorized'
+        '403':
+          $ref: '#/components/responses/403forbidden'
+      tags:
+        - context-payments
+        - party-tenant
+        - resource-templates
+      x-child-product-name: Payments
+      x-group-name: Templates
+      x-proxy-name: Get all template types
+    post:
+      description: Creates a template type configuration for a tenant.
+      operationId: post-tenant-payments-templates-types
+      requestBody:
+        content:
+          application/json:
+            example:
+              feature: ACH
+              fields:
+                - customMapping:
+                    - description:
+                        $default: Debit
+                      fields:
+                        - dataType: string
+                          identifier: debitChecking
+                          mandatory: false
+                          name:
+                            $default: Checking
+                          value: '27'
+                  dataType: string
+                  identifier: transactionCodeCustom
+                  mandatory: true
+                  maximumLength: 1024
+                  name:
+                    $default: Transaction Code Custom
+                    en: Transaction Code Custom
+                    es: Código de transacción personalizado
+                  promptOnImport: false
+              name:
+                $default: Payroll - PPD payments
+              transactionType:
+                kind: payment
+                secCode: PPD
+            schema:
+              $ref: '#/components/schemas/templateTypePost'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/templateType'
+          description: Successfully created a template type.
+        '303':
+          $ref: '#/components/responses/303seeOther'
+        '400':
+          $ref: '#/components/responses/400badRequest'
+        '401':
+          $ref: '#/components/responses/401unauthorized'
+        '403':
+          $ref: '#/components/responses/403forbidden'
+      tags:
+        - context-payments
+        - party-tenant
+        - resource-templates
+      x-child-product-name: Payments
+      x-group-name: Templates
+      x-proxy-name: Create a template type
+  /tenant/payments/v1/templates/types/{id}:
+    delete:
+      description: Deletes a template type for a tenant.
+      operationId: delete-tenant-payments-templates-types-by-id
+      parameters:
+        - $ref: '#/components/parameters/templateTypeId'
+        - $ref: '#/components/parameters/tenantId'
+      responses:
+        '204':
+          description: Successfully deleted the template type.
+        '400':
+          $ref: '#/components/responses/400badRequest'
+        '401':
+          $ref: '#/components/responses/401unauthorized'
+        '403':
+          $ref: '#/components/responses/403forbidden'
+        '404':
+          $ref: '#/components/responses/404notFound'
+      tags:
+        - context-payments
+        - party-tenant
+        - resource-templates
+      x-child-product-name: Payments
+      x-group-name: Templates
+      x-proxy-name: Delete a template type
+    get:
+      description: Gets a specific template type by ID.
+      operationId: get-tenant-payments-templates-types-by-id
+      parameters:
+        - $ref: '#/components/parameters/templateTypeId'
+        - $ref: '#/components/parameters/tenantId'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/templateType'
+          description: Successfully retrieved the template type.
+        '400':
+          $ref: '#/components/responses/400badRequest'
+        '401':
+          $ref: '#/components/responses/401unauthorized'
+        '403':
+          $ref: '#/components/responses/403forbidden'
+        '404':
+          $ref: '#/components/responses/404notFound'
+      tags:
+        - context-payments
+        - party-tenant
+        - resource-templates
+      x-child-product-name: Payments
+      x-group-name: Templates
+      x-proxy-name: Get a template type by ID
+    patch:
+      description: Updates a template type for a tenant.
+      operationId: patch-tenant-payments-templates-types-by-id
+      parameters:
+        - $ref: '#/components/parameters/templateTypeId'
+        - $ref: '#/components/parameters/tenantId'
+      requestBody:
+        content:
+          application/json-patch+json:
+            example:
+              - op: replace
+                path: /name/es
+                value: Plantilla de prueba ACH
+            schema:
+              $ref: '#/components/schemas/jsonPatchDocument'
+          application/merge-patch+json:
+            example:
+              name:
+                es: Plantilla de prueba ACH
+            schema:
+              $ref: '#/components/schemas/templateTypePatch'
+      responses:
+        '204':
+          description: All operations in the patch document succeeded.
+        '303':
+          $ref: '#/components/responses/303seeOther'
+        '400':
+          $ref: '#/components/responses/400badRequest'
+        '401':
+          $ref: '#/components/responses/401unauthorized'
+        '403':
+          $ref: '#/components/responses/403forbidden'
+        '404':
+          $ref: '#/components/responses/404notFound'
+      tags:
+        - context-payments
+        - party-tenant
+        - resource-templates
+      x-child-product-name: Payments
+      x-group-name: Templates
+      x-proxy-name: Update a template type
+security:
+  - bearerAuth: []
+servers:
+  - description: Fiserv API.
+    url: https://prod.api.fiservapps.com
+tags:
+  - description: Payments bounded context.
+    name: context-payments
+  - description: Consumer/client application operations.
+    name: party-consumer
+  - description: Tenant-scoped operations.
+    name: party-tenant
+  - description: Metadata about templates and template types.
+    name: resource-templates
